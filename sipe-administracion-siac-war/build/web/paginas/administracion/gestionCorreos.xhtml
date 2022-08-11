@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">           
+            <h:form id="frmGestionCorreo">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneCorreo" width="1000" columns="1" >
+                        <p:tabView id="tabsCorreoesPermisos">
+                            <p:tab title="Correo Individual">
+                                <h:panelGrid columns="2">
+                                    <h:panelGrid columns="3">
+                                        <p:outputLabel value="Alias"/>
+                                        <p:inputText    id="rolNemonico"  value="#{gestionCorreoControlador.objCorreoActual.alias}" onkeyup="this.value = this.value.toUpperCase();"
+                                                        readonly="#{gestionCorreoControlador.habilitaEdicion}"    maxlength="250" size="40" required="true" requiredMessage="Alias no puede estar vacío"/>
+                                        <p:message for="rolNemonico" display="icon"/>
+
+                                        <p:outputLabel value="Asunto"/>
+                                        <p:inputText   id="rolNombre" value="#{gestionCorreoControlador.objCorreoActual.asunto}"  
+                                                       maxlength="250"   size="40"   required="true" requiredMessage="Asunto no puede estar vacío" />
+                                        <p:message for="rolNombre" display="icon"/>                                                       
+
+                                        <p:outputLabel value="Descripción"/>
+                                        <p:inputTextarea  id="rolDescripcion"  value="#{gestionCorreoControlador.objCorreoActual.descripcion}" 
+                                                          cols="38" rows="4"   maxlength="500" autoResize="false"  />
+                                        <p:message for="rolDescripcion" display="icon"/>   
+
+                                        <p:outputLabel value="Tipo prioridad"/>
+                                        <p:selectOneMenu id="tipoPioridad" value="#{gestionCorreoControlador.objCorreoActual.codTipoPrioridad}" converter="catalogoConverter"  style="width:315px" required="true" requiredMessage="Tipo prioridad necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionCorreoControlador.tipoPrioridades}" var="tp" itemLabel="#{tp.nombre}" itemValue="#{tp}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="tipoPioridad" display="icon"/>  
+
+                                        <f:facet name="footer">
+                                            <center>                                            
+                                            </center>
+                                        </f:facet>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="1">
+                                        <h:panelGrid columns="2">
+                                            <p:outputLabel value="Para"/>
+                                            <p:commandButton value="Agregar" id="btnAgregarDestinatario" oncomplete="PF('adicionarNombres').show();"
+                                                             update="frmGestionCorreo:personalDialogoContainer"    process="@this"      action="#{gestionCorreoControlador.refrescaNuevoDestinatario()}"   icon="fa fa-fw fa-user-plus">
+                                                <p:resetInput target="frmGestionCorreo:personalDialogoContainer" />
+                                            </p:commandButton>
+                                        </h:panelGrid>
+                                        <p:dataTable paginator="true" rows="5" id="tablaListDestinatario" widgetVar="tablaListDestinatario" value="#{gestionCorreoControlador.listarCorreosDestinario}"  var="destColumna"   
+                                                     selectionMode="single" rowKey="#{destColumna.idCorreoDestinatario}"
+                                                     styleClass="pdataTable_font"
+                                                     currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                            <f:facet name="header">
+                                                <p:outputLabel value="Destinatarios" style="font-size:15px;"/>
+                                            </f:facet>
+                                            <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                                <h:outputText value="#{destColumna.idCorreoDestinatario}" style="font-size:12px;" />
+                                            </p:column>
+                                            <p:column   headerText="Nombre" width="200" style="font-size:12px;"   filterBy="#{destColumna.codPersonal.primerNombre} #{destColumna.codPersonal.segundoNombre} #{destColumna.codPersonal.primerApellido} #{destColumna.codPersonal.segundoApellido}" filterMatchMode="contains"    >
+                                                <h:outputText value="#{destColumna.codPersonal.primerNombre} #{destColumna.codPersonal.segundoNombre} #{destColumna.codPersonal.primerApellido} #{destColumna.codPersonal.segundoApellido}" style="font-size:12px;" />
+                                            </p:column>
+                                            <p:column headerText="Tipo" width="100" style="font-size:12px;" filterBy="#{destColumna.codTipoDestinatario.nombre}" filterMatchMode="contains" >
+                                                <h:outputText value="#{destColumna.codTipoDestinatario.nombre}" style="font-size:12px;" />
+                                            </p:column>
+                                            <p:column headerText="Estado" width="50" style="font-size:12px;">                                               
+                                                <p:selectBooleanCheckbox  value="#{destColumna.estadoDestinatario}" >                                                   
+                                                </p:selectBooleanCheckbox>
+                                            </p:column>  
+                                            <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                                <p:commandButton style="font-size:12px;" icon="ui-icon-close"  
+                                                                 actionListener="#{gestionCorreoControlador.confirmaEliminarDestinatario(destColumna)}" 
+                                                                 process="@this" update="tablaListDestinatario,:frmGestionCorreo:message" async="true" global="false">                                                   
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable> 
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Correos Masivos" disabled="true">                                
+                            </p:tab>
+                        </p:tabView>
+                        <p:panel id="panel2" header="Mensaje">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Acepta parámetros sistema"/>
+                                <p:selectBooleanCheckbox id="aceptaParametros" value="#{gestionCorreoControlador.admCorreoDetActual.parametroSistema}" />                                   
+                                <p:message for="aceptaParametros" display="icon"/>
+
+                                <p:outputLabel value="Posición parámetros"/>
+                                <p:selectOneMenu id="posicionParametros" value="#{gestionCorreoControlador.admCorreoDetActual.posicionParametro}"  style="width:315px" required="true" requiredMessage="Posición parámetros no puede estar vacío" >
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionCorreoControlador.posicionParametros}"  />
+                                </p:selectOneMenu>
+                                <p:message for="posicionParametros" display="icon"/>                                                       
+
+                                <p:outputLabel value="Detalle"/>
+                                <p:textEditor id="editorDetalle" secure="false" widgetVar="editorWidget" class="#{ not component.valid?'ui-state-error':''}" style="margin-bottom:10px; width: 700px;" height="250" value="#{gestionCorreoControlador.admCorreoDetActual.detalle}" required="true" requiredMessage="Detalle no puede estar vacío" >
+                                    <f:facet name="toolbar">
+                                        <span class="ql-formats">
+                                            <select class="ql-font"></select>
+                                            <select class="ql-size"></select>
+                                        </span>                                        
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list active" value="ordered"></button>
+                                            <button class="ql-list" value="bullet"></button>    
+                                            <button class="ql-indent" value="-1"></button>    
+                                            <button class="ql-indent" value="+1"></button>    
+                                        </span>
+                                    </f:facet>                                    
+                                </p:textEditor>
+                                <p:message for="editorDetalle" display="icon"/>     
+
+                                <f:facet name="footer">
+                                    <center>                                            
+                                    </center>
+                                </f:facet>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                      
+                                <center> 
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardarUsuCorreo" 
+                                                         action="#{gestionCorreoControlador.guardarCorreo()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneCorreo" 
+                                                         update=":frmGestionCorreo:panelConieneListas,panelContieneCorreo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionCorreoControlador.permisosBoton['PAG_INSRT'] || gestionCorreoControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListCorreo').filter();"/>
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionCorreoControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionCorreo:panelConieneListas,panelContieneCorreo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionCorreoControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target="panelContieneCorreo"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>   
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListCorreo" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListCorreo" value="#{gestionCorreoControlador.listarCorreoes}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idCorreoCab}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListCorreo"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Listado de correos registrados" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idCorreoCab}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Alias" width="200" style="font-size:12px;"   filterBy="#{aplColumna.alias}" filterMatchMode="contains"    >
+                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Asunto" width="300" style="font-size:12px;" filterBy="#{aplColumna.asunto}" filterMatchMode="contains" >
+                                    <h:outputText value="#{aplColumna.asunto}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Prioridad" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codTipoPrioridad.nombre}" style="font-size:12px;" />
+                                </p:column>   
+                                <p:column headerText="Descripción" width="230" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>   
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionCorreoControlador.recuperarCorreoCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionCorreo:panelContieneCorreo,:frmGestionCorreo:panelConieneListas,:frmGestionCorreo:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionCorreoControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionCorreo:panelContieneCorreo"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionCorreoControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionCorreo,:frmGestionCorreo:panelConieneListas,:frmGestionCorreo:message" 
+                                                     async="true" global="false" disabled="#{!gestionCorreoControlador.permisosBoton['PAG_ELIM']}">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                         <p:resetInput target=":frmGestionCorreo:panelContieneCorreo"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                        <p:dialog header="Seleccionar nombres" id="adicionarContacto" widgetVar="adicionarNombres">
+                            <h:panelGroup id="personalDialogoContainer">
+                                <h:panelGrid columns="3"> 
+                                    <p:outputLabel value="Personal"/>                                
+                                    <p:selectOneMenu id="cbxPersona"  panelStyle="width:305px" converter="personaConverter" value="#{gestionCorreoControlador.personaActual}" required="true"  requiredMessage="Personal necesita ser seleccionado"
+                                                      var="item" style="width:315px" filter="true" filterMatchMode="contains">
+                                        <p:ajax listener="#{gestionCorreoControlador.cargarTipoDestinatarios}"  update="chkTipo" />
+                                        <f:selectItem  itemLabel="Seleccione.." itemValue="" /> 
+                                        <f:selectItems value="#{gestionCorreoControlador.mapPersonal}" var="p" itemLabel="#{p.primerNombre} #{p.segundoNombre} #{p.primerApellido} #{p.segundoApellido}" itemValue="#{p}" />
+                                        <p:column style="width:10%">
+                                            <h:outputText value="#{item.idPersonal}" />
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{item.primerNombre} #{item.segundoNombre} #{item.primerApellido} #{item.segundoApellido}" />
+                                        </p:column>
+                                    </p:selectOneMenu>
+                                    <p:message for="cbxPersona" display="icon"/> 
+
+                                    <p:outputLabel value="Tipo"/>
+                                    <p:selectManyCheckbox id="chkTipo" value="#{gestionCorreoControlador.selectedTiposDestinatarios}"  columns="1" required="true" requiredMessage="Tipo necesita ser seleccionado">
+                                        <f:selectItems value="#{gestionCorreoControlador.tiposDestinatarios}" var="acc" itemLabel="#{acc.nombre}" itemValue="#{acc.idCatalogo}" />
+                                    </p:selectManyCheckbox>
+                                    <p:message for="chkTipo" display="icon"/>  
+                                    <f:facet name="footer">                                                                                                                      
+                                        <center> 
+                                            <h:panelGrid columns="2">
+                                                <p:commandButton value="Aceptar"  id="btnAceptarDestinatario" 
+                                                                 action="#{gestionCorreoControlador.agregarDestinatario()}" 
+                                                                 icon="ui-icon-check"  oncomplete="if(!args.validationFailed)PF('adicionarNombres').hide();"                                                    
+                                                                 update="frmGestionCorreo:personalDialogoContainer, frmGestionCorreo:tabsCorreoesPermisos:tablaListDestinatario,msgs"
+                                                                 partialSubmit="true" process="personalDialogoContainer"  async="true"
+                                                                 global="false"/>
+                                                <p:commandButton value="Cancelar" icon="ui-icon-close" onclick="PF('adicionarNombres').hide();"/>
+                                            </h:panelGrid>
+                                        </center>   
+                                    </f:facet>    
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </p:dialog> 
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

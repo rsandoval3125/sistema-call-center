@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionInstitucion">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneInstitucion" width="1000" columns="1" >
+                        <p:panel header="Administración - Instituciones">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="institucionNombre" value="#{gestionInstitucionControlador.objAdmInstitucionActual.nombre}"  
+                                               size="40"  maxlength="255"  required="true" requiredMessage="Nombre no puede estar vacío"/>
+                                <p:message for="institucionNombre" display="icon"/>       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="institucionDescripcion"  value="#{gestionInstitucionControlador.objAdmInstitucionActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false"  />
+                                <p:message for="institucionDescripcion" display="icon"/>   
+
+                                <p:outputLabel value="Web"/>
+                                <p:inputText   id="institucionWeb"  value="#{gestionInstitucionControlador.objAdmInstitucionActual.web}" validatorMessage="Web inválido" 
+                                               maxlength="255" size="40">
+                                    <f:validateRegex pattern="^(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$" />
+                                </p:inputText>
+                                <p:message for="institucionWeb" display="icon"/>
+
+                                <p:outputLabel value="Logo"/>
+                                <p:inputText    id="institucionLogo"  value="#{gestionInstitucionControlador.objAdmInstitucionActual.logo}" 
+                                                maxlength="255"    size="40"/>
+                                <p:message for="institucionLogo" display="icon"/>
+
+                                <p:outputLabel value="Email"/>
+                                <p:inputText    id="institucionEmail"  value="#{gestionInstitucionControlador.objAdmInstitucionActual.email}" validatorMessage="Email inválido" 
+                                                maxlength="225"  size="40">
+                                    <f:validateRegex pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" />
+                                </p:inputText>
+                                <p:message for="institucionEmail" display="icon"/>                                
+
+                                <p:outputLabel  value="Alias" />
+                                <p:inputText    id="institucionAlias"  value="#{gestionInstitucionControlador.objAdmInstitucionActual.alias}" 
+                                                maxlength="100"  size="40"  readonly="#{gestionInstitucionControlador.habilitaEdicion}" required="true" requiredMessage="Alias no puede estar vacío"/>
+                                <p:message for="institucionAlias" display="icon"/>   
+                            </h:panelGrid>
+                            <f:facet name="footer"> <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionInstitucionControlador.guardarInstitucion()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneInstitucion" 
+                                                         update=":frmGestionInstitucion:panelConieneListas,panelContieneInstitucion,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionInstitucionControlador.permisosBoton['PAG_INSRT'] || gestionInstitucionControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListInstitucion').filter();" />
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionInstitucionControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionInstitucion:panelConieneListas,panelContieneInstitucion,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionInstitucionControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target=":frmGestionInstitucion:panelContieneInstitucion"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center></f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListInstitucion" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListInstitucion" value="#{gestionInstitucionControlador.listarInstitucions}"  var="perColumna"   
+                                         selectionMode="single" rowKey="#{perColumna.idInstitucion}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListInstitucion"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Instituciones" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.idInstitucion}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="100" style="font-size:12px;" filterBy="#{perColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Descripción" width="150" style="font-size:12px;" filterBy="#{perColumna.descripcion}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.descripcion}" style="font-size:12px;" />
+                                </p:column> 
+
+                                <p:column headerText="Web" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.web}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Logo" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.logo}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Email" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.email}" style="font-size:12px;" >
+
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Alias" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.alias}" style="font-size:12px;" >
+
+                                    </h:outputText>
+                                </p:column>                               
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionInstitucionControlador.recuperarInstitucionCampos(perColumna)}" 
+                                                       process="@this" update=":frmGestionInstitucion:panelContieneInstitucion,:frmGestionInstitucion:panelConieneListas,:frmGestionInstitucion:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionInstitucionControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionInstitucion:panelContieneInstitucion"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionInstitucionControlador.confirmaEliminar(perColumna)}" 
+                                                     process="@this" update=":frmGestionInstitucion,:frmGestionInstitucion:message" 
+                                                     async="true" global="false" disabled="#{!gestionInstitucionControlador.permisosBoton['PAG_ELIM']}">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionInstitucion:panelContieneInstitucion"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

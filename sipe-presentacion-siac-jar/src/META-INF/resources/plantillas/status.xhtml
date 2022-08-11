@@ -1,0 +1,12 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+        <p:ajaxStatus onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" onsuccess="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide();"/>  
+
+        <p:dialog modal="true"  appendTo="@(body)"  widgetVar="#{baseControlador.datosGenerales.dialogwidgetVar}" header="#{baseControlador.datosGenerales.dialogheader}" resizable="false"
+                  draggable="false" closable="false">  
+            <p:graphicImage value="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.dialogimagen}" />  
+        </p:dialog>
+    </ui:composition>
+</html>

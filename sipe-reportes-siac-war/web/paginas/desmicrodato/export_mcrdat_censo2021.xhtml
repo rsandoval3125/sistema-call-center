@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <!-- xmlns:pinec="http://java.sun.com/jsf/composite/pinec"-->
+
+    <ui:composition template="/plantillas/inec_plantilla_sinlogin.xhtml">
+        <ui:define name="contenido">
+            <link href="../../css/reportes.css" rel="stylesheet" type="text/css"/>
+            <h:body style=" background-color: #D8E1E6;"/>
+
+            <h:form id="frmExporBases">  
+                <h:panelGrid style="height: 40px;"></h:panelGrid>
+                <p:growl id="msgs" showDetail="true" />
+                <center>
+                    <h:panelGrid columns="6">
+                        <h:panelGrid rendered="false">
+                            <!--<p:commandButton id="btnLimpiarDatos"
+                                             action="#{ebcCenso2021.limpiarDatosCapturados()}"
+                                             async="true" global="false"
+                                             process="@this" update="msgs"
+                                             icon="fa fa-eraser"
+                                             style="background: #FFFFCC;color:black;"
+                                             onstart="PF('dlgValidando').show();"
+                                                 oncomplete="PF('dlgValidando').hide();"/>
+                            <p:tooltip id="ttLimpiar" for="btnLimpiarDatos" 
+                                       value="Limpiar Saltos de Linea en Base" 
+                                       position="right"/>-->
+                            <p:commandButton id="btnInsertarDatos"
+                                             action="#{ebcCenso2021.insertarDatosEnTablaTemporal()}"
+                                             async="true" global="false"
+                                             process="@this" update="msgs,pnlInformativo"
+                                             icon="fa fa-list"
+                                             style="background: #FFFFCC;color:black;"
+                                             onstart="PF('dlgValidando').show();"
+                                             oncomplete="PF('dlgValidando').hide();"/>
+                            <p:tooltip id="ttInsertar" for="btnInsertarDatos" 
+                                       value="Consolidar Datos en Base" 
+                                       position="right"/>
+                        </h:panelGrid>
+                        <h:panelGrid id="pnlInformativo" width="300" style="font-size:12px;" rendered="false"> 
+                            <p:panel header="Pasos para exportación a SPSS">
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value="1.-"/>
+                                    <h:outputText  styleClass="ui-icon fa fa-table"/>
+                                    <p:outputLabel value="Obtener la base según el tipo y el periodo"/>
+                                    <p:outputLabel value="2.-"/>
+                                    <h:outputText  styleClass="ui-icon fa fa-file-excel-o"/>
+                                    <p:outputLabel value="Descargar la información en excel"/>
+                                    <p:outputLabel value="3.-"/>
+                                    <h:outputText  styleClass="ui-icon fa fa-copy"/>
+                                    <p:outputLabel value="Copiar la información desde el excel hacia el Archivo SPSS correspondiente"/>
+
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:panelGrid>
+                        
+                        
+                        <h:panelGrid width="100"/>
+                        
+                        <p:panel header="Exportación de BDD (CENSO 2021)" 
+                                 style="font-size:15px;color: #ffffff;box-shadow:0px 10px 10px black; ">
+                            
+                            <h:panelGrid  columns="3" width="850" >
+                                <h:panelGrid id="pnlCriterios" columns="3" width="400" >
+                                <p:outputLabel value="Periodo:" />
+                                <p:selectOneMenu id="periodo"
+                                                 value="#{ebcCenso2021.per}"
+                                                 style="width: 75% !important" >
+                                    <f:selectItems value="#{ebcCenso2021.listaperiodos}"/>
+                                </p:selectOneMenu>
+                                <f:verbatim/>
+                                
+                                <f:verbatim/>
+                                <f:verbatim/>
+                                <f:verbatim/>
+                                
+                                <p:outputLabel value="Zonal:"/>
+                                <p:selectOneMenu id="zonal" 
+                                                 value="#{ebcCenso2021.codZonal1}"
+                                                 style="width: 75% !important">
+                                    <f:selectItems value="#{ebcCenso2021.listaZonales}"/>
+                                </p:selectOneMenu>
+                                <f:verbatim/>
+                                
+                                <p:outputLabel value="Base:"/>
+                                <p:selectOneMenu id="tipoBase" 
+                                                 value="#{ebcCenso2021.idBase}"
+                                                 style="width: 75% !important">
+                                    <f:selectItems value="#{ebcCenso2021.listaNombresBases}"/>
+                                    <!--<f:selectItem itemValue="financiero" itemLabel="Base de Uso Serv. Fin."/>-->
+                                </p:selectOneMenu>
+                                <f:verbatim/>
+                                <p:outputLabel value="Formato:&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                                <p:selectOneRadio id="tipoFile" value="#{ebcCenso2021.tipoArchivoDescarga}">
+                                    <!--    <f:selectItem itemLabel="Excel" itemValue="XLS" /> -->
+                                    <f:selectItem itemLabel="Texto" itemValue="TXT" />
+                                </p:selectOneRadio>
+                                <f:verbatim/>
+                                <f:verbatim/>
+                                <p:commandButton id="btn" async="true" global="false"
+                                                 process="@this,periodo,zonal,tipoBase,tipoFile"
+                                                 action="#{ebcCenso2021.obtenerBase()}"
+                                                 update="pnlResultado,pnlControlDescarga,msgs"
+                                                 value="Obtener Base"
+                                                 icon="fa fa-table"
+                                                 onstart="PF('dlgValidando').show();PF('pbAjax').start();"
+                                                 oncomplete="PF('dlgValidando').hide();"/>
+                                <f:verbatim/>
+                                <f:verbatim/>
+                                <p:outputLabel value="Dependiendo de la cantidad de registros,la obtención de la base puede tardar un par de minutos." style="text-justify: none;width: 75% !important"/>
+                                </h:panelGrid>
+                                
+                                <h:panelGrid  columns="1" width="150" >
+                                    <i class="fa fa-bar-chart" style="font-size: 6em; color: #0062cc"></i>
+                                    <h4 style="color: #0069d9">Total de Periodos #{ebcCenso2021.listaperiodos.size() - 1} </h4>
+                                </h:panelGrid>
+                                <h:panelGrid  columns="1" width="50" >
+                                </h:panelGrid>
+                            </h:panelGrid>    
+                        </p:panel>
+                        <h:panelGrid width="100"/>
+                        <h:panelGrid id="pnlFormatos" width="300" style="font-size:12px;">
+                            <h:panelGrid/>
+                        </h:panelGrid>
+
+                    </h:panelGrid>                       
+                    <h:panelGrid id="pnlResultado" style="font-size:8px;">
+
+                        <h:panelGrid id="pnlControlDescargaPersonas" columns="2">
+                            <h:graphicImage value="/imagenes/excelexport.png" rendered="#{ebcCenso2021.puedeDescargarBaseExcel}"/>
+                            <h:outputLink value="/sipe-reportes-siac-war/archivos/#{ebcCenso2021.nombreArchivoDescarga}.xlsx" target="_blank"
+                                          style="color:blue;font-size: 14px;"
+                                          rendered="#{ebcCenso2021.puedeDescargarBaseExcel}">Exportar Base (Click para descargar)</h:outputLink>
+                            <h:graphicImage value="/imagenes/icon_text.png" rendered="#{ebcCenso2021.puedeDescargarBaseTexto}"/>
+                            <!--Se comenta este componente porque el texto se abre en el explorador<h:outputLink value="/INFOCAPT-war/archivos/#{ebcCenso2021.nombreArchivoDescarga}.txt" target="_blank"
+                                          style="color:blue;font-size: 14px;" 
+              rendered="#{ebcCenso2021.puedeDescargarBaseTexto}">Exportar Base (Click para descargar)</h:outputLink>-->
+
+                            <h:panelGrid columns="1" rendered="#{ebcCenso2021.puedeDescargarBaseTexto}">
+                                <br/>
+                                <br/>
+                                <center>
+                                <i class="fa fa-cloud-download" aria-hidden="true" style="font-size: 6em; color: #0062cc"></i>
+                                </center>
+                                <br/>
+                                <a href="/sipe-reportes-siac-war/archivos/#{ebcCenso2021.nombreArchivoDescarga}.txt"
+                                   download="#{ebcCenso2021.nombreArchivoDescarga}.txt" style="font-size: 14px;"
+                                   >Exportar Base en Texto delimitado por Tabulaciones (Click para descargar)</a>  
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{ebcCenso2021.progresoConstruccion}" labelTemplate="{value}%" styleClass="animated" global="false"
+                                       style="font-size:16px;">
+                        </p:progressBar>
+                    </h:panelGrid>
+                    <h:panelGrid id="pnlControlDescarga" columns="2">
+                        <p:outputLabel rendered="#{ebcCenso2021.listaResultado.size()>0}" 
+                                       value="Descargar base en Excel"/>
+                        <h:commandLink rendered="#{ebcCenso2021.listaResultado.size()>0}">
+                            <h:graphicImage value="/imagenes/excelexport.png"/>
+                            <p:dataExporter type="xls" target="baseInfocapt" fileName="#{ebcCenso2021.nombreArchivoDescarga}"  
+                                            />
+                        </h:commandLink>
+                    </h:panelGrid>                       
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

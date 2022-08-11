@@ -1,0 +1,468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!--<ui:composition template="/plantillas/inec_plantilla.xhtml">-->
+    <ui:composition template="../../META-INF.resources.plantillas/plantillaboot.xhtml">
+        <!--http://localhost:8080/sipe-captura-siac-war/formularios/inquietudes/listaInquietudesNuevo.xhtml-->
+        <h:outputStylesheet library="webjars" name="primeflex/3.0.1/primeflex.min.css" />
+        <ui:define name="contenido">
+
+            <style type="text/css">
+                .cheap {
+                    background-color: #d4efdf  !important;
+                    background-image: none !important;
+                    color: #145a32   !important;
+                }
+                .cheap1 {
+                    background-color: #fadbd8 !important;
+                    background-image: none !important;
+                    color: #922b21 !important;
+                }
+                .cheap2 {
+                    background-color: #ebedef   !important;
+                    background-image: none !important;
+                    color: #2c3e50  !important;
+                }
+            </style>
+            
+            <h:form id="form">   
+                <p:growl id="growl" showDetail="true" life="5000"/>                
+                <p:panel id="reportes-filtro" class="ui-fluid">
+                        <p:outputPanel>
+                            <p:panelGrid columns="6"
+                                         columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank ui-fluid"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-12">
+                                        ASIGNACIÓN TICKETS - PARÁMETROS DE BUSQUEDA
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Provincia"/>
+                                        <p:selectOneMenu
+                                            id="dpaProvSelect_1"
+                                            value="#{incidenciasBuscarControlador.provinciaSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaProvinciaSelect}"
+                                                var="prov"
+                                                itemLabel="#{prov.nombre}"
+                                                itemValue="#{prov}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCanSelect_1"
+                                                process="@this"
+                                                listener="#{incidenciasBuscarControlador.onChangeProvincia}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cantón"/>
+                                        <p:selectOneMenu
+                                            id="dpaCanSelect_1"
+                                            value="#{incidenciasBuscarControlador.cantonSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaCantonSelect}"
+                                                var="can"
+                                                itemLabel="#{can.nombre}"
+                                                itemValue="#{can}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect_1"
+                                                process="@this"
+                                                listener="#{incidenciasBuscarControlador.onChangeCanton}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Ciudad o Parroquia"/>
+                                        <p:selectOneMenu
+                                            id="dpaCiuSelect_1"
+                                            value="#{incidenciasBuscarControlador.parroquiaSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaCiudadSelect}"
+                                                var="ciu"
+                                                itemLabel="#{ciu.nombre}"
+                                                itemValue="#{ciu}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect_1"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="inicio_1" value="Fecha inicio"/>
+                                        <p:calendar id="inicio_1" value="#{incidenciasBuscarControlador.fechaInicio}" pattern="dd-MM-yyyy" mask="true"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="fin_1" value="Fecha fin"/>
+                                        <p:calendar id="fin_1" value="#{incidenciasBuscarControlador.fechaFin}" pattern="dd-MM-yyyy" mask="true"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4"/>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton 
+                                            value="Buscar" 
+                                            icon="pi pi-search" 
+                                            actionListener="#{incidenciasBuscarControlador.filtrarAsignacionesxParametros()}"
+                                            update=":form:growl, dt-asignaciones reportes-filtro, :form:dt-asignaciones reportes-filtro" 
+                                            process="dt-asignaciones reportes-filtro @this"
+                                            style="font-size: 2rem"
+                                            ajax="false"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton value="Limpiar" icon="pi pi-undo" actionListener="#{incidenciasBuscarControlador.limpiarDatos}"                                                
+                                                update="dt-asignaciones reportes-filtro" 
+                                                process="dt-asignaciones reportes-filtro @this"
+                                                class="ui-button-secondary"
+                                                style="font-size: 2rem"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4"/>
+                                </p:row>                                
+                            </p:panelGrid>                         
+                        </p:outputPanel>
+                    </p:panel>               
+                
+                <p:dataTable paginator="true" 
+                             rows="10" 
+                             reflow="true" 
+                             id="dt-asignaciones" 
+                             value="#{incidenciasBuscarControlador.listarIncidencias}"  
+                             var="entidad"   
+                             rowKey="#{entidad.idDeth}"                            
+                             rowStyleClass="#{entidad.val20 eq 'CERRADO' ? 'cheap1' : entidad.val20 eq 'PROCESO' ? 'cheap2' : 'cheap'}"                            
+                             currentPageReportTemplate="{currentPage} de {totalPages}"
+                             selection="#{asignacionesControlador.listarAsignacionesSel}">  
+
+                    <f:facet name="header">
+                        <!--<p:outputLabel value="LISTA DE INQUIETUDES" style="font-size:15px;"/>-->
+                        <span style="font-weight: bold">ASIGNACIÓN TICKETS INCIDENCIAS</span>
+                    </f:facet>
+
+                    <p:column selectionMode="multiple" width="25" style="text-align:center" />
+                        <p:ajax event="toggleSelect"  update="btnAsignar" />
+                        <p:ajax event="rowSelectCheckbox"  update="btnAsignar" />
+                        <p:ajax event="rowUnselectCheckbox" update="btnAsignar" /> 
+                        
+                    <p:column headerText="ID" style="width: 3%;">
+                        <h:outputText value="#{entidad.idDeth}"/>
+                    </p:column>
+
+                    <p:column headerText="Cédula" style="width: 13%" filterBy="#{entidad.clave}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.clave}"/>
+                    </p:column> 
+
+                    <p:column headerText="Apellidos y Nombres" style="width: 25%" filterBy="#{entidad.val08} #{entidad.val09}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val08} #{entidad.val09}" />
+                    </p:column>
+
+                    <p:column headerText="Correo" style="width: 22%" filterBy="#{entidad.val10}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val10}"/>
+                    </p:column> 
+                        
+                    <p:column headerText="Incidencia" style="width: 15%" filterBy="#{entidad.codCab.info1}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.codCab.info1}"/>
+                    </p:column>                    
+                   
+                    <p:column headerText="Plataforma" style="width: 15%" filterBy="#{entidad.val16}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val16}"/>
+                    </p:column> 
+                        
+                    <p:column headerText="Estado" style="width: 15%" filterBy="#{entidad.val20}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val20}"/>
+                    </p:column>                    
+                    
+                    <p:column headerText="Operador" style="width:110px;height:10px;top:200px" filterBy="#{entidad.val26}" filterMatchMode="exact">  
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('dt-asignaciones').filter()" styleClass="custom-filter" style="width:200px" disabled="true">
+                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{asignacionesControlador.listaRolesDelUsuario}"
+                                               var="entry"
+                                               itemLabel="#{entry[2]} #{entry[3]}"
+                                               itemValue="#{entry[0]}"
+                                               />
+                            </p:selectOneMenu>
+                        </f:facet>  
+
+                        <p:selectOneMenu id="operador"  
+                                         value="#{asignacionesControlador.listaRolesDelUsuarioSelected}"
+                                         style="width: 110px !important"                                         
+                                         filter="true" 
+                                         filterMatchMode="contains" 
+                                         panelStyle="width:280px"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         valueChangeListener="#{asignacionesControlador.seleccionarOperador}">
+                            <f:selectItem itemLabel="Seleccione uno"
+                                           itemValue=""
+                                           noSelectionOption="true" />                                          
+                            <f:selectItems value="#{asignacionesControlador.listaRolesDelUsuario}" 
+                                           var="entry"
+                                           itemLabel="#{entry[3]} #{entry[2]}"
+                                           itemValue="#{entry[0]}"/>
+                            <p:ajax event="change" process="@this" 
+                                    global="false" async="true"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 15%" exportable="false">
+                        <h:outputText value="Ver Detalle" style="font-weight: bold"/>
+                        <p:commandButton   icon="pi pi-search" 
+                                           update=":form:manage-incidencias-content"
+                                           action="#{asignacionesControlador.mostrar(entidad)}" 
+                                           oncomplete="PF('incidenciasDialog').show()"
+                                           styleClass="ui-button-info rounded-button ui-button-success"
+                                           process="@this">
+                            <p:resetInput target=":form:manage-incidencias-content"/>
+                        </p:commandButton>
+                    </p:column>
+                    
+                    <f:facet name="footer">
+                        <p:commandButton id="btnAsignar"
+                                         value="Asignar" 
+                                         icon="pi pi-plus" 
+                                         disabled="#{empty asignacionesControlador.listarAsignacionesSel}"
+                                         actionListener="#{asignacionesControlador.PruebaRegistroAsignaciones()}"                                    
+                                         update=":form:growl, dt-asignaciones, :form:dt-asignacionesSaved"
+                                         styleClass="ui-button-success" 
+                                         style="margin-right: .5rem"
+                                         process="@this, operador">
+                        </p:commandButton>  
+                    </f:facet>
+         
+                </p:dataTable>
+                <br/>
+                <br/>
+                <p:dataTable paginator="true" 
+                             rows="10" 
+                             reflow="true" 
+                             id="dt-asignacionesSaved" 
+                             value="#{asignacionesControlador.checkOperador}"  
+                             var="entidad"   
+                             selectionMode="single"  
+                             selection="#{asignacionesControlador.captDetalleH}"
+                             rowKey="#{entidad.idDeth}"
+                             rowStyleClass="#{entidad.val20 eq 'CERRADO' ? 'cheap1' : entidad.val20 eq 'PROCESO' ? 'cheap2' : 'cheap'}" 
+                             currentPageReportTemplate="{currentPage} de {totalPages}">  
+
+                    <f:facet name="header">
+                        <!--<p:outputLabel value="LISTA DE INQUIETUDES" style="font-size:15px;"/>-->
+                        <span style="font-weight: bold">LISTA DE TICKETS ASIGNADOS INCIDENCIAS</span>
+                    </f:facet>
+
+                    <p:column   headerText="ID" style="width: 5%;">
+                        <h:outputText value="#{entidad.idDeth}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Cédula" style="width: 15%" filterBy="#{entidad.clave}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.clave}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Apellidos y Nombres" style="width: 25%" filterBy="#{entidad.val08} #{entidad.val09}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val08} #{entidad.val09}" />
+                    </p:column>
+                    
+                    <p:column headerText="Correo" style="width: 15%" filterBy="#{entidad.val10}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val10}"/>
+                    </p:column>
+                    <p:column headerText="Plataforma" style="width: 15%" filterBy="#{entidad.val16}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val16}"/>
+                    </p:column> 
+                        
+                    <p:column headerText="Estado Ticket" style="width: 15%" filterBy="#{entidad.val20}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val20}"/>
+                    </p:column>     
+                    
+                    <p:column headerText="Incidencia" style="width: 15%" filterBy="#{entidad.tipoFormulario}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.tipoFormulario}"/>
+                    </p:column> 
+                    
+                    <p:column headerText="Fecha" style="width: 15%" filterBy="#{entidad.fechaAsignacion}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.fechaAsignacion}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Operador" style="width: 25%" filterBy="#{entidad.val33}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val33}"/>
+                    </p:column>                     
+                    
+                </p:dataTable>      
+
+                <p:dialog
+                  modal="true"
+                  showEffect="fade" 
+                  widgetVar="incidenciasDialog"
+                  responsive="true"                  
+                  height="450"
+                  width="900">  
+
+                    <p:outputPanel id="manage-incidencias-content" class="ui-fluid">
+                       <p:outputPanel rendered="#{not empty asignacionesControlador.captDetalleH}">
+
+                           <div class="card">
+                                <style>
+                                   /* reset on the showcase style*/
+                                   body .ui-panelgrid .ui-panelgrid-cell {
+                                       background-color: transparent;
+                                   }
+
+                                   /* example use of styles for your form */
+                                   .my-heading-row {
+                                       
+                                       font-weight: bold;
+                                   }
+                               </style>
+
+
+                                <p:panelGrid columns="6"
+                                             columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank ui-fluid"
+                                             style="border:0px none; background-color:transparent;">
+
+                                    <p:row styleClass="my-heading-row">
+                                        <p:column styleClass="ui-grid-col-12">
+                                             DETALLE DE TICKET - #{asignacionesControlador.captDetalleH.codCab.info1}
+                                         </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Provincia"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val12}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Cantón"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val04}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Ciudad o Parroquia"/>
+                                             <p:inputText value="#{asignacionesControlador.captDetalleH.val06}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Cédula de Identidad"/>
+                                             <p:inputText value="#{asignacionesControlador.captDetalleH.val07}" 
+                                                         disabled="true"/>
+                                        </p:column>
+
+                                    </p:row>
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-6">
+                                            <p:outputLabel value="Nombres"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val09}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                        <p:column styleClass="ui-grid-col-6">
+                                            <p:outputLabel value="Apellidos"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val08}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                    </p:row>  
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-6">
+                                            <p:outputLabel value="Correo"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val10}" 
+                                                         disabled="true"/>
+                                        </p:column>  
+                                        <p:column styleClass="ui-grid-col-6">
+                                            <p:outputLabel value="Fecha de Creación"/>
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val28}" 
+                                                         disabled="true"/>
+                                        </p:column>                                    
+                                    </p:row>                                
+                                    <p:row>
+                                            <p:column styleClass="ui-grid-col-4" rendered="#{asignacionesControlador.captDetalleH.codCab.info1 == 'CONSULTAS'}">
+                                                <p:outputLabel value="Detalle de consulta" />
+                                                <p:inputText value="#{asignacionesControlador.captDetalleH.val11}" 
+                                                             disabled="true"/>
+                                            </p:column>                                                                   
+                                        </p:row>
+                                        <p:column styleClass="ui-grid-col-6" rendered="#{asignacionesControlador.captDetalleH.codCab.info1 == 'DENUNCIAS'}">
+                                            <p:outputLabel value="Detalle Denuncia" />
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val13}" 
+                                                         disabled="true"/>
+                                        </p:column>                                      
+                                                               
+                                        <p:column styleClass="ui-grid-col-4" rendered="#{asignacionesControlador.captDetalleH.codCab.info1 == 'NO CENSADO'}">
+                                            <p:outputLabel value="Detalle Requerimiento" />
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val22}" 
+                                                         disabled="true"/>
+                                        </p:column>                                      
+                                                                
+                                        <p:row>
+                                            <p:column styleClass="ui-grid-col-6" rendered="#{asignacionesControlador.captDetalleH.codCab.info1 == 'CENSO EN LÍNEA'}">
+                                                <p:outputLabel value="Descripción del Requerimiento" />
+                                                <p:inputText value="#{asignacionesControlador.captDetalleH.val11}" 
+                                                             disabled="true"/>
+                                            </p:column>                           
+
+                                            <p:column styleClass="ui-grid-col-6" rendered="#{asignacionesControlador.captDetalleH.codCab.info1 == 'CENSO EN LÍNEA'}">
+                                                <p:outputLabel value="Novedad al sistema" />
+                                                <p:inputText value="#{asignacionesControlador.captDetalleH.val12}" 
+                                                             disabled="true"/>
+                                            </p:column>     
+                                        </p:row>                                 
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Plataforma" />
+                                            <p:inputText value="#{asignacionesControlador.captDetalleH.val16}" 
+                                                         disabled="true"/>
+                                        </p:column>
+                                    </p:row>                               
+                                    <p:row>
+                                        <p:column styleClass="ui-grid-col-4">
+                                            <p:outputLabel value="Estado:"/>&nbsp;
+                                            <p:outputLabel value="#{asignacionesControlador.captDetalleH.val20}"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                           </div>
+
+                       </p:outputPanel>
+                    </p:outputPanel>
+
+                   <f:facet name="footer">
+                       <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('incidenciasDialog').hide()"
+                                        class="ui-button-secondary"
+                                        style="font-size: 2rem"/>
+                   </f:facet>
+
+               </p:dialog>
+
+                 
+            </h:form>
+            <br/>
+        </ui:define>
+    </ui:composition>
+</html>
+
+

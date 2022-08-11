@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      >
+    <ui:composition>
+        <div id="formMenu" style="width: 65%; margin: 0 auto; top: 70px; position: relative;">   
+            <h:form id="frmMenuApp" rendered="#{usuarioControlador.visibleMenuAplicacion}">
+                <p:growl id="messageApp"></p:growl>
+                <h:panelGrid  columns="1" style="width: 100%;" class="estiloTextoCandaraMed">
+                    <h:panelGroup>
+                        <p:stack icon="#{baseControlador.getProfundidad()}imagenes/app.png" expanded="false" >
+                            <c:forEach items="#{usuarioControlador.menuModelAplicacion.elements}" var="menuiteminec">
+                                <p:menuitem value="#{menuiteminec.value}" icon="#{baseControlador.getProfundidad()}imagenes/#{menuiteminec.icon}.png" url="#{menuiteminec.url}" iconPos="left"/>
+                            </c:forEach>
+                        </p:stack>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:form>         
+        </div>
+    </ui:composition>
+</html>

@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionSeccion">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneSeccion" width="1000" columns="1" >
+                        <p:panel header="Metadato - Sección">
+                            <h:panelGrid columns="3">
+                                
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="seccionNombre" value="#{gestionSeccionControlador.objSeccion.nombre}"  
+                                               size="40" maxlength="100" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="seccionNombre" display="text"/>
+                                
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="alias" value="#{gestionSeccionControlador.objSeccion.alias}"  
+                                               size="40" maxlength="100" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="alias" display="text"/>
+                                
+                                <p:outputLabel value="Título"/>
+                                <p:inputText   id="seccionTitulo" value="#{gestionSeccionControlador.objSeccion.titulo}"  
+                                               size="40" maxlength="100" required="true" requiredMessage="no puede estar vacio" />
+                                <p:message for="seccionTitulo" display="text"/>
+                                
+                                <p:outputLabel value="Subtítulo"/>
+                                <p:inputText   id="seccionsubtitulo" value="#{gestionSeccionControlador.objSeccion.subtitulo}"  
+                                               size="40" maxlength="100"  />
+                                <p:message for="seccionsubtitulo" display="text"/>
+                               
+                                
+                                <p:outputLabel  value="Tipo" />
+                                <p:selectOneMenu id="seccionTipo" value="#{gestionSeccionControlador.objSeccion.tipo}" 
+                                                 effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                    <f:selectItem itemLabel="Selecione uno" />
+                                    <f:selectItem itemLabel="Vertical Seleccionado" itemValue="SV" />
+                                    <f:selectItem itemLabel="Vertical" itemValue="1V" />
+                                    <f:selectItem itemLabel="Vertical N" itemValue="NV" />
+                                    <f:selectItem itemLabel="Horzontal Fija" itemValue="1HF" />
+                                    <f:selectItem itemLabel="Horzontal Dinámica" itemValue="1HD" />
+                                    
+                                </p:selectOneMenu>
+                                <p:message for="seccionTipo" display="text"/>
+                                
+<!--                                <p:outputLabel value="Institución"/>                               
+                                <p:selectOneMenu id="institucion" value="#{gestionSeccionControlador.objSeccion.codInstitucion}" 
+                                                         effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionSeccionControlador.listaInsti}" var="inst" itemLabel="#{inst.nombre}" itemValue="#{inst.idInstitucion}" />
+                                </p:selectOneMenu>
+                                <p:message for="institucion" display="text"/>-->
+                                
+                                <p:outputLabel value="Institución"/>    
+                                <p:selectOneMenu id="institucion" value="#{gestionSeccionControlador.objSeccion.codInstitucion}"  panelStyle="width:280px" converter="institucionConverter"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionSeccionControlador.listaInsti}" var="inst" itemLabel="#{inst.nombre}" itemValue="#{inst}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idInstitucion}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="institucion" display="text"/>        
+                                        
+                                <p:outputLabel value="Organigrama"/>                               
+                                <p:selectOneMenu id="organigrama" value="#{gestionSeccionControlador.objSeccion.codOrganigrama}" converter="organigramaConverter"
+                                                         effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionSeccionControlador.listaOrganigrama}" var="org" itemLabel="#{org.nombre}" itemValue="#{org}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idOrganigrama}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="organigrama" display="text"/>
+                                
+                                
+                                <p:outputLabel  value="Nivel" />
+                                <p:selectOneMenu id="nivel" value="#{gestionSeccionControlador.objSeccion.nivel}" 
+                                                 effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                    <f:selectItem itemLabel="Selecione uno" />
+                                    <f:selectItem itemLabel="Sección" itemValue="1" />
+                                    <f:selectItem itemLabel="Subsección" itemValue="2" />
+                                    <p:ajax update="padre" listener="#{gestionSeccionControlador.validarSeccion()}" 
+				           async="true" global="false" process="@this"/>
+                                </p:selectOneMenu>
+                                <p:message for="nivel" display="text"/>
+                                        
+                                <p:outputLabel value="Sección Padre"/>                               
+                                <p:selectOneMenu id="padre"  disabled="#{gestionSeccionControlador.validar}" value="#{gestionSeccionControlador.objSeccion.codSeccionPadre}" converter="seccionesConverter"
+                                                         effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionSeccionControlador.seccionPadre}" var="org" itemLabel="#{org.nombre}" itemValue="#{org}"  />
+
+                                </p:selectOneMenu>
+                                        <p:message for="padre" display="text"/>
+                                
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="seccionDescripcion"  value="#{gestionSeccionControlador.objSeccion.descripcion}" 
+                                                  cols="38" rows="2"   maxlength="150" autoResize="false" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="seccionDescripcion" display="text"/> 
+                 
+                                <p:outputLabel value="Muestra"/>
+                                <p:inputText   id="seccionMuestra" value="#{gestionSeccionControlador.objSeccion.muestraTitulo}" size="40" maxlength="5" >
+                                             <p:keyFilter regEx="/[\d\-]/"/>
+                                </p:inputText> 
+                                <p:message for="seccionMuestra" display="text"/>
+                                
+                                <p:outputLabel value="Orden " />
+                                <p:spinner id="seccionOrden" value="#{gestionSeccionControlador.objSeccion.orden}" min="1" max="20" required="true" requiredMessage="no puede estar vacio" style="width:115px" />
+                                <p:message for="seccionOrden" display="text"/>
+                                
+                                <p:outputLabel value="Filas " />
+                                <p:spinner id="seccionFilas" value="#{gestionSeccionControlador.objSeccion.filas}" min="0" max="20" required="true" requiredMessage="no puede estar vacio" style="width:115px"/>
+                                <p:message for="seccionFilas" display="text"/>
+                                
+                                <p:outputLabel value="Columnas " />
+                                <p:spinner id="seccionCol" value="#{gestionSeccionControlador.objSeccion.columnas}" min="0" max="20" required="true" requiredMessage="no puede estar vacio" style="width:115px"/>
+                                <p:message for="seccionCol" display="text"/>
+
+                                
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar"
+                                                         action="#{gestionSeccionControlador.guardarSeccion()}"
+                                                         icon="ui-icon-disk"
+                                                         process="@this,panelContieneSeccion" 
+                                                         update=":frmGestionSeccion:panelConieneListas,panelContieneSeccion,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         
+                                                         
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionSeccionControlador.refrescaNuevoSeccion()}"
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmGestionSeccion:panelConieneListas,panelContieneSeccion,msgs"
+                                                         async="true"
+                                                         global="false" 
+                                                         
+                                                         >
+                                            <p:resetInput target=":frmGestionSeccion:panelContieneSeccion"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListSeccion" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListSeccion" value="#{gestionSeccionControlador.listarSeccion}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idSeccion}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Secciones" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idSeccion}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column  filterBy="#{aplColumna.nombre}" headerText="Nombre" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{aplColumna.titulo}"  headerText="Título" width="220" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.titulo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Alias" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Institución" filterBy="#{aplColumna.codInstitucion.nombre}"  width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codInstitucion.nombre}" style="font-size:12px;" />
+                                </p:column>
+<!--                                <p:column headerText="Institución" filterBy="#{gestionSeccionControlador.mapaInsti[aplColumna.codInstitucion]}"  width="70" style="font-size:12px;">
+                                    <h:outputText value="#{gestionSeccionControlador.mapaInsti[aplColumna.codInstitucion]}" style="font-size:12px;" />
+                                </p:column>-->
+<!--                                <p:column   headerText="Organigrama" width="90" style="font-size:12px;">
+                                    <h:outputText value="#{gestionSeccionControlador.mapaOrga[aplColumna.codOrganigrama]}" style="font-size:12px;" />
+                                </p:column>-->
+                                 <p:column   headerText="Organigrama" width="90" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codOrganigrama.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{aplColumna.codSeccionPadre.titulo}"  headerText="Sección Padre" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codSeccionPadre.titulo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{aplColumna.nivel==1 ? 'Sección' : 'Subsección'}"  headerText="Nivel" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.nivel==1 ? 'Sección' : 'Subsección'}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Orden" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.orden}" style="font-size:12px;" />
+                                </p:column>
+                                
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionSeccionControlador.recuperarSeccionCampos(aplColumna)}"
+                                                       process="@this" update=":frmGestionSeccion:panelContieneSeccion,:frmGestionSeccion:panelConieneListas,:frmGestionSeccion:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionSeccion:panelContieneSeccion"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionSeccionControlador.confirmaEliminarSeccion(aplColumna)}" 
+                                                     process="@this" update=":frmGestionSeccion:panelConieneListas,:frmGestionSeccion:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                                
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

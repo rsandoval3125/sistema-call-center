@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Dependencies: deployment.sipe-entidades-siac-jar.jar,deployment.sipe-negocio-siac-jar.jar, deployment.sipe-cache-siac-ejb.jar
+

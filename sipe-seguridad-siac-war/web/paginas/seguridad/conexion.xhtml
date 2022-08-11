@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"      
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">            
+            <h:form id="frmConn" styleClass="estilo-pagina">
+                <p:growl id="msgs" showDetail="true" escape="false"/>
+                <p:spacer width="100" height="10"/> 
+                <center>
+                    <p:panel id="idPnlConAdm" style="width:98%" header="Administración de Conexiones" styleClass="ui-responsive">
+                        <center>
+                            <p:panel id="idPnlConAdd" style="width:630px">
+                                <p:panelGrid columns="2">
+                                    <p:toolbar  style="height:30px; width: 600px;">
+                                        <f:facet name="right" >
+                                            <p:commandButton id="idBtnNuevoConn"
+                                                             icon="ui-icon-document"
+                                                             value="Nuevo" 
+                                                             process="@this"  
+                                                             style="height: 30px"
+                                                             action="#{conexionReporteControlador.nuevaConexion()}"
+                                                             update=":frmConn:idPnlDtaTableLstConexion, idPnlConAdd, msgs"
+                                                             global="false"
+                                                             async="true">
+                                                <p:resetInput target=":frmConn:idPnlConAdd"/>
+                                            </p:commandButton>
+                                        </f:facet>
+                                    </p:toolbar>
+                                </p:panelGrid>                              
+
+                                <h:panelGrid  columns="3" styleClass="estiloListaCalibriPeq" >  
+                                    <h:outputLabel value="Nombre Conexión: "/>
+                                    <p:inputText id="nomConn" value="#{conexionReporteControlador.admBDD.nombre}" size="30" 
+                                                 required="true" requiredMessage="Nombre no puede estar vacío"/>
+                                    <p:message for="nomConn" display="icon"/>       
+                                    <h:outputLabel value="Driver: "/>
+                                    <p:inputText id="driver" value="#{conexionReporteControlador.admBDD.driver}" size="30" 
+                                                 required="true" requiredMessage="Driver no puede estar vacío"/> 
+                                    <p:message for="driver" display="icon"/>       
+                                    <h:outputLabel value="RDBMS: "/>
+                                    <p:inputText id="rdbms" value="#{conexionReporteControlador.admBDD.rdbms}" size="30" 
+                                                 required="true" requiredMessage="RDBMS no puede estar vacío"/> 
+                                    <p:message for="rdbms" display="icon"/>       
+                                    <h:outputLabel value="Ip: "/>
+                                    <p:inputText id="ip" value="#{conexionReporteControlador.admBDD.ip}" size="30" 
+                                                 required="true" requiredMessage="Ip no puede estar vacío"/>
+                                    <p:message for="ip" display="icon"/>       
+                                    <h:outputLabel value="Puerto: "/>
+                                    <p:inputText id="puerto" value="#{conexionReporteControlador.admBDD.puerto}" size="30" 
+                                                 required="true" requiredMessage="Puerto no puede estar vacío"/>
+                                    <p:message for="puerto" display="icon"/>       
+                                    <h:outputLabel value="Usuario: "/>
+                                    <p:inputText id="usuario" value="#{conexionReporteControlador.admBDD.usuario}" size="30" 
+                                                 required="true" requiredMessage="Usuario no puede estar vacío"/>
+                                    <p:message for="usuario" display="icon"/>       
+                                    <h:outputLabel value="Contraseña: "/>
+                                    <p:password  id="conn"  value="#{conexionReporteControlador.admBDD.password}" 
+                                                 maxlength="200" size="30" redisplay="true"  
+                                                 required="true" requiredMessage="Contraseña no puede estar vacío"/>
+                                    <p:message for="conn" display="icon"/>
+                                    <h:outputLabel value="Nombre BDD: "/>
+                                    <p:inputText id="nomBDD" value="#{conexionReporteControlador.admBDD.nombrebdd}" size="30" 
+                                                 required="true" requiredMessage="Nombre BDD no puede estar vacío"/>
+                                    <p:message for="nomBDD" display="icon"/>       
+                                    <h:outputLabel value="Estado: "/>
+                                    <p:selectBooleanCheckbox id="estado" value="#{conexionReporteControlador.admBDD.estadoLogico}" 
+                                                             />
+                                    <p:message for="estado" display="icon"/>       
+                                    <h:outputLabel value="Alias: "/>
+                                    <p:inputText id="alias" value="#{conexionReporteControlador.admBDD.alias}" size="30"
+                                                 required="true" requiredMessage="Alias no puede estar vacío" /> 
+                                    <p:message for="alias" display="icon"/>
+                                    <p:tooltip id="toolTipFocusAlias" for="alias" showEvent="focus" hideEvent="blur" 
+                                               value="Ingrese en minusculas y sin espacios" />
+                                </h:panelGrid>  
+
+                                <f:facet name="footer">
+                                    <center>
+                                        <h:panelGrid columns="2">   
+                                            <p:commandButton id="idBtnGuardarConn"
+                                                             icon="ui-icon-disk"
+                                                             value="Guardar" 
+                                                             process="@this, idPnlConAdd"                                          
+                                                             action="#{conexionReporteControlador.guardarConn()}"
+                                                             update=":frmConn:idPnlDtaTableLstConexion, idPnlConAdd, msgs"
+                                                             global="false"
+                                                             async="true">
+                                            </p:commandButton>
+
+                                            <p:commandButton id="idBtnCancelar"
+                                                             icon="ui-icon-cancel"
+                                                             update=":frmConn:msgs, idPnlConAdd"                                                             
+                                                             action="#{conexionReporteControlador.cancelarEdicion()}"
+                                                             value="Cancelar"
+                                                             global="false"
+                                                             async="true">
+
+                                            </p:commandButton> 
+                                        </h:panelGrid>
+                                    </center>
+                                </f:facet> 
+                            </p:panel>
+                        </center>  
+                        <p:spacer width="100" height="10"/>
+                        
+                        <h:panelGrid id="idPnlDtaTableLstConexion" styleClass="seg-estiloFormDatos" style="width:100%">
+                            <p:dataTable id="idDtaTableLstConexion"
+                                         value="#{conexionReporteControlador.lstAdmBDDConexion}" 
+                                         var="conn" 
+                                         paginator="true" 
+                                         rows="10"  
+                                                                    
+                                         scrollWidth="100%"
+                                         styleClass="estiloListaCalibriPeq"
+                                         emptyMessage="#{etq.msg_seg_sinRegistros}"
+                                         rowsPerPageTemplate="10,15,25" 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+
+                                         scrollHeight="350">
+
+                                <p:column headerText="Nombre Conexión"  style="width: 100px">
+                                    <h:outputText value="#{conn.nombre}" />
+                                </p:column>                    
+                                <p:column headerText="Driver"  style="width: 130px">
+                                    <h:outputText value="#{conn.driver}" />
+                                </p:column>                                                  
+                                <p:column headerText="RDBMS"  style="width: 40px">
+                                    <h:outputText value="#{conn.rdbms}" />
+                                </p:column>
+                                <p:column headerText="Ip"  style="width: 70px">
+                                    <h:outputText value="#{conn.ip}" />
+                                </p:column>                    
+                                <p:column headerText="Puerto"  style="width: 25px">
+                                    <h:outputText value="#{conn.puerto}" />
+                                </p:column>                                                  
+                                <p:column headerText="Usuario"  style="width: 50px">
+                                    <h:outputText value="#{conn.usuario}" />
+                                </p:column>
+                                <p:column headerText="Contraseña"  style="width: 150px">
+                                    <h:outputText value="#{conn.password}" />
+                                </p:column>                    
+                                <p:column headerText="Nombre BDD"  style="width: 100px">
+                                    <h:outputText value="#{conn.nombrebdd}" />
+                                </p:column>     
+                                <p:column headerText="Estado"  style="width: 20px">
+                                    <p:selectBooleanCheckbox  value="#{conn.estadoLogico}" disabled="true"/>
+                                </p:column>                                                     
+                                <p:column headerText="Alias"  style="width: 90px">
+                                    <h:outputText value="#{conn.alias}" />
+                                </p:column>                 
+                                <p:column headerText="Editar" style="width:25px">
+                                    <p:commandButton id="btnEdit"                                                 
+                                                     icon="ui-icon-pencil" 
+                                                     title="Editar" 
+                                                     process="@this" 
+                                                     action="#{conexionReporteControlador.editarConn(conn)}"
+                                                     update=":frmConn:idPnlConAdd" >  
+                                    </p:commandButton>     
+                                </p:column>   
+                                <p:column headerText="Eliminar" style="width: 35px">
+                                    <p:commandButton id="btnEliminar"                                                 
+                                                     icon="ui-icon-trash" 
+                                                     title="Eliminar" 
+                                                     process="@this" 
+                                                     action="#{conexionReporteControlador.eliminarConn(conn)}"
+                                                     update=":frmConn:idPnlConAdd  :frmConn:idDtaTableLstConexion :frmConn:msgs" >  
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>     
+                                </p:column>                              
+                            </p:dataTable>
+                        </h:panelGrid> 
+                        
+                         <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:panel> 
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

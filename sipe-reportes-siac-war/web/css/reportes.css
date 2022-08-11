@@ -1,0 +1,101 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 02/01/2021, 23:28:55
+    Author     : dgarcia
+*/
+.estiloCourierNew{
+   font-family: 'Courier New' !important; 
+}
+
+.ten-percent {
+    width: 10%;
+}
+.fifteen-percent {
+    width: 15%;
+}
+.twentyfive-percent {
+    width: 25%;
+}
+.forty-percent {
+    width: 40%;
+}
+.fifty-percent {
+    width: 50%;
+}
+.sixty-percent {
+    width: 60%;
+}
+.twenty-percent {
+    width: 20%;
+}
+.thirty-percent {
+    width: 30%;
+}
+.thirtyfive-percent {
+    width: 35%;
+}
+.sixtyfive-percent {
+    width: 65%;
+}
+.seventy-percent {
+    width: 70%;
+}
+.eigty-percent {
+    width: 80%;
+}
+.five-percent {
+    width: 5%;
+}
+
+.fondoValido{
+    background:  #85c1e9 !important;
+}
+.fondoErrorAceptable{
+    background: #FFA07A !important;
+
+}
+.fondoNoValido{
+    background:  red !important;
+    color:white !important;
+}
+.colorCellVerde {
+    background-color: #CBFC9F;
+    font-weight: bold;
+    color: #323131;
+}
+.colorCellCeleste {
+    background-color: #9FFCF2;
+    font-weight: bold;
+    color: #323131;
+}
+
+.checkboxValidar .ui-chkbox-box  {
+    width: 25px !important;
+    height: 25px !important;
+}
+.ui-datatable-header  {
+    background: #0474b4!important;
+}
+
+.old {
+        background-color: #80DBCF !important;
+        background-image: none !important;
+        color: #000000 !important;
+    }
+ 
+.old2 {
+        background-color: #fca752 !important;
+        background-image: none !important;
+        color: #000000 !important;
+    }
+    
+.ui-panel .ui-panel-titlebar {
+    padding: .5em 1em .3em;
+    background: #0474b4!important;
+    color: #ffffff;
+    font-weight: bold !important;
+}  

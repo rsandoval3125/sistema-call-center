@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:view contentType="text/html" locale="es">
+        <h:head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <f:event listener="#{usuarioControlador.validaNavegacionPagina}" type="preRenderView" />
+            <ui:insert name="meta_pagina">
+
+            </ui:insert>
+            <ui:insert name="titulo_pagina">
+                <ui:include src="/plantillas/titulo.xhtml" />
+            </ui:insert>
+            <ui:insert name="script_pagina">
+                <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->                     
+
+            </ui:insert>
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/inec_js_locales.js" ></script>
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/menuBar.js" ></script>
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/logIn.js"></script>              
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/temas.js"></script>   
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/js_controlInput.js"></script> 
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/extPrimefaces.js"></script> 
+            
+             <!--JS DEL GESTOR MPE-->
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/gpe.js" ></script>
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/primefaces_config.js"/>
+            <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/echarts.js"/>
+            
+            <!--CSS POR APLICACION -->
+            <link href="#{baseControlador.getProfundidad()}css/captura/captura.css" rel="stylesheet" type="text/css" />
+            <link href="#{baseControlador.getProfundidad()}css/proceso/proceso.css" rel="stylesheet" type="text/css" />
+            
+            <ui:insert name="css_pagina">
+
+            </ui:insert>
+
+            <link href="#{baseControlador.getProfundidad()}css/inec_locale.css" rel="stylesheet" type="text/css" />
+            <link href="#{baseControlador.getProfundidad()}css/menu_style_v1.css" rel="stylesheet" type="text/css" />
+            <link href="#{baseControlador.getProfundidad()}css/menu_style_font.css" rel="stylesheet" type="text/css" />
+            <link href="#{baseControlador.getProfundidad()}css/log_in.css" rel="stylesheet" type="text/css" />            
+            <link href="#{baseControlador.getProfundidad()}css/temas.css" rel="stylesheet" type="text/css" />            
+            <link id="themeLnk" rel="stylesheet" href="#{baseControlador.nombreTema}" type="text/css"/>
+        </h:head>
+        <h:body class="body">          
+            
+            <div >
+                <div id="container">
+                    <!--<link id="themeLnk" rel="stylesheet" href="#{baseControlador.nombreTema}" type="text/css"/>-->
+                    <div>
+                        <div class="#{vistaControlador.auxiliar}}"></div>
+                        <div id="leftPanelSIPE" class="leftfloat">
+                            <ui:insert name="left">        
+                            </ui:insert>
+
+                        </div>
+                        <div>
+                            <div id="right" class="rightfloat">
+                                <ui:insert name="right">
+                                </ui:insert>
+                            </div>
+                        </div>
+                        <ui:include src="/plantillas/status.xhtml"/>
+                        <ui:include src="/plantillas/status_gif.xhtml"/>
+                        <div id="content" class="centerfloat" style="overflow: auto" > 
+                            
+                            <div id="contentMap" class="estiloTextoCandaraPeq">
+                                <ui:insert name="contenido">
+                                    
+                                </ui:insert>
+                            </div>                                
+                        </div>
+                    </div>
+
+                    <div id="top" class="top">
+                        <ui:insert name="cabecera_pagina">
+                            <!--NO EXISTE CODIGO SIN EMBARGO ES NECESARIO PARA QUE ADOPTE EL TEMA DE CAPTURA-->
+                            <ui:include src="/plantillas/cabecera_captura.xhtml" /> 
+                        </ui:insert>                       
+                    </div>
+
+                    
+                </div>
+            </div>
+
+        </h:body>
+    </f:view>
+
+</html>

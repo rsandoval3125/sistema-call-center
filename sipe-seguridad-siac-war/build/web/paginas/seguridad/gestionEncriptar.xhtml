@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionColumna">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneColumna" width="1000" columns="1" >
+                        <p:panel header="Seguridad - Columnas">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre Tabla"/>
+                                <p:inputText   id="nomTabla" disabled="true" value="#{gestionEncriptarControlador.objColumnaActual.codTabla.nombre}"  
+                                               size="40" maxlength="255"  />
+                                <p:message for="nomTabla" display="icon"/>
+
+                                <p:outputLabel value="Nombre Columna"/>
+                                <p:inputText   id="aplNom" disabled="true" value="#{gestionEncriptarControlador.objColumnaActual.nombre}"  
+                                               size="40" maxlength="255"  />
+                                <p:message for="aplNom" display="icon"/>
+
+                                <p:outputLabel value="Clave primaria"/>
+                                <p:inputText   id="clave" disabled="true"  value="#{gestionEncriptarControlador.objColumnaActual.esPk}" 
+                                               maxlength="125" size="40"/>
+                                <p:message for="clave" display="icon"/>   
+
+                                <p:outputLabel value="Tipo de dato"/>
+                                <p:inputText   id="tipoDato" disabled="true" value="#{gestionEncriptarControlador.objColumnaActual.codTipoDato.nombre}"  
+                                               size="40" maxlength="255"  />
+                                <p:message for="tipoDato" display="icon"/>
+
+                                <p:outputLabel value="Obligatorio"/>
+                                <p:inputText   id="abligatorio" disabled="true" value="#{gestionEncriptarControlador.objColumnaActual.obligatorio}"  
+                                               size="40" maxlength="255"  />
+                                <p:message for="abligatorio" display="icon"/>
+
+                                <p:outputLabel value="Encriptar"/>                                                                    
+                                <p:selectBooleanCheckbox id="encriptar" disabled="#{gestionEncriptarControlador.objColumnaActual.encr}" value="#{gestionEncriptarControlador.objColumnaActual.encr}"/>
+                                <p:message for="encriptar" display="icon"/>
+
+                                <p:outputLabel value="Tipo encriptación"/>                                                                    
+                                <p:selectOneMenu id="estado" disabled="#{gestionEncriptarControlador.objColumnaActual.encr}" converter="catalogoConverter" value="#{gestionEncriptarControlador.objColumnaActual.codTipoEncr}" required="true" requiredMessage="Tipo encriptación necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionEncriptarControlador.tiposEncriptacion}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>   
+                                <p:message for="estado" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                            
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionEncriptarControlador.guardarColumna()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneColumna" 
+                                                         update=":frmGestionColumna:panelConieneListas,panelContieneColumna,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionEncriptarControlador.habilitaEdicion}"
+                                                         oncomplete="PF('tablaColumnas').filter();" />                                       
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListColumna" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable widgetVar="tablaColumnas" paginator="true" rows="10" id="tablaListColumna" value="#{gestionEncriptarControlador.listarColumnaes}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idColumna}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Columnas" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idColumna}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{aplColumna.codTabla}" headerText="Tabla" filterMatchMode="exact" width="150" style="font-size:12px;">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tablaColumnas').filter()" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{gestionEncriptarControlador.tablas}" var="t" itemLabel="#{t.nombre}" itemValue="#{t}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{aplColumna.codTabla.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="150" style="font-size:12px;"  filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Clave primaria" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.esPk}" style="font-size:12px;" />
+                                </p:column>   
+                                <p:column headerText="Tipo de dato" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codTipoDato.nombre}" style="font-size:12px;" />
+                                </p:column> 
+                                <p:column headerText="Obligatorio" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.obligatorio}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Encriptado" width="70" style="font-size:12px;">
+                                    <p:selectBooleanCheckbox disabled="true" value="#{aplColumna.encr}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Tipo encriptación" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codTipoEncr.nombre}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionEncriptarControlador.recuperarColumnaCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionColumna:panelContieneColumna,:frmGestionColumna:panelConieneListas,:frmGestionColumna:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionEncriptarControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionColumna:panelContieneColumna"/>
+                                    </p:commandButton>
+                                </p:column>                               
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,201 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition> 
+        <h:head>      
+            <f:event listener="#{usuarioControlador.validaNavegacionPagina}" type="preRenderView" />
+            <header>    
+                <section class="wrap">
+                    <div class="logo">                        
+                        <nav >
+                            <a ><p:spacer width="40" height="10"/></a>
+                            <a class="estiloTextoCandaraGran">#{baseControlador.datosGenerales.titulo}</a>
+                            <p:spacer width="15" height="10" />
+                            <a ><img src="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.imagenproyecto}" style="width: 50px; height: 50px;"/></a>
+                            <p:spacer width="15" height="10" />
+                            <a class="estiloTextoCandaraMed">#{baseControlador.datosGenerales.detalleSistema}</a>
+                            <p:spacer width="15" height="10" />
+                        </nav>  
+
+                        <nav style="float: right" >   
+                            <ul class="main-nav">
+                                <li class="menu-item-1"><span class="icon-star"></span><a id="themes" onclick="myFunction()" href="#" class="dropbtn estiloTextoCandaraMed" >Temas</a></li>
+                                <div id="myDropdown" class="dropdown-content estiloTextoCandaraMed">
+
+                                </div>
+                                <li class="menu-item-3" style="width:125px!important;"><span class="icon-key"></span><a href="#" onclick="PF('cambiarClaveDlg').show()" class="estiloTextoCandaraMed">Cambiar Clave</a></li>
+                                <li class="menu-item-2"><span class="icon-login"></span><a id="abrir" href="#" class="estiloTextoCandaraMed" >Log In</a></li>     
+                                <li class="menu-item-3"><span class="icon-logout"></span><a href="#" onclick="log_out()" class="estiloTextoCandaraMed">Log Out</a></li>
+
+                            </ul>                            
+                        </nav>                        
+                        <script type="text/javascript">
+                            var us = "#{usuarioControlador.usuarioActual.nombre}";
+                            if (us) {
+                                $(".menu-item-2").addClass("is-hidden");
+                                $(".menu-item-3").addClass("is-visible");
+                            }
+                        </script>                          
+                    </div> 
+                    <div class="hidden_space">
+                        <nav >
+                            <a ><p:spacer width="40" height="10"/></a> 
+                        </nav>                               
+                    </div> 
+                    <div class="hidden_user">
+                        <nav >
+                            <p:spacer width="1" height="40" styleClass="separator"/>
+                            <span class="icon-user"></span>
+                            <a class="estiloTextoCandaraMed">#{usuarioControlador.usuarioActual.codPersonal.primerNombre} #{usuarioControlador.usuarioActual.codPersonal.primerApellido}</a>                                               
+                            <p:spacer width="1" height="40" styleClass="separator"/>
+                        </nav>                               
+                    </div> 
+                    <div class="menu_bar">
+                        <a class="bt-menu" href="#"><span class="icon-list2"></span></a>
+                    </div>
+                </section>
+
+                <h:form id="frmLog">
+                    <p:growl id="msg" showDetail="true"/>  
+                    <p:remoteCommand name="out" action="#{usuarioControlador.cerrarSesion()}" process="@this" update="frmLog"/>
+                    <p:remoteCommand name="rmtTema" action="#{baseControlador.conseguirTema()}" 
+                                     oncomplete="getNombreTemaUrl(xhr, status, args);" process="@this" update="frmLog"/>  
+                    <script type="text/javascript">
+                        function log_out() {
+                            out();
+                        }
+                    </script>
+                    <p:remoteCommand name="ingresar" action="#{usuarioControlador.inicioSesion()}" process="@this" update="frmLog"/>               
+                    <script type="text/javascript">
+                        var us;
+                        var cnt;
+                        var controlarClick = false;
+                        function checkSubmit() {
+                            if (!controlarClick) {
+                                controlarClick = true;
+                                us = document.getElementById("usuario").value;
+                                cnt = document.getElementById("contrasena").value;
+                                ingresar([
+                                    {
+                                        name: 'val1', value: us
+                                    },
+                                    {
+                                        name: 'val2', value: cnt
+                                    }
+                                ]);
+                                return true;
+                            } else {
+                                alert("El Ingreso ya se esta realizando...");
+                                return false;
+                            }
+                        }
+                    </script>
+                    <p:remoteCommand name="recuperarclave" process="@this" update="recuperarDialogoContainer" oncomplete="PF('recuperarClaveDlg').show()" >
+                        <p:resetInput target="recuperarDialogoContainer" />
+                    </p:remoteCommand>     
+                    <p:dialog header="Recuperar clave" id="recuperarClaveDlg" widgetVar="recuperarClaveDlg">
+                        <h:panelGroup id="recuperarDialogoContainer">
+                            <h:panelGrid columns="1"> 
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value="Correo"/>                                    
+                                    <p:inputText id="txtCorreo"  value="#{usuarioControlador.correoUsuario}" maxlength="80" size="30" required="true" requiredMessage="El campo correo es requerido." validatorMessage="Email inválido." >
+                                        <f:validateRegex pattern="^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" />
+                                    </p:inputText>
+                                    <p:message for="txtCorreo" display="icon"/>
+                                </h:panelGrid>                                                                                                  
+                                <center> 
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Recuperar"  id="btnRecuperarClave" action="#{usuarioControlador.recuperarClave()}" icon="ui-icon-disk" 
+                                                         update="recuperarDialogoContainer, msg" 
+                                                         process="@this, recuperarDialogoContainer" oncomplete="if(!args.validationFailed)PF('recuperarClaveDlg').hide();"/>
+                                        <p:commandButton value="Cancelar" icon="ui-icon-close" update="recuperarDialogoContainer"  
+                                                         action="#{usuarioControlador.encerarDireccionCorreo()}" oncomplete="PF('recuperarClaveDlg').hide();"/>
+                                    </h:panelGrid>
+                                </center>  
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </p:dialog> 
+                    <p:remoteCommand name="cambiarclave" process="@this" update="cambiarClaveContainer" oncomplete="PF('cambiarClaveDlg').show()" >
+                        <p:resetInput target="cambiarClaveContainer" />
+                    </p:remoteCommand>  
+                    <p:dialog header="Cambiar clave"  id="cambiarClaveDlg" widgetVar="cambiarClaveDlg">
+                        <input type="password" autocomplete="off" value="" style="display: none;" />
+                        <h:panelGroup id="cambiarClaveContainer">
+                            <h:panelGrid columns="1"> 
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value="Nueva clave"/>
+                                    <p:password   id="clave" value="#{usuarioControlador.nuevaClave}"  
+                                                  size="40" maxlength="200" match="confirmClave"  feedback="true"  required="true" label="Clave" requiredMessage="El campo nueva clave es requerido" validatorMessage="nueva clave deberia ser igual con la confirmación nueva clave" promptLabel="Porfavor ingrese la nueva clave" weakLabel="Débil"
+                                                  goodLabel="Bueno" strongLabel="Fuerte" autocomplete="off" />
+                                    <p:message for="clave" display="icon"/>
+
+                                    <p:outputLabel value="Confirmación nueva clave"/>
+                                    <p:password   id="confirmClave" value="#{usuarioControlador.confirmacionNuevaClave}"  
+                                                  autocomplete="off" size="40" maxlength="200"  required="true" label="Confirmación" requiredMessage="El campo confirmación nueva clave es requerido"/>
+                                    <p:message for="confirmClave" display="icon"/>
+                                </h:panelGrid>                                                                                                  
+                                <center> 
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Cambiar"  id="btnCambiarClave" action="#{usuarioControlador.cambiarClave()}" icon="ui-icon-disk" 
+                                                         update="cambiarClaveContainer, msg"  process="@this, cambiarClaveContainer" 
+                                                         oncomplete="if(!args.validationFailed)PF('cambiarClaveDlg').hide();"/>
+
+                                    </h:panelGrid>
+                                </center>  
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </p:dialog>
+                </h:form>
+            </header>
+        </h:head>
+        <h:body>
+            <div class="cd-user-modal">
+                <div class="cd-user-modal-container">
+                    <div id="cd-login"> <!-- log in form -->
+                        <form class="cd-form" id="frmSIPE" >
+                            <!--<span >Ingreso al Sistema</span>-->                             
+                            <table>
+                                <tbody>
+                                    <tr>
+
+                                        <td style="width: 1px; padding: 0 10px 0 0;">
+                                            <img src="#{baseControlador.getProfundidad()}imagenes/usu_reg.jpg" height="105" />
+                                            <img src="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.imagenproyecto}" style="width: 50px; height: 50px; padding: 30px 0 0;"/>
+                                        </td>
+                                        <td style="border: 1px solid #a8a8a8; border-radius: 10px;
+                                            padding: 1em 1em; background: lightgrey; box-shadow: 3px 3px 8px #353535;">
+                                            <p class="fieldset">
+                                                <label class="image-replace cd-username" for="signin-username">Usuario</label>
+                                                <input class="full-width has-padding has-border" id="usuario" type="text" placeholder="Usuario" name="usuario" style="border-radius: 10px;"/>
+                                                <span class="cd-error-message">Ingrese el Usuario</span>
+                                            </p>
+                                            <p class="fieldset">
+                                                <input type="password" autocomplete="off" value="" style="display: none;" />
+                                                <label class="image-replace cd-password" for="signin-password">Password</label>
+                                                <input class="full-width has-padding has-border" id="contrasena" autocomplete="off" type="password"  placeholder="Contraseña" name="contrasena" style="border-radius: 10px;"/>
+
+                                                <a href="#" class="hide-password estiloTextoCandaraMed">Ver</a>
+                                                <span class="cd-error-message">Ingrese la Contraseña</span>
+                                            </p>
+                                            <p class="fieldset">
+                                                <input class="full-width" type="submit" value="Ingresar" onclick="return checkSubmit();" style="border-radius: 30px;"/>                            
+                                            </p>
+                                            <p class="fieldset">
+                                                <a href="#" onclick="recuperarclave()" >¿Has olvidado tu contraseña?</a>                                                
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div> <!-- cd-login -->
+                    <a href="#" class="cd-close-form">Close</a>
+                </div>
+            </div>           
+        </h:body>
+    </ui:composition>
+</html>
+

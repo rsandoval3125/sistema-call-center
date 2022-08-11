@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <ui:composition>
+        <div id="formMenu"  class="sipeMenuAppINT">   
+            <h:form id="frmMenu" rendered="#{usuarioControlador.visibleMenu}">
+                <p:growl id="message"></p:growl>
+                <h:panelGrid  columns="1" style="width: 100%;" class="estiloTextoCandaraMed">
+                    <h:panelGroup>
+                        <p:menubar model="#{usuarioControlador.menuModel}">
+                        </p:menubar>                                
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:form>         
+        </div>
+    </ui:composition>
+</html>

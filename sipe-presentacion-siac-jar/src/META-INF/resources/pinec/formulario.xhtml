@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <!--COMPONENTE PARA LA VISUALIZACION DE 1 FORMULARIO INTERFACE version: 16-09-2015-->
+    <cc:interface>
+        <composite:attribute name="formulario" required="true"/>
+        <composite:attribute name="ancho" default="500"/>
+        <composite:attribute name="tamanioLetra" default="12"/>
+        <composite:attribute name="background" default="ffffff"/>
+        <composite:attribute name="color" default="000000"/>
+        <composite:attribute name="muestraMetadato" default="false"/>
+        <composite:attribute name="metodoValCatExt" method-signature="void action(java.lang.Object)" /> 
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+       
+        <h:panelGrid width="#{cc.attrs.ancho}%" style="font-size: #{cc.attrs.tamanioLetra}px !important;margin-bottom:10px" cellpadding="5"
+                     bgcolor="#{cc.attrs.background}" styleClass="alineacion_vertical_media" >
+            <p:dataTable id="lst#{cc.attrs.id}" value="#{cc.attrs.formulario.filas}"
+                         var="fila" emptyMessage="#{txt.cues_estructura_sin_variables}">
+                <f:facet name="header">
+                    #{cc.attrs.formulario.tituloEstruc}
+                </f:facet>
+                <p:column width="50" style="background:##{cc.attrs.background}; ">
+                    <p:outputLabel value="#{fila.variable.varNombre}" escape="false"/>
+                </p:column>
+                <p:column width="200" style="background:##{cc.attrs.background}; ">
+                    <p:outputLabel value="#{fila.variable.varPregunta}" escape="false"/>
+                </p:column>
+                <p:column style="background:##{cc.attrs.background};">
+                    <!--CAMPO DE TEXTO--> 
+                    <p:inputText id="TIT" value="#{fila.valorTexto}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='IT'}"
+                                 size="#{fila.longuitudMaxima}" maxlength="#{fila.longuitudMaxima}" required="#{fila.requerido}"
+                                 requiredMessage="#{fila.variable.varNombre} #{txt.cues_msg_campo_requerido}"
+                                 onblur="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                 autocomplete="off">
+                    </p:inputText>
+                    <p:inputTextarea id="TTA" value="#{fila.valorTexto}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='TA'}"
+                                     cols="#{fila.longuitudMaxima/3}" rows="2" maxlength="#{fila.longuitudMaxima}" required="#{fila.requerido}"
+                                     requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                     onblur="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                     >
+                        
+                    </p:inputTextarea>
+                    <p:inputMask id="TMK" value="#{fila.valorTexto}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='MK'}"
+                                 mask="#{fila.patron}" required="#{fila.requerido}"
+                                 requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                 
+                                 >
+                    </p:inputMask>
+                    <h:selectOneMenu id="TSM" value="#{fila.valorTexto}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='SM'}">
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </h:selectOneMenu>
+                    <p:message for="TIT"/> 
+                    <p:message for="TTA"/>
+                    <p:message for="TMK"/>
+                    <p:message for="TSM"/>
+                    <p:tooltip for="TIT" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="TTA" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="TMK" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="TSM" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    
+                    <!--CAMPO ENTERO-->
+                    <!-- onblur="value=validarValoresEnteros(value,'#{fila.valorEnteroMinimo}','#{fila.valorEnteroMaximo}')" -->
+                    <p:inputText id="EIT" value="#{fila.valorEntero}" rendered="#{fila.tipoDato=='E' and fila.tipoPresentacion=='IT'}"
+                                 size="#{fila.longuitudMaxima}" required="#{fila.requerido}" maxlength="#{fila.longuitudMaxima}"
+                                 requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                 onkeypress="return isNumberKey(event)"                                       
+                                 onblur="value=validarValoresEnteros(value,'#{fila.valorEnteroMinimo}','#{fila.valorEnteroMaximo}');
+                                     saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                 autocomplete="off">
+                    </p:inputText>
+                    <h:selectOneMenu id="ESM" value="#{fila.valorEntero}" rendered="#{fila.tipoDato=='E' and fila.tipoPresentacion=='SM'}"                                                                         
+                                     onchange="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                      disabled="false" required="#{fila.requerido}" requiredMessage="#{txt.cues_msg_campo_requerido}"> 
+                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione..."/>
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </h:selectOneMenu>
+                    <p:selectManyCheckbox id="EMC" value="#{fila.itemsSeleccionados}" rendered="#{fila.tipoDato=='E' and fila.tipoPresentacion=='MC'}"
+                                     layout="grid" columns="1"
+                                     onchange="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                     > 
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </p:selectManyCheckbox>
+                    
+                   
+                    <h:selectOneRadio id="ERB" value="#{fila.valorEntero}" 
+                                      layout="pageDirection" style="width:300px;" styleClass="sin_borde"                                     
+                                      rendered="#{fila.tipoDato=='E' and fila.tipoPresentacion=='RB'}"
+                                      disabled="false"                                         
+                                      onclick="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                      >                                      
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </h:selectOneRadio>
+                    <p:message for="EIT"/>
+                    <p:message for="ESM"/>
+                    <p:message for="EMC"/>
+                    <p:message for="ERB"/>
+                    <p:tooltip for="EIT" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="ESM" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="EMC" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="ERB" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    
+                    <!--CAMPO NUMERICO-->
+                    <p:inputText id="NIT" value="#{fila.valorNumerico}" rendered="#{fila.tipoDato=='N' and fila.tipoPresentacion=='IT'}"
+                                 required="#{fila.requerido}"
+                                 requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                 onkeypress="return isNumericKey(event)"
+                                 onblur="value=validarValoresNumericos(value,'#{fila.valorNumericoMinimo}','#{fila.valorNumericoMaximo}');
+                                 saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                 >
+                    </p:inputText>
+                    <p:message for="NIT"/>
+                    <p:tooltip for="NIT" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <!--CAMPO DECIMAL-->
+                    <p:inputText id="DIT" value="#{fila.valorNumerico}" rendered="#{fila.tipoDato=='D' and fila.tipoPresentacion=='IT'}"
+                                 required="#{fila.requerido}"
+                                 requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                 onkeypress="return isNumericKey(event)"
+                                 onblur="value=validarValoresNumericos(value,'#{fila.valorNumericoMinimo}','#{fila.valorNumericoMaximo}'); 
+                                     saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                 >
+                    </p:inputText>
+                    <p:message for="DIT"/>
+                    <p:tooltip for="DIT" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <!--CAMPO FECHA-->
+                    
+                    <p:calendar id="FCD" value="#{fila.valorFecha}" rendered="#{fila.tipoDato=='F' and fila.tipoPresentacion=='CD'}" pattern="yyyy-MM-dd">
+                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                    </p:calendar>
+                    <p:inputMask id="FMK" value="#{fila.valorFecha}" rendered="#{fila.tipoDato=='F' and fila.tipoPresentacion=='MK'}"
+                                 mask="#{fila.patron}">
+                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                    </p:inputMask>
+                    <p:message for="FCD"/>
+                    <p:message for="FMK"/>
+                    <p:tooltip for="FCD" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="FMK" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                     <!--CAMPO BOLEANO-->
+                    <p:selectBooleanCheckbox  id="BCB" value="#{fila.valorBoleano}" rendered="#{fila.tipoDato=='B'  and fila.tipoPresentacion=='CB'}"
+                                             onchange="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                             />
+                    <p:selectOneMenu id="BSM" value="#{fila.valorEntero}" rendered="#{fila.tipoDato=='B' and fila.tipoPresentacion=='SM'}">
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </p:selectOneMenu>
+                    <h:selectOneRadio id="BRB" value="#{fila.valorEntero}" rendered="#{fila.tipoDato=='B' and fila.tipoPresentacion=='RB'}"                                      
+                                      onclick="saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                      disabled="false" layout="grid" style="width:100px;" styleClass="sin_borde">
+                        <f:selectItems value="#{fila.items}" var="item" itemValue="#{item.codigo}" itemLabel="#{item.descripcion}"/>
+                    </h:selectOneRadio>
+                    <p:message for="BCB"/>
+                    <p:message for="BSM"/>
+                    <p:message for="BRB"/>
+                    <p:tooltip for="BCB" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="BSM" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <p:tooltip for="BRB" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                    <!--CAMPO ENTERO CATALOGO EXTENDIDO-->
+                    <p:inputText id="TCE" value="#{fila.valorTexto}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='CE'}"
+                                 size="10" required="true" maxlength="#{fila.longuitudMaxima}"
+                                 requiredMessage="#{txt.cues_msg_campo_requerido}"
+                                 onblur="rcCatExt(); saltoValidacion(this, '#{fila.opcionesPregActual}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto1}+':lstfrmok'+#{fila.numeroFormularioSalto1}+':'+ #{fila.ordenSalto} +':#{fila.idSalto}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar1}+':lstfrmok'+#{fila.numeroFormularioEvaluar1}+':'+ #{fila.ordenEvaluar} +':#{fila.idEvaluar}', '#{fila.opcionesEvaluar}', '#{fila.listaIdEvaluacion1}' , '#{fila.listaOpcionesEvaluacion1}', '#{fila.saltoFuturo1}', 
+                                                                     '#{fila.opcionesPregActual2}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto2}+':lstfrmok'+#{fila.numeroFormularioSalto2}+':'+ #{fila.ordenSalto2} +':#{fila.idSalto2}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar2}+':lstfrmok'+#{fila.numeroFormularioEvaluar2}+':'+ #{fila.ordenEvaluar2} +':#{fila.idEvaluar2}', '#{fila.opcionesEvaluar2}', '#{fila.listaIdEvaluacion2}' , '#{fila.listaOpcionesEvaluacion2}',                                      
+                                                                     '#{fila.opcionesPregActual3}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto3}+':lstfrmok'+#{fila.numeroFormularioSalto3}+':'+ #{fila.ordenSalto3} +':#{fila.idSalto3}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar3}+':lstfrmok'+#{fila.numeroFormularioEvaluar3}+':'+ #{fila.ordenEvaluar3} +':#{fila.idEvaluar3}', '#{fila.opcionesEvaluar3}', '#{fila.listaIdEvaluacion3}' , '#{fila.listaOpcionesEvaluacion3}',                                    
+                                                                     '#{fila.opcionesPregActual4}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto4}+':lstfrmok'+#{fila.numeroFormularioSalto4}+':'+ #{fila.ordenSalto4} +':#{fila.idSalto4}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar4}+':lstfrmok'+#{fila.numeroFormularioEvaluar4}+':'+ #{fila.ordenEvaluar4} +':#{fila.idEvaluar4}', '#{fila.opcionesEvaluar4}', '#{fila.listaIdEvaluacion4}' , '#{fila.listaOpcionesEvaluacion4}',                                    
+                                                                     '#{fila.opcionesPregActual5}' , 'frmInicio:tbv:frmok'+#{fila.numeroFormularioSalto5}+':lstfrmok'+#{fila.numeroFormularioSalto5}+':'+ #{fila.ordenSalto5} +':#{fila.idSalto5}','frmInicio:tbv:frmok'+#{fila.numeroFormularioEvaluar5}+':lstfrmok'+#{fila.numeroFormularioEvaluar5}+':'+ #{fila.ordenEvaluar5} +':#{fila.idEvaluar5}', '#{fila.opcionesEvaluar5}', '#{fila.listaIdEvaluacion5}' , '#{fila.listaOpcionesEvaluacion5}',                                    
+                                                                      #{fila.filaPregActualIni}, #{fila.ordenSalto}, #{fila.ordenSalto2}, #{fila.ordenSalto3}, #{fila.ordenSalto4}, #{fila.ordenSalto5}, #{formulario.numeroFormulario}, '#{fila.codigosOrdenEstructuras}', '#{fila.filasCadaFormulario}', '#{fila.ordenFuturo1}' )"
+                                 >
+                    </p:inputText>
+                    <p:outputLabel id="txtTCE" value="#{fila.textoCatalogoExtendido}" rendered="#{fila.tipoDato=='T' and fila.tipoPresentacion=='CE'}"/>
+                    <p:message for="TCE"/>
+                    <p:tooltip for="TCE" rendered="#{cc.attrs.muestraMetadato}"><h:outputText value="#{fila.ayuda}" escape="false"/></p:tooltip>
+                </p:column>
+            </p:dataTable>
+            <p:remoteCommand name="rcCatExt" update="lst#{cc.attrs.id}" actionListener="#{cc.attrs.metodoValCatExt}" />
+        </h:panelGrid>       
+    </cc:implementation>     
+</html>

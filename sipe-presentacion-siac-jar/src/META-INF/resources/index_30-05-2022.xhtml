@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+    <ui:composition template="/plantillas/inec_plantilla_siac.xhtml">
+        <ui:define name="content">  
+            <style>
+                .btningreso{
+                    float: left;
+                    width: 50%;
+                    margin-bottom: 5%;     
+                }
+                .btnregistrarse{
+                    float: right;
+                    width: 50%;
+                    margin-bottom: 5%;     
+                }
+                .boton{
+                    width: 90%;
+                }
+                .color_h1{
+                    background: #444E83;
+                    /*padding-left: 20px;
+                    padding-top: 6px;*/
+                    min-height: 40px;
+                    padding-bottom: 1px;
+                    border-bottom: 5px solid #FFFFFF;
+                }
+                .color{
+                    background: #FFFFFF;
+                    padding-left: 20px;
+                    /*padding-top: 6px;*/
+                    min-height: 40px;
+                    padding-bottom: 1px;
+                }
+                .titulo{
+                    display: inline-block; color: #a8a8a8; font-size: 24px; width: 75%; float: left; text-rendering: optimizeLegibility;
+                    margin-bottom: 0.5em;   line-height: 1.2125em; font-weight: bold;  font-style: normal; 
+
+                    /*margin-inline-start: 0px;
+                    margin-inline-end: 0px;*/
+                    width: 100%;
+                }
+                .subtitulo{
+                    display: inline-block; color: #FFF; font-size: 14px;  width: 75%; float: left; text-rendering: optimizeLegibility;
+                    margin-bottom: 0.5em;   line-height: 1.2125em; font-weight: bold;  font-style: normal; 
+                    margin: 0;
+                    padding: 0;
+                    margin-block-start: 1em;
+                    margin-block-end: 1em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                }
+                .texto {
+                    font-size: 18px;
+                }
+                .anio{
+                    font-weight: bold;
+                    font-size: 26px;
+                    background-color: lightgray;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    margin-top: 4px;
+                }
+                @media only screen and (max-width: 600px) {
+                    .titulo {
+                        font-size: 14px;
+                    }
+                    .subtitulo {
+                        font-size: 14px;
+                        white-space: nowrap;
+                    }
+                    .texto {
+                        font-size: 13px;
+                    }
+                }
+            </style>
+            <center>
+                <div>
+                    <script type="text/javascript">
+                        var us = "#{usuarioControlador.usuarioActual.nombre}";
+                        if (us) {
+                            $(".menu-item-2").addClass("is-hidden");
+                            $(".menu-item-3").addClass("is-visible");
+                        }
+                    </script>
+
+                    <p:panel style="height: 90%; width: 60%; background-repeat: no-repeat; background-position: center">
+                        <center>
+                            <h:panelGrid columns="1" >
+                                <!--<h:graphicImage value="/imagenes/tarea.png"/>-->
+                                <center>
+                                    <h:panelGrid columns="1" width="100%">
+                                        <div align="center" class="color_h1">
+                                            <label class="titulo">INGRESO</label>
+                                        </div>
+
+                                        <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6,ui-g-12 ui-md-6">
+                                            <h:panelGrid class="texto" style="width: 100%">
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <h:form id="frmLogUser">
+                                                    <p:remoteCommand name="ingresar" action="#{usuarioControlador.inicioSesion()}" process="@this" update="frmLogUser"/>               
+                                                    <script type="text/javascript">
+                                                        var us;
+                                                        var cnt;
+                                                        var controlarClick = false;
+                                                        function checkSubmit() {
+                                                            if (!controlarClick) {
+                                                                controlarClick = true;
+                                                                us = document.getElementById("usuario").value;
+                                                                cnt = document.getElementById("contrasena").value;
+                                                                ingresar([
+                                                                    {
+                                                                        name: 'val1', value: us
+                                                                    },
+                                                                    {
+                                                                        name: 'val2', value: cnt
+                                                                    }
+                                                                ]);
+                                                                return true;
+                                                            } else {
+                                                                alert("El Ingreso ya se esta realizando...");
+                                                                return false;
+                                                            }
+                                                        }
+                                                    </script>
+
+                                                    <p class="fieldset">
+
+                                                        <input id="usuario" type="text" placeholder="Usuario" name="usuario" style="border-radius: 10px;"/>
+                                                    </p>
+
+                                                    <p class="fieldset">
+                                                        <input id="contrasena" autocomplete="off" type="password" placeholder="Contraseña" name="contrasena" style="border-radius: 10px;"/>
+                                                    </p>
+
+<!--                                                    <div id="divCaptcha">
+                                                        <p:captcha label="Captcha" language="es" />
+                                                    </div>-->
+                                                </h:form>
+                                                <!--                                                <a href="recuperar.xhtml">Recuperar </a>-->
+<!--                                                <p:captcha label="Captcha"/>-->
+                                                <h:form id="frm">
+
+                                                    <br/>
+                                                    <center>
+                                                        <div id="boton" class="boton">
+
+                                                            <div id="btningreso" class="btningreso">
+                                                                <p:button value="Ingresar" onclick="return checkSubmit();" class="color_h1" 
+                                                                          iconPos="left" icon="pi pi-sign-in"
+                                                                          style="alignment-baseline: hanging;font-style: inherit; height: 100%; width: 125px;"/>
+                                                            </div>
+  
+                                                        </div>
+                                                        
+                                                    </center>
+
+                        
+                                                    <strong style="color: #ffffff">Se olvidó la contraseña...!!</strong>
+                                                </h:form>
+                                                
+                                                
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                            </h:panelGrid>
+                                            <h:panelGrid style="height: 40%">
+                                                <!--<img src='imagenes/IMGCENSOLINEA.png' width="80%"/>-->
+                                                <img src='#{baseControlador.getProfundidad()}imagenes/siac/siac_img_1.png' width="100%"/>
+                                                <br/>
+                                                <div align="center" class="anio">SIAC 2022</div>
+                                            </h:panelGrid>
+                                        </p:panelGrid>
+                                    </h:panelGrid>
+                                </center>
+                            </h:panelGrid>
+
+                        </center>
+                    </p:panel>
+                </div>
+            </center>
+        </ui:define>
+    </ui:composition> 
+</html>

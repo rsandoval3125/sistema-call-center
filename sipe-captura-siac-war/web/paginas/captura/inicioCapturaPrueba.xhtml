@@ -1,0 +1,993 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <link href="../../css/estilos_enrefam.css" rel="stylesheet" type="text/css"/>
+            <style>
+                .izq{
+                    text-align: right;
+                }
+                .ui-dialog .ui-dialog-content {
+                    width: auto;
+                    height: 100%;
+                }
+
+            </style>
+            <script>
+                $ = jQuery;
+                // Now you can use it
+                $(document).ready(function () {
+                    function reportWindowSize() {
+                        var htmlTag = document.getElementById('frmIniCap:testCovid');
+                        htmlTag.style.height = Math.floor(window.innerHeight * 0.75) + "px";
+                        $("div.contenido-dialogo").height(Math.floor(window.innerHeight * 0.75) - 100 + "px");
+                    }
+                    window.onresize = reportWindowSize;
+                });
+
+            </script>
+            <h:body style=" background-color: #D8E1E6;"/>
+            <h:form id="frmIniCap"  >   
+                <f:passThroughAttribute name="autocomplete" value="off"/>
+                <p:growl id="msgs" showDetail="true" life="5000"/>
+                <center>
+                    <p:panelGrid id="pnlIniCap"  columns="1" columnClasses="ui-g-12 ui-md-12" layout="grid" styleClass="ui-fluid">
+                        <br/><br/>
+                        <p:panel >
+                            <p:panel header="BIENVENIDO USUARIO:  #{inicioCapturaPrueba.nombreRol}"  >
+                                <h:panelGrid>
+                                    <br/>
+                                    <h:outputLabel value="CAPACITACIÓN SIPE" style="color: brown;font-weight: bold; font-size: 16px">
+                                    </h:outputLabel>
+                                    <br/>
+                                    <br/>
+                                </h:panelGrid>
+
+                                <p:panelGrid id="pnlParamBusqVariables" columns="3" 
+                                             style="text-align: center;" 
+                                             columnClasses="ui-g-12 ui-md-4,ui-g-12 ui-md-4,ui-g-12 ui-md-4 izq" 
+                                             layout="grid" styleClass="ui-fluid">
+                                    <h:panelGrid rendered="#{inicioCapturaPrueba.nombreRol!='VALIDADOR' and inicioCapturaPrueba.nombreRol!='COORTECNAC'  and inicioCapturaPrueba.nombreRol!='RESPZONAL' and inicioCapturaPrueba.nombreRol!='OBSERVADOR' and inicioCapturaPrueba.nombreRol!='RESPCRIT'}" columns="4" width="100%">                                        
+                                        <!-- cambio vic 21/05/2020  -->
+                                        <p:outputLabel value="Jornada:" />
+                                        <p:selectOneMenu id="jorConglomerados"   
+                                                         value="#{inicioCapturaPrueba.jornadaSelect}" 
+                                                         panelStyle="width:280px"
+                                                         filter="true" filterMatchMode="contains"  effect="fade" 
+                                                         style="width: 100% !important" >
+                                            <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                            <f:selectItems value="#{inicioCapturaPrueba.lstJornadas}" var="jorn" itemLabel="#{jorn[1]}" itemValue="#{jorn[0]}" />
+                                            <p:ajax event="change" listener="#{inicioCapturaPrueba.buscarConglomerados()}"   
+                                                    process="@this" update="somConglomerados,pnlCargaPendiente,pnlCabeceras,msgs" />
+
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Identificador:" for="paramClave" />
+
+                                        <p:selectOneMenu id="somConglomerados"   
+                                                         value="#{inicioCapturaPrueba.conglomeradoSelected}" 
+                                                         panelStyle="width:280px"
+                                                         filter="true" filterMatchMode="contains"  effect="fade" 
+                                                         style="width: 100% !important" >
+                                            <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                            <f:selectItems value="#{inicioCapturaPrueba.lstConglomerados}" var="cong" itemLabel="#{cong[1]}" itemValue="#{cong[0]}" />
+                                        </p:selectOneMenu>  
+                                        <!-- cambio vic 21/05/2020  -->
+                                        <!--    <p:selectOneMenu id="somConglomerados"   
+                                                            value="#{inicioCapturaPrueba.conglomeradoSelected}" 
+                                                            panelStyle="width:280px"
+                                                            filter="true" filterMatchMode="contains"  effect="fade" 
+                                                            style="width: 100% !important" >
+                                               <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                               <f:selectItems value="#{inicioCapturaPrueba.listaConglomerados}" var="cong" itemLabel="#{cong}" itemValue="#{cong}" />
+                                           </p:selectOneMenu> -->
+
+                                        <p:outputLabel value="Ingrese el Identificador:" for="paramClave"/>
+                                        <p:inputText id="paramClave" 
+                                                     value="#{inicioCapturaPrueba.conglomeradoInput}"   autocomplete="off"  size="18"  maxlength="15"/>  
+
+                                    </h:panelGrid>
+
+
+
+                                    <h:panelGrid id="pnlBotonesVariables"  columns="1">
+                                        <p:commandButton id="btnBusq" value="Buscar"
+                                                         action="#{inicioCapturaPrueba.buscarInformacion()}"
+                                                         process="@this,pnlParamBusqVariables" async="true"
+                                                         global="false" partialSubmit="true"
+                                                         icon="fa fa-search"
+                                                         update="pnlCargaPendiente,pnlCabeceras,msgs,pnlDatosInfResEnt" 
+                                                         style="width: 100px;"
+                                                         onstart="PF('dlgValidando').show();" 
+                                                         oncomplete="PF('dlgValidando').hide();"
+                                                         />
+                                    </h:panelGrid>
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel id="pnlCargaPendiente">
+                                <p:dataTable value="#{inicioCapturaPrueba.listaCargaPendiente.stream().sorted((o1, o2)->o1.control1.concat(o1.control2)-o2.control1.concat(o2.control2)).toList()}"
+                                             styleClass="tblCebra"
+                                             style="text-align: center"
+                                             var="car" emptyMessage="Sin carga pendiente" >
+                                    <f:facet name="header"  >
+                                        <p:outputLabel value="Carga de trabajo asignada " style="color: #ffffff"/>
+                                    </f:facet>
+                                    <p:column headerText="SEC" width="30">
+                                        <p:outputLabel value="#{car.idCarCon}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha" width="50">
+                                        <p:outputLabel value="#{car.fechaHora}" style="font-size:10px;">
+                                            <f:convertDateTime pattern="yyy-MM-dd hh:mm"/>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Zonal" width="45">
+                                        <p:outputLabel value="#{car.codMueDet.var03}" style="font-size:10px;"/>
+                                    </p:column>
+                                    <p:column headerText="Identificador" width="80">
+                                        <p:outputLabel value="#{car.clave}"/>
+                                    </p:column>
+                                    <p:column headerText="Viv" width="20">
+                                        <p:outputLabel value="#{car.control1}"/>
+                                    </p:column>
+                                    <p:column headerText="Hog" width="20">
+                                        <p:outputLabel value="#{car.control2}"/>
+                                    </p:column> 
+                                    <p:column headerText="Estado" width="50">
+                                        <p:outputLabel value="ASIGNADO" rendered="#{car.estadoFormulario=='1'}" style="font-size:10px;"/>
+                                        <p:outputLabel value="CREADO"   rendered="#{car.estadoFormulario=='2'}" style="font-size:10px;"/>
+                                    </p:column>
+                                    <p:column rendered="#{usuarioControlador.usuarioTieneRol('ROL_VALID') or usuarioControlador.usuarioTieneRol('ROL_ENCUE') or usuarioControlador.usuarioTieneRol('ROL_SUPER') or usuarioControlador.usuarioTieneRol('ROL_REVIS') or usuarioControlador.usuarioTieneRol('ADMIN_TOTAL_SIPE')}" 
+                                              width="40" headerText="Formulario"
+                                              style="text-align: center">
+                                        <p:commandButton action="#{inicioCapturaPrueba.seleccionarCarga(car)}"
+                                                         async="true" global="false" 
+                                                         value="Crear" 
+                                                         update=":frmIniCap:pnlDialogos,:frmIniCap:pnlDatosInfResEnt,:frmIniCap:resulEntrevista"
+                                                         style="width: 50px;"
+                                                         />
+                                    </p:column>
+                                    <p:column width="30" headerText="Nuevo Hogar" style="text-align: center">
+                                        <p:commandButton id="btnNuevoHogar" title="Nuevo Hogar"  rendered="#{car.control2=='1' or car.control2=='2' or car.control2=='3'}"
+                                                         action="#{inicioCapturaPrueba.listarHogar(car)}"
+                                                         icon="fa fa-home"
+                                                         global="false"
+                                                         async="true"
+                                                         process="@this"
+                                                         update=":frmIniCap:pnlCrearHogarEnemdu"
+                                                         style="width: 30px;"/>
+                                        <p:tooltip   for="btnNuevoHogar" showEffect="clip" hideEffect="explode" >
+                                            <h:panelGrid columns="1">
+                                                <h:outputText value="Crear nuevo hogar" style="font-size: 12px;"  ></h:outputText>                                                
+                                            </h:panelGrid>
+                                        </p:tooltip>
+                                    </p:column> 
+                                    <!--p:column headerText="" width="5%">
+                                        <p:commandButton actionListener="#{inicioCapturaPrueba.eliminaCargaControl(car)}"
+                                                         rendered="#{car.codFormulario.idFormulario gt 1 and car.codFormulario.idFormulario lt 6  and usuarioControlador.usuarioTieneRol('SUP_ENS')}"                                                   
+                                                         icon="fa fa-trash" title="Eliminar Registro"
+                                                         process="@this" global="false" async="true"
+                                                         update=":frmIniCap:pnlCargaPendiente,:frmIniCap:msgs"  style="width: 40px;">
+                                            <p:confirm header="Confirmación" message="Está seguro de eliminar PERMANENTEMENTE el registro?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p:column-->
+
+
+
+                                </p:dataTable>
+                            </p:panel>
+                            <p:panel id="pnlCabeceras" >
+                                <p:dataTable value="#{inicioCapturaPrueba.listaFormulariosCreados.stream().sorted((o1, o2)->o1.codCarCon.control1.concat(o1.codCarCon.control2)-o2.codCarCon.control1.concat(o2.codCarCon.control2)).toList()}"
+                                             var="cab" emptyMessage="Sin formularios creados."
+                                             style="text-align: center"
+                                             rowStyleClass="#{cab.estado=='G'?'filaTipoReg2':cab.estado=='VG'?'filaTipoReg1':cab.estado=='VS'?'capBgcolorInfMuestraAct':cab.estado=='VC'?'capBgcolorInfMuestraAct':cab.estado=='RC'?'capBgcolorInfMuestraAct':null}"
+                                             >
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Formularios creados" style="color: #ffffff"/>
+                                    </f:facet>
+                                    <p:column headerText="SEC" width="30" style="#{cab.estado3=='V'?'background-color:#BCF5A9;':null}">
+                                        <p:outputLabel value="#{cab.idCab}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha" width="50">
+                                        <p:outputLabel value="#{cab.fechaCreacion}" style="font-size:10px;">
+                                            <f:convertDateTime pattern="yyy-MM-dd hh:mm"/>
+                                        </p:outputLabel>
+                                    </p:column>                               
+                                    <p:column headerText="Zonal" width="45">
+                                        <p:outputLabel value="#{cab.codCarCon.codMueDet.var03}" style="font-size:10px;"/>
+                                    </p:column>
+                                    <p:column headerText="Identificador" width="80">
+                                        <p:outputLabel value="#{cab.clave}"/>
+                                    </p:column>
+                                    <p:column headerText="Viv" width="20">
+                                        <p:outputLabel value="#{cab.codCarCon.control1}"/>
+                                    </p:column>
+                                    <p:column headerText="Hog" width="20">
+                                        <p:outputLabel value="#{cab.codCarCon.control2}"/>
+                                    </p:column>
+                                    <p:column headerText="Per.Mues" width="40">
+                                        <p:outputLabel value="#{cab.codCarCon.codMueDet.var21}"/>
+                                    </p:column>
+                                    <p:column headerText="Per.Enc" width="40" style="color: orangered;font-weight: bold;font-size: 12px; text-align: center">
+                                        <p:outputLabel value="#{cab.numDet}" rendered="#{cab.info1 != 'N'}" style="color: orangered;font-weight: bold;font-size: 15px"/>
+                                        <p:outputLabel value="0" rendered="#{cab.info1 == 'N'}" style="color: orangered;font-weight: bold;font-size: 15px"/>
+                                    </p:column>                          
+                                    <p:column headerText="Estado" width="100">
+                                        <p:outputLabel value="INICIADO" rendered="#{cab.estado=='00'}" style="font-size:12px;"/>       
+                                        <p:outputLabel value="GUARDADO" rendered="#{cab.estado=='G'}" style="font-size:12px;"/>
+                                        <p:outputLabel value="VALIDADO" rendered="#{cab.estado=='VG'}" style="font-size:12px;"/>
+                                        <p:outputLabel value="SUPERVISADO" rendered="#{cab.estado=='VS'}" style="font-size:12px;"/>
+                                        <p:outputLabel value="CRI-VERIFICADO" rendered="#{cab.estado=='VC'}" style="font-size:12px;"/>                                                                     
+                                        <p:outputLabel value="VALIDADO-FINAL" rendered="#{cab.estado=='RC'}" style="font-size:12px;"/>                                                                     
+                                    </p:column>
+                                    <p:column headerText="Resul.Enc." width="45">
+                                        <p:outputLabel value="EFECTIVO" rendered="#{cab.info1 != 'N'}" style="font-size:12px;"/>       
+                                        <p:outputLabel value="NO EFECTIVO" rendered="#{cab.info1 == 'N'}" style="font-size:12px;"/>       
+                                    </p:column>                          
+                                    <p:column headerText="Formulario" width="50" style="text-align: center">  
+                                        <p:commandButton id="editaFrm" action="#{inicioCapturaPrueba.editarFormulario(cab)}"
+                                                         async="true" global="false" 
+                                                         icon="fa fa-pencil"
+                                                         style="width: 50px;"
+                                                         update=":frmIniCap:msgs" 
+                                                         onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"
+                                                         />
+                                        <p:tooltip id="toolTipInfEdit" for="editaFrm" showEffect="clip" hideEffect="explode" >
+                                            <h:panelGrid columns="1">
+                                                <h:outputText value="Editar Formulario" style="font-size: 12px;"  ></h:outputText>                                                
+                                            </h:panelGrid>
+                                        </p:tooltip>
+                                    </p:column>
+                                    <p:column width="50" style="text-align: center" headerText="Eliminar">
+                                        <p:commandButton id="eliminaFrmMulti" actionListener="#{inicioCapturaPrueba.eliminaCabecera(cab)}"                                                         
+                                                         rendered="#{usuarioControlador.usuarioTieneRol('ROL_VALID') or (cab.estado != 'VC') }"
+                                                         icon="fa fa-trash" title="Eliminar Registro"
+                                                         process="@this" global="false" async="true" 
+                                                         update=":frmIniCap:msgs :frmIniCap:pnlCargaPendiente :frmIniCap:pnlCabeceras"  style="width: 40px;">
+                                            <p:confirm header="Confirmación" message="Está seguro de ELIMINAR PERMANENTEMENTE el registro?" icon="ui-icon-alert" />
+                                        </p:commandButton>  
+                                        <p:tooltip   for="eliminaFrmMulti" showEffect="clip" hideEffect="explode" >
+                                            <h:panelGrid columns="1">
+                                                <h:outputText value="Eliminar formulario" style="font-size: 12px;"  ></h:outputText>                                                
+                                            </h:panelGrid>
+                                        </p:tooltip>
+                                    </p:column>                                  
+                                </p:dataTable>                              
+                            </p:panel>
+                        </p:panel>
+                    </p:panelGrid>
+                    <h:panelGrid id="pnlDialogos">                                               
+
+                        <!--Inicia Dialogo Enemdu-->
+                        <p:dialog id="testCovid" widgetVar="dlgInicioCapturaEnemDiciembre" 
+                                  dynamic="true" position="top" style="max-width: 1200px; height: 400px"  responsive="true" 
+                                  >
+                            <p:messages id="msgsCreacionMlt" showDetail="true"/>
+
+                            <center>
+                                <p:panel id="panCantidadHM" class="contenido-dialogo" style="max-width:700px;max-height:800px;">
+                                    <h:panelGrid columns="1" width="600" styleClass="estiloPanelTop">
+                                        <p:panel header="A. DIVISIÓN POLÍTICO ADMINISTRATIVA" style="font-size:11px;">
+                                            <h:panelGrid columns="1"  >
+                                                <p:panelGrid columns="6">
+                                                    <p:outputLabel value="1.PROVINCIA" style="display: block; width: 60px"/>
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var05}" readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/>
+                                                    <p:outputLabel value="2.CANTÓN" style="display: block; width: 55px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var06}" readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/>
+                                                    <p:outputLabel value="3.CABECERA CANTONAL O PARROQUIA RURAL" style="display: block; width: 105px" />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var07}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                </p:panelGrid>
+                                                <p:panelGrid columns="4">
+                                                    <p:outputLabel value="4.ZONA" style="display: block; width: 60px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var08}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="5.SECTOR" style="display: block; width: 55px" />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var09}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                </p:panelGrid>                                             
+                                            </h:panelGrid>                                                                                                
+                                        </p:panel>
+                                        <p:panel header="B. ÁREA AMANZANADA" style="font-size:11px;">
+                                            <h:panelGrid columns="1"  >                                             
+                                                <p:panelGrid columns="6">
+                                                    <p:outputLabel value="6.MANZANA"  style="display: block; width: 60px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var32}"   readonly="true" styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                </p:panelGrid>
+                                            </h:panelGrid>                                                                                                
+                                        </p:panel>
+                                        <p:panel header="C. ÁREA DISPERSA" style="font-size:11px;">
+                                            <h:panelGrid columns="1"  >                                             
+                                                <p:panelGrid columns="6">
+                                                    <p:outputLabel value="7. NÚMERO DE LOCALIDAD, COMUNIDAD, CENTRO POBLADO, RECINTO, ANEJO, COMUNA"  style="display: block; width: 180px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var34}"   readonly="true" styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="7.1. NOMBRE"  style="display: block; width: 70px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var33}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="80"/> 
+                                                </p:panelGrid>
+                                            </h:panelGrid>                                                                                                
+                                        </p:panel>
+                                        <p:panel header="D. IDENTIFICACIÓN DE LA VIVIENDA" style="font-size:11px;">
+                                            <h:panelGrid columns="1"  >                                             
+                                                <p:panelGrid columns="6">
+                                                    <p:outputLabel value="8.EDIFICIO"  style="display: block; width: 45px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var19}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="9.PISO" style="display: block; width: 55px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var24}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="15"/> 
+                                                    <p:outputLabel value="10. NÚMERO DE LA VIVIENDA"  style="display: block; width: 80px;"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.control1}"   readonly="true" styleClass="capBgcolorInfMuestra" size="31"/> 
+                                                    <p:outputLabel value="11. AE"  style="display: block; width: 80px"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.codMueDet.var35}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="30"/> 
+                                                </p:panelGrid>
+                                            </h:panelGrid>                                                                                                
+                                        </p:panel>
+                                        <!--<p:panel header="INGRESE CANTIDAD DE HOMBRES Y MUJERES" style="font-size:13px;display: block"  >
+                                            <p:panelGrid columns="2">
+                                                <p:outputLabel value="Hombres" for="numH"/>
+                                                <p:inputText id="numH" style="font-size: 15px;font-weight: bold;color: crimson;width: 50px;"
+                                                             value="#{inicioCapturaPrueba.numHombres}"  
+                                                             styleClass="capBgcolorInfMuestraAct" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:numM', '')"
+                                                             size="10"
+                                                             autocomplete="off"
+                                                             maxlength="2"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));">
+                                                    <p:ajax event="keyup" update="totHM" listener="#{inicioCapturaPrueba.calcularTotalPersonas()}"/>
+                                                </p:inputText>
+                                                <p:outputLabel value="Mujeres" for="numM"/>
+                                                <p:inputText id="numM" style="font-size: 15px;font-weight: bold;color: crimson;width: 50px;" 
+                                                             value="#{inicioCapturaPrueba.numMujeres}"  
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:totHM', '')" 
+                                                             size="10"
+                                                             autocomplete="off"
+                                                             maxlength="2"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));">
+                                                    <p:ajax event="keyup" update="totHM" listener="#{inicioCapturaPrueba.calcularTotalPersonas()}"/>
+                                                </p:inputText>                                                                                                                               
+                                                <p:outputLabel value="Total"/>                                                                                              
+                                                <p:outputLabel id="totHM" value="#{inicioCapturaPrueba.numElementos}" style="font-size: 15px;font-weight: bold;width: 50px;color: crimson;"/>                                            
+                                            </p:panelGrid>
+                                        </p:panel>--> 
+                                    </h:panelGrid>
+
+                                    <p:panel header="Formulario Efectivo" style="font-size:11px;width: 300px">
+                                        <h:panelGrid id="opcFrmE" columns="1">                                        
+                                            <p:commandButton id="btnCrearFrmEfectivo" 
+                                                             action="#{inicioCapturaPrueba.crearFormularioCenso(inicioCapturaPrueba.cargaActual)}"
+                                                             value="Crear Formulario Efectivo" 
+                                                             process="@this,pnlUbicGeoViv,pnlVivreemplazo,pnlDatosInfResEnt,pnlPerTecFechObserv" async="true" global="false"
+                                                             icon="fa fa-save"
+                                                             update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras " 
+                                                             rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario==1}">
+                                                <p:confirm header="Confirmación" message="Seguro de crear un Formulario Efectivo?" icon="ui-icon-alert" />
+                                            </p:commandButton>                                            
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel header="Formulario No Efectivo" style="font-size:11px;width: 300px">
+                                        <h:panelGrid id="opcFrmNoE" columns="1">                                                                                    
+                                            <p:commandButton id="btnCrearFrmNoEfectivo" 
+                                                             action="#{inicioCapturaPrueba.crearFormularioNoCenso(inicioCapturaPrueba.cargaActual)}"
+                                                             value="Crear Formulario No Efectivo" 
+                                                             process="@this,pnlUbicGeoViv,pnlVivreemplazo,pnlDatosInfResEnt,pnlPerTecFechObserv" async="true" global="false"
+                                                             icon="fa fa-save"
+                                                             update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras " 
+                                                             rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario==1}">
+                                                <p:confirm header="Confirmación" message="Seguro de crear un formulario No Efectivo?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:panel>
+                            </center>
+
+                            <p:panel id="panContenido" rendered="false" class="contenido-dialogo" style="max-width:1200px;max-height:400px;">
+                                <h:panelGrid rendered="false" columns="3" width="1200"   styleClass="estiloPanelTop"   >
+                                    <h:panelGrid columns="1"  width="400" id="pnlUbicGeoViv" styleClass="estiloPanelTop"  > 
+                                        <p:panel header="1. UBICACIÓN GEOGRÁFICA Y MUESTRAL" style="font-size:11px;">
+                                            <h:panelGrid columns="1"  >
+                                                <h:panelGrid columns="6">
+                                                    <p:outputLabel value="Provincia"/>
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var05}" readonly="true"  styleClass="capBgcolorInfMuestra" size="20"/>
+                                                    <p:outputLabel value="Cantón"/>                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var06}" readonly="true"  styleClass="capBgcolorInfMuestra" size="20"/>
+                                                    <p:outputLabel value="Parroquial"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var07}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="4">
+                                                    <p:outputLabel value="Identificador"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var01}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="40"/> 
+                                                    <p:outputLabel value="Area"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var04}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="40"/> 
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="8">
+                                                    <p:outputLabel value="Zona"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var08}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="Sector"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var09}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="Panel"  />  
+                                                    <p:column>
+                                                        <h:panelGrid columns="2">
+                                                            <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var28}" readonly="true"   styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                            <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var27}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                        </h:panelGrid>
+                                                    </p:column>
+
+                                                    <p:outputLabel value="Viv.Panel"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var20}" readonly="true"   styleClass="capBgcolorInfMuestra" size="20"/> 
+                                                </h:panelGrid>                                             
+                                                <h:panelGrid columns="2" id="pnlVivreemplazo">
+                                                    <p:outputLabel value="Si es vivienda de reemplazo (08 – 09 – 10) y la encuesta fue efectiva, registre el número de la vivienda a la que reemplaza ( 01 – 07):N° de Vivienda Original reemplazada:"  /> 
+                                                    <p:inputText id="vivReemp" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.vivReemplaza}"  
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:piso', '')" 
+                                                                 size="4"
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 autocomplete="off"                                                                 
+                                                                 maxlength="2" 
+                                                                 onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));"  
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="4">
+                                                    <p:outputLabel value="Nro.Hogar"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.cargaActual.control2}"   readonly="true" styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                    <p:outputLabel value="Periodo"  />                                                                                              
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var13}"  readonly="true"  styleClass="capBgcolorInfMuestra" size="10"/> 
+                                                </h:panelGrid>
+                                            </h:panelGrid>                                                                                                
+                                        </p:panel> 
+                                        <p:panel header="2. IDENTIFICACIÓN Y UBICACIÓN DE LA VIVIENDA EFECTIVA" style="font-size:11px">
+                                            <h:panelGrid>
+                                                <h:panelGrid columns="4">
+                                                    <p:outputLabel value="Manzana(MyC)"  />
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var18}" readonly="true"  styleClass="capBgcolorInfMuestra" size="30"/>
+                                                    <p:outputLabel value="Edificio(MyC)"  />
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var19}" readonly="true"  styleClass="capBgcolorInfMuestra" size="20"/>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="6">
+                                                    <p:outputLabel value="Vivienda(MyC)"  />
+                                                    <p:inputText value="#{inicioCapturaPrueba.objMueDetalleActual.var29}" readonly="true"  styleClass="capBgcolorInfMuestra" size="30"/>
+                                                    <p:outputLabel value="Piso"  />
+                                                    <p:inputText id="piso" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.piso}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:numMuni', '')" 
+                                                                 size="10"
+                                                                 autocomplete="off"
+                                                                 maxlength="9"  
+
+                                                                 >
+                                                    </p:inputText>
+                                                    <p:outputLabel value="Nro Casa/Municipio"  />       
+                                                    <p:inputText id="numMuni" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.nuMunicipio}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:calle', '')" 
+                                                                 size="20"
+                                                                 autocomplete="off"
+
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid> 
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel value="Calle"  />       
+                                                    <p:inputText id="calle" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.calle}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:nomJefeHogar', '')" 
+                                                                 size="40"
+                                                                 autocomplete="off"
+                                                                 onkeyup="value = value.toUpperCase()"
+
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+
+                                        </p:panel> 
+
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlDatosInfResEnt"   columns="1"  width="400" styleClass="estiloPanelTop">
+                                        <p:panelGrid   columns="1" > 
+                                            <p:panel header="3. DATOS DEL INFORMANTE Y DEL HOGAR" style="font-size:11px"   >
+                                                <h:panelGrid columns="1"    >
+                                                    <p:outputLabel value="Nombre del Jefe de Hogar"  />                                                                                              
+                                                    <p:inputText id="nomJefeHogar" style="font-size: 14px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.nomJefeHogar}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeyup="$(this).val($(this).val().replace(/[0-9]+/, ''));" 
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:nomInformante', '')" 
+                                                                 size="40"
+                                                                 autocomplete="off" 
+                                                                 onchange="value = value.toUpperCase()"
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="2"    >
+                                                    <p:outputLabel value="Nombre del Informante Calificado"  /> 
+                                                    <p:outputLabel value="Código"  />  
+                                                    <p:inputText id="nomInformante" style="font-size: 14px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.nomInformante}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeyup="$(this).val($(this).val().replace(/[0-9]+/, ''));" 
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:codInformante', '')" 
+                                                                 size="40"
+                                                                 autocomplete="off"       
+                                                                 onchange="value = value.toUpperCase()"
+                                                                 >
+                                                    </p:inputText>
+                                                    <p:inputText id="codInformante" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.codInformante}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:fonoCelular', '')" 
+                                                                 size="4"
+                                                                 autocomplete="off"
+                                                                 maxlength="2" 
+                                                                 onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="4" >
+                                                    <p:outputLabel value="Fono Celular:"  />                                                                                              
+                                                    <p:inputText id="fonoCelular" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.fonoCelular}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:fonoConvencional', '')" 
+                                                                 size="12"
+                                                                 autocomplete="off"
+                                                                 maxlength="10" 
+                                                                 onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));"  
+
+                                                                 >
+                                                    </p:inputText>
+                                                    <p:outputLabel value="Fono Convencional:"  />                                                                                              
+                                                    <p:inputText id="fonoConvencional" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.fonoConvencional}"  
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniMHEnem', '')" 
+                                                                 size="11"
+                                                                 autocomplete="off"
+                                                                 maxlength="9" 
+                                                                 onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+
+                                                                 >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel value="Ingrese Núm. de Personas a entrevistar:" />                                                           
+                                                    <p:inputText id="iniMHEnem" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                                 value="#{inicioCapturaPrueba.conNumMiembrosHog}"  
+                                                                 styleClass="capBgcolorInfMuestraAct"
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniReEnemCovid', '')" 
+                                                                 size="2"
+                                                                 onblur="validaCaratulaEnemCovid(this)"
+                                                                 autocomplete="off"                                                                 
+                                                                 maxlength="2" 
+                                                                 onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" >
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                                            </p:panel>
+                                            <p:panel header="4. RESULTADO DE LA ENTREVISTA"  style="font-size:11px;">
+                                                <h:panelGrid id="resulEntrevista">
+                                                    <h:panelGrid columns="2" rendered="#{inicioCapturaPrueba.cabeceraActual.estado.equals('00') or inicioCapturaPrueba.cabeceraActual.estado.equals('G') or inicioCapturaPrueba.cargaActual.estadoFormulario==1 and (usuarioControlador.usuarioTieneRol('ROL_ENCUE') or usuarioControlador.usuarioTieneRol('COOR_TEC_NAC') or usuarioControlador.usuarioTieneRol('ROL_SUPER') or usuarioControlador.usuarioTieneRol('ROL_REVIS') or usuarioControlador.usuarioTieneRol('ROL_RESP_CRIT') or usuarioControlador.usuarioTieneRol('RES_ZON') or usuarioControlador.usuarioTieneRol('RES_NAC'))}" > 
+                                                        <h:panelGrid id="pnlResul">
+                                                            <h:selectOneMenu id="iniReEnemCovid" 
+                                                                             value="#{inicioCapturaPrueba.cabeceraActual.estado1}"
+                                                                             style="width:100%" 
+                                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniCaptEnemdu', '')" >
+                                                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione..."/>
+                                                                <f:selectItems value="#{inicioCapturaPrueba.listaResultadoEntrevista}"/>
+                                                                <p:ajax event="change"  
+                                                                        listener="#{inicioCapturaPrueba.activaOtroCualResultadoEntrevista()}"
+                                                                        process="@this,resulEntrevista" async="true" global="false" update="frmIniCap:pnlOtraRazon" />
+                                                            </h:selectOneMenu> 
+                                                        </h:panelGrid>
+                                                        <h:panelGrid id="pnlOtraRazon">
+                                                            <h:selectOneMenu id="iniREor"                                                                          
+                                                                             value="#{inicioCapturaPrueba.resulEntrevistaOtraRazon}"
+                                                                             rendered="#{inicioCapturaPrueba.activaOtroCual == 1}"
+                                                                             style="width:100%" 
+                                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniCaptEnemdu', '')" >
+                                                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione..."/>
+                                                                <f:selectItems value="#{inicioCapturaPrueba.listaResultadoEntrevistaOtraRazon}"/>
+                                                            </h:selectOneMenu> 
+                                                        </h:panelGrid>
+                                                    </h:panelGrid>
+
+                                                    <h:panelGrid columns="2" rendered="#{usuarioControlador.usuarioTieneRol('COOR_TEC_NAC') or usuarioControlador.usuarioTieneRol('ROL_RESP_CRIT') or usuarioControlador.usuarioTieneRol('RES_ZON') or usuarioControlador.usuarioTieneRol('RES_NAC') }" > 
+                                                        <h:panelGrid id="pnlResul2">
+                                                            <h:selectOneMenu id="iniReEnemCovidAux" 
+                                                                             style="width:100%" 
+                                                                             value="#{inicioCapturaPrueba.cabeceraActual.estado1}"
+                                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniCaptEnemdu', '')" >
+                                                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione ..."/>
+                                                                <f:selectItems value="#{inicioCapturaPrueba.listaResultadoEntrevista}"/>
+                                                                <p:ajax event="change"  
+                                                                        listener="#{inicioCapturaPrueba.activaOtroCualResultadoEntrevista()}"
+                                                                        process="@this,resulEntrevista" async="true" global="false" update="frmIniCap:pnlOtraRazon2" />
+                                                            </h:selectOneMenu>    
+                                                        </h:panelGrid>
+                                                        <h:panelGrid id="pnlOtraRazon2">
+                                                            <h:selectOneMenu id="iniREor2"                                                                          
+                                                                             value="#{inicioCapturaPrueba.resulEntrevistaOtraRazon}"
+                                                                             rendered="#{inicioCapturaPrueba.activaOtroCual == 1}"
+                                                                             style="width:100%" 
+                                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:iniCaptEnemdu', '')" >
+                                                                <f:selectItem itemValue="#{null}" itemLabel="Seleccione..."/>
+                                                                <f:selectItems value="#{inicioCapturaPrueba.listaResultadoEntrevistaOtraRazon}"/>
+                                                            </h:selectOneMenu> 
+                                                        </h:panelGrid>
+                                                    </h:panelGrid>
+                                                    <p:panel>
+                                                        <p:outputLabel value="Recuerde: Una vez validado el formulario no puede cambiar de estado; RESULTADO ACTUAL: #{inicioCapturaPrueba.cabeceraActual.estado1} - #{inicioCapturaPrueba.cabeceraActual.codFormulario.idFormulario}"  /> 
+                                                    </p:panel>
+                                                </h:panelGrid>
+                                            </p:panel>											
+                                        </p:panelGrid>
+                                        <h:panelGrid   columns="1"   width="400" styleClass="estiloPanelTop" > 
+                                            <p:panel header="5. FORMA DE CAPTURA" id="formaCapt" style="font-size:11px;">
+                                                <h:panelGrid columns="2"> 
+                                                    <h:panelGrid id="pnlConTipoCapt">
+                                                        <h:selectOneMenu id="iniCaptEnemdu" style="width:100%" value="#{inicioCapturaPrueba.cabeceraActual.estado2}"
+                                                                         onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:cedEncEnem', '')"  >
+                                                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione.."/>
+                                                            <f:selectItems value="#{inicioCapturaPrueba.listaFormaCaptura}"/>
+                                                            <p:ajax event="change"  
+                                                                    process="@this,formaCapt" async="true" global="false" update="frmIniCap:pnlConModoCapt" />
+                                                        </h:selectOneMenu>  
+                                                    </h:panelGrid>
+
+                                                    <h:panelGrid id="pnlConModoCapt">
+                                                        <h:selectOneMenu id="iniCaptEnemduT" style="width:100%" 
+                                                                         rendered="#{inicioCapturaPrueba.cabeceraActual.estado2=='02'}"
+                                                                         value="#{inicioCapturaPrueba.cabeceraActual.estado4}"
+                                                                         onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:cedEncEnem', '')"  >
+                                                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione.."/>
+                                                            <f:selectItems value="#{inicioCapturaPrueba.listaFormaCapturaTelef}"/>
+                                                        </h:selectOneMenu> 
+                                                    </h:panelGrid>
+                                                </h:panelGrid>
+                                            </p:panel>
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlPerTecFechObserv" columns="1"  width="400"   styleClass="estiloPanelTop" >
+                                        <p:panel header="Información Kobo" style="font-size:11px;width: 320px">
+                                            <h:panelGrid columns="1">
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel value="Jefe Hogar: #{inicioCapturaPrueba.objMueDetalleActual.var35}" style="font-size:0px;" /><p:outputLabel value="Cédula: #{inicioCapturaPrueba.objMueDetalleActual.var36}" style="font-size:0px;"/>
+                                                </h:panelGrid>
+                                                <p:outputLabel value="Contactos: #{inicioCapturaPrueba.objMueDetalleActual.var38}/#{inicioCapturaPrueba.objMueDetalleActual.var39}/#{inicioCapturaPrueba.objMueDetalleActual.var40}"  style="font-size:0px;"/>
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel value="Correo: #{inicioCapturaPrueba.objMueDetalleActual.var41}" style="font-size:0px;" /><p:outputLabel value="Num Habitantes: #{inicioCapturaPrueba.objMueDetalleActual.var37}" style="font-size:0px;"/>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                        <p:panel header="7. PERSONAL TÉCNICO DE LA ENCUESTA"  style="font-size:11px;width: 320px">
+                                            <h:panelGrid id="pnlCedulas" columns="2"  style="font-size:10px;">
+                                                <p:outputLabel value="Encuestador C.I:" />
+                                                <p:inputText id="cedEncEnem" 
+                                                             value="#{inicioCapturaPrueba.cedEncuestador}" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:cedSupEnem', '')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+                                                             size="10" maxlength="10" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             autocomplete="off"/>
+                                                <p:outputLabel value="Supervisor C.I:" />
+                                                <p:inputText id="cedSupEnem" value="#{inicioCapturaPrueba.cedSupervisor}" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:cedCriEnem', '')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+                                                             size="10" maxlength="10" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             autocomplete="off"/>
+                                                <p:outputLabel value="Crítico C.I:" />
+                                                <p:inputText id="cedCriEnem" value="#{inicioCapturaPrueba.cedCritico}" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:cedDigEnem', '')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+                                                             size="10" maxlength="10" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             autocomplete="off"/>
+                                                <p:outputLabel value="Digitador C.I:" />
+                                                <p:inputText id="cedDigEnem" value="#{inicioCapturaPrueba.cedDigitador}" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:fechEncuesta', '')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+                                                             size="10" maxlength="10" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             autocomplete="off"/>  
+                                                <p:outputLabel value="Validador C.I:" />
+                                                <p:inputText id="cedValEnem" 
+                                                             value="#{inicioCapturaPrueba.cedValidador}" 
+                                                             disabled="#{inicioCapturaPrueba.estadoForm=='VC' || inicioCapturaPrueba.estadoForm=='RC'? false:true}" 
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:fechEncuesta', '')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" 
+                                                             size="10" maxlength="10" style="font-size: 15px;font-weight: bold;color: crimson" 
+                                                             styleClass="capBgcolorInfMuestraAct"
+                                                             autocomplete="off"/>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                        <p:panel style="font-size:11px;width: 320px">
+                                            <h:panelGrid border="0" columns="2">
+                                                <p:outputLabel value="Fecha de la Encuesta (AAAA-MM-DD):"/>
+                                                <p:inputMask id="fechEncuesta" value="#{inicioCapturaPrueba.conFechaVisita1}"  
+                                                             mask="2021-99-99"   
+                                                             styleClass="capBgcolorInfMuestraAct" 
+                                                             size="12"
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:observaciones', '')" 
+                                                             onblur="validaCaratulaEnemCovid(this)" />
+                                            </h:panelGrid>
+                                        </p:panel>
+                                        <p:panel header="OBSERVACIONES" style="font-size:11px;width: 320px" rendered="#{inicioCapturaPrueba.nombreRol!='OBSERVADOR'}">
+                                            <h:panelGrid id="observaciones" columns="3">
+                                                <p:inputTextarea id="iniObsMlt" 
+                                                                 value="#{inicioCapturaPrueba.observaciones}" 
+                                                                 onkeypress="return ejecutarSaltoEnterHacia(event, 'frmIniCap:btnCrearEnem', '')"
+                                                                 cols="15" rows="3"
+                                                                 onchange="value = value.toUpperCase()"/>
+                                                <p:commandButton id="btnCrearEnem" 
+                                                                 action="#{inicioCapturaPrueba.crearFormulario()}"
+                                                                 value="Crear Formulario" 
+                                                                 process="@this,pnlUbicGeoViv,pnlVivreemplazo,pnlDatosInfResEnt,pnlPerTecFechObserv" async="true" global="false"
+                                                                 icon="fa fa-save"
+                                                                 update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras " 
+                                                                 rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario==1}">
+                                                    <p:confirm header="Confirmación" message="Seguro de registrar este resultado de la entrevista?" icon="ui-icon-alert" />
+                                                </p:commandButton>
+                                                <p:commandButton  id="btnCrearForm2Mlt" action="#{inicioCapturaPrueba.actualizaCabecaeraEnemCovid()}"
+                                                                  value="Guardar Cambios" 
+                                                                  styleClass="capTextoMediano"
+                                                                  process="@this,pnlUbicGeoViv,pnlVivreemplazo,pnlDatosInfResEnt,pnlPerTecFechObserv" 
+                                                                  async="true" global="false"
+                                                                  icon="fa fa-save"
+                                                                  update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras "   
+                                                                  rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario>=2 and (usuarioControlador.usuarioTieneRol('ROL_REVIS') or usuarioControlador.usuarioTieneRol('RES_NAC') or usuarioControlador.usuarioTieneRol('RES_ZON') or usuarioControlador.usuarioTieneRol('ROL_RESP_CRIT') or usuarioControlador.usuarioTieneRol('ROL_VALID'))}">
+                                                    <p:confirm header="Confirmación" message="Seguro de actualizar el resultado de la entrevista?" icon="ui-icon-alert" />
+                                                </p:commandButton>
+                                            </h:panelGrid>
+                                            <h:panelGrid id="supervisado" >
+                                                <p:commandButton  id="super" action="#{inicioCapturaPrueba.guardarSupervisaroCriticado()}"
+                                                                  value="VALIDAR-SUPERVISADO" 
+                                                                  styleClass="capTextoMediano"
+                                                                  process="@this,supervisado" 
+                                                                  async="true" global="false"
+                                                                  icon="fa fa-fw fa-edit"
+                                                                  update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras "   
+                                                                  rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario>=2 and usuarioControlador.usuarioTieneRol('ROL_SUPER')  and !inicioCapturaPrueba.cabeceraActual.estado1.equals('01')}">
+                                                    <p:confirm header="Confirmación" message="Seguro de actualizar el resultado de la entrevista?" icon="ui-icon-alert" />
+                                                </p:commandButton>
+                                            </h:panelGrid>
+                                            <h:panelGrid>
+                                                <h:panelGrid id="criticado"  >
+                                                    <p:commandButton  id="cri" action="#{inicioCapturaPrueba.guardarSupervisaroCriticado()}"
+                                                                      value="VALIDAR-CRITICA" 
+                                                                      styleClass="capTextoMediano"
+                                                                      process="@this,pnlDatosInfResEnt,observaciones" 
+                                                                      async="true" global="false"
+                                                                      icon="fa fa-fw fa-edit"
+                                                                      update=":frmIniCap:msgsCreacionMlt,msgs,:frmIniCap:pnlCargaPendiente,:frmIniCap:pnlCabeceras "   
+                                                                      rendered="#{inicioCapturaPrueba.cargaActual.estadoFormulario>=2 and usuarioControlador.usuarioTieneRol('ROL_REVIS') and !inicioCapturaPrueba.cabeceraActual.estado1.equals('01')}">
+                                                        <p:confirm header="Confirmación" message="Seguro de actualizar el resultado de la entrevista?" icon="ui-icon-alert" />
+                                                    </p:commandButton>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </h:panelGrid>
+                                </h:panelGrid>  
+                            </p:panel>                           
+                        </p:dialog>
+
+                        <!--Inicia Dialogo Contactos-->
+                        <p:dialog widgetVar="dlgInicioContactos" dynamic="true"    width="350"  >
+                            <p:scrollPanel style="width:300px;height:300px;">                                                                           
+                                <p:dataTable value="#{inicioCapturaPrueba.listaContactos}"
+                                             var="car" emptyMessage="No se ha registrado contactos"                                             
+                                             rendered="#{inicioCapturaPrueba.listaContactos.size()>0}">
+
+                                    <f:facet name="header">
+                                        Contactos
+                                    </f:facet>
+                                    <p:column headerText="Teléfono" width="15">
+                                        <p:outputLabel value="#{car[1]}"/>
+                                    </p:column>  
+                                    <p:column headerText="Nombre" width="25">
+                                        <p:outputLabel value="#{car[0]}"/>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dataTable value="#{inicioCapturaPrueba.listaContactos}"
+                                             var="car" emptyMessage="No se ha registrado contactos"                                             
+                                             rendered="#{inicioCapturaPrueba.listaContactos.size()==0}">
+
+                                    <p:column headerText="Contactos" width="40">
+                                        <p:outputLabel value="No se ha registrado contactos"/>
+                                    </p:column> 
+
+                                </p:dataTable>
+                            </p:scrollPanel>                     
+                        </p:dialog>
+
+                        <script language="JavaScript" type="text/javascript"  >
+                            //<![CDATA[
+                            function validaCaratulaEnemCovid(compValor) {
+                                var valCompActual = compValor.value;
+                                var nomCompActual = compValor.name;
+
+                                if (nomCompActual.indexOf('frmIniCap:fonoConvencional') !== -1) { //Campo telefono local
+                                    if (valCompActual.length < 9) {
+                                        alert("Fono convencional:La longtud debe ser de al menos 9 digitos");
+                                    }
+                                } else if (nomCompActual.indexOf('frmIniCap:fonoCelular') !== -1) {//Campo telefono celular
+                                    if (valCompActual.length < 10) {
+                                        alert("Fono celular:La longtud debe ser de al menos 10 digitos");
+                                    }
+                                } else if (nomCompActual.indexOf('frmIniCap:iniMHMlt') !== -1) {
+                                    if (Number(valCompActual) >= Number(25)) {
+                                        alert("Alerta el número de elementos es demasiado grande");
+                                        document.getElementById(nomCompActual).value = '';
+                                        document.getElementById(nomCompActual).focus();
+                                    }
+                                } else if (nomCompActual.indexOf('frmIniCap:fechEncuesta') !== -1) {
+                                    if (valCompActual.length === 10) {
+                                        var hoy = new Date();
+                                        var fechaActual = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+                                        var fechaDigitada = new Date(valCompActual.substring(0, 4), (valCompActual.substring(5, 7) - 1), valCompActual.substring(8, 10));
+
+                                        if (fechaActual.getTime() < fechaDigitada.getTime()) {
+                                            alert("Fecha ingresada mayor a la fecha actual");
+                                            // document.getElementById(nomCompActual).value = '';
+                                            //document.getElementById(nomCompActual).focus();
+                                        }
+
+                                        var mes = valCompActual.substring(5, 7);
+                                        if (Number(mes) !== Number(7)) {
+                                            alert("Mes no corresponde al actual");
+                                            document.getElementById(nomCompActual).value = '';
+                                            document.getElementById(nomCompActual).focus();
+                                        }
+                                    }
+                                }
+                            }
+
+                            function ejecutarSaltoSiguientePC(evt, compValor) {
+                                var valCompActual = compValor.value;
+                                idPreguntaSig = 'frmIniCap:codCan';
+                                idOtraPreguntaSig = '';
+                                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                                console.log(charCode);
+                                if (charCode === 13 || charCode === 9) {
+                                    try {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        if (Number(valCompActual) === Number(1)) {
+                                            idPreguntaSig = 'frmIniCap:codCan';
+                                        } else {
+                                            idPreguntaSig = 'frmIniCap:iProv';
+                                        }
+                                        document.getElementById(idPreguntaSig).focus();
+                                        document.getElementById(idPreguntaSig).style.border = "solid #58ACFA";
+                                    } catch (e) {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        document.getElementById(idOtraPreguntaSig).focus();
+                                    }
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+
+                            function ejecutarSaltoSiguienteCP(evt, compValor) {
+                                var valCompActual = compValor.value;
+                                idPreguntaSig = 'frmIniCap:codParr';
+                                idOtraPreguntaSig = '';
+                                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                                console.log(charCode);
+                                if (charCode === 13 || charCode === 9) {
+                                    try {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        if (Number(valCompActual) === Number(1)) {
+                                            idPreguntaSig = 'frmIniCap:codParr';
+                                        } else {
+                                            idPreguntaSig = 'frmIniCap:iCan';
+                                        }
+                                        document.getElementById(idPreguntaSig).focus();
+                                        document.getElementById(idPreguntaSig).style.border = "solid #58ACFA";
+                                    } catch (e) {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        document.getElementById(idOtraPreguntaSig).focus();
+                                    }
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+
+                            function ejecutarSaltoSiguientePO(evt, compValor) {
+                                var valCompActual = compValor.value;
+                                idPreguntaSig = 'frmIniCap:iniObsMlt';
+                                idOtraPreguntaSig = '';
+                                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                                console.log(charCode);
+                                if (charCode === 13 || charCode === 9) {
+                                    try {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        if (Number(valCompActual) === Number(1)) {
+                                            idPreguntaSig = 'frmIniCap:iniObsMlt';
+                                        } else {
+                                            idPreguntaSig = 'frmIniCap:iParr';
+                                        }
+                                        document.getElementById(idPreguntaSig).focus();
+                                        document.getElementById(idPreguntaSig).style.border = "solid #58ACFA";
+                                    } catch (e) {
+                                        $(':focus').blur();
+                                        $('[id$="_S1_OBS"]').off();
+                                        document.getElementById(idOtraPreguntaSig).focus();
+                                    }
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                            //]]>
+                        </script>  
+                        <!--Fin Dialogo Multi proposito -->   
+
+                    </h:panelGrid>                   
+
+                    <h:panelGrid id="pnlCrearHogarEnemdu"> 
+                        <p:dialog header="CREAR UN NUEVO HOGAR" widgetVar="dlgCrearHogarEnemdu" minHeight="50">
+                            <p:panel header="IDENTIFICADOR ACTUAL PRECENSO" style="font-size:14px;">
+                                <h:panelGrid columns="2"   style="font-size:12px;">
+                                    <p:outputLabel value="CONGLOMERADO: " style="font-weight:bold"/>
+                                    <p:outputLabel value="#{inicioCapturaPrueba.cargaCarControlHog.clave} "/>
+                                    <p:outputLabel value="VIVIENDA: " style="font-weight:bold"/>
+                                    <p:outputLabel value="#{inicioCapturaPrueba.cargaCarControlHog.control1} "/>
+                                    <p:outputLabel value="HOGAR: " style="font-weight:bold"/>
+                                    <p:outputLabel value="#{inicioCapturaPrueba.cargaCarControlHog.control2} "/>
+                                    <p:outputLabel value="NÚMERO DEL NUEVO HOGAR: " style="font-weight:bold"/>
+                                    <br></br>
+                                    <p:outputLabel value="N°: " style="font-weight:bold"/>
+                                    <p:inputText id="nuevoHogarMulti" value="#{inicioCapturaPrueba.nuevoHogar}"  maxlength="1" />
+                                </h:panelGrid>
+                            </p:panel>
+                            <br></br>
+                            <p:commandButton id="btnHogarMulti" value="Crear Hogar"
+                                             action="#{inicioCapturaPrueba.crearHogar()}" 
+                                             async="true"
+                                             global="false" 
+                                             icon="fa fa-search"
+                                             process="@this,pnlCrearHogarEnemdu"
+                                             update=":frmIniCap:msgs :frmIniCap:pnlCargaPendiente :frmIniCap:pnlCabeceras" 
+                                             style="width: 200px;height: 30px;font-size:13px;"
+                                             >
+                                <p:confirm header="Confirmación" message="Seguro de crear un nuevo hogar?" icon="ui-icon-alert" /> 
+                            </p:commandButton>
+                        </p:dialog>
+                    </h:panelGrid>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="SI" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="NO"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionUsuario">   
+                <p:growl id="msgs" showSummary="false" showDetail="true"/>
+                <center>
+                    <p:panel id="panelContieneUsuario" style="width:1000px; text-align: left" header="Seguridad - Cambiar clave" visible="#{!gestionCambiarClaveControlador.ok}">
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Nueva clave"/>
+                            <p:password   id="clave" value="#{gestionCambiarClaveControlador.clave}"  autocomplete="off"
+                                          size="40" maxlength="200" match="confirmClave"  feedback="true"  required="true" label="Clave" requiredMessage="Nueva clave no puede estar vacío" validatorMessage="Nueva clave deberia ser igual con la confirmación nueva clave" promptLabel="Porfavor ingrese la nueva clave" weakLabel="Débil"
+                                          goodLabel="Bueno" strongLabel="Fuerte" />
+                            <p:message for="clave" display="icon"/>
+
+                            <p:outputLabel value="Confirmación nueva clave"/>
+                            <p:password   id="confirmClave" value="#{gestionCambiarClaveControlador.confirmacionClave}"  autocomplete="off"
+                                          size="40" maxlength="200"  required="true" label="Confirmación" requiredMessage="Confirmación nueva clave no puede estar vacío"/>
+                            <p:message for="confirmClave" display="icon"/>
+                        </h:panelGrid>
+                        <f:facet name="footer">                                                                                                            
+                            <center>
+                                <h:panelGrid columns="2">
+                                    <p:commandButton value="Guardar" 
+                                                     id="btnGuardar" 
+                                                     action="#{gestionCambiarClaveControlador.guardarUsuario()}" 
+                                                     icon="ui-icon-disk"  
+                                                     process="@this,panelContieneUsuario,panelContieneMensaje" 
+                                                     update="panelContieneUsuario,panelContieneMensaje,msgs"
+                                                     async="true"
+                                                     global="false"                                                        
+                                                     />                                       
+                                </h:panelGrid>
+                            </center>
+                        </f:facet>
+                    </p:panel>
+                    <p:panel id="panelContieneMensaje" style="width:1000px; text-align: left" header="Seguridad - Cambiar clave" visible="#{gestionCambiarClaveControlador.ok}" >                 
+                        <p:outputLabel value="Su clave fue actualizado satisfactoriamente."/>   
+                    </p:panel>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

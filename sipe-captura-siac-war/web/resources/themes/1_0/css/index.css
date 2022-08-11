@@ -1,0 +1,88 @@
+@CHARSET "UTF-8";
+
+.upper{
+    text-transform: uppercase;
+}
+
+label.ui-outputlabel.ui-widget{
+    display: block;
+}
+
+button.btn-Normal{
+    width:250px;
+}
+
+div.ui-selectonemenu.ui-widget.ui-corner-all{
+    min-width: 250px!important;
+    max-width: 250px!important;
+}
+
+label{
+	max-width: 250px!important;
+}
+
+th.columna-acciones{
+	width: 100px!important;
+	text-align: center!important;
+}
+
+html, body {
+    height: 100%!important;
+}
+
+nav.navbar.navbar-default, .btn {
+	border-bottom-right-radius: 0px; 
+	border-bottom-left-radius: 0px; 
+	border-top-right-radius: 0px; 
+	border-top-left-radius: 0px;
+}
+
+.btn-power-off{
+	margin-top: 10px;
+}
+
+.form-label{
+	margin-bottom: 0px;
+}
+
+.form-label.form-label-no-on-top{
+	margin-top: 2px;
+}
+
+.ui-icon.ui-icon-triangle-1-s.ui-c{
+	margin-left: -8px;
+}
+
+.col-d-num{
+	text-align: right;
+	width: 30px !important;
+}
+
+.form-group{
+	margin-bottom: 5px;
+}
+
+th.col-acciones{
+	padding-left: 25px !important; 
+	padding-right: 25px !important;
+}
+
+div.resultadoDeSimiec, div.resultadoDeSimiec > div.ui-datatable-header{
+	background-color: #03b272 !important;
+	border-color: #03b272 !important;
+}
+
+div.resultadoDeSiipne, div.resultadoDeSiipne > div.ui-datatable-header{
+	background-color: #f98f00 !important;
+	border-color: #f98f00 !important;
+}
+
+/*
+Estilos del calendar
+*/
+
+.ui-datepicker-title select {
+   background: transparent;
+   border:1px dashed white;
+   color: black;
+}

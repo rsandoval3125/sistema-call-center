@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmProcedimiento" styleClass="estilo-pagina">
+                <p:growl id="msgs" showDetail="true" escape="false"/>
+                <center>
+                    <p:spacer width="100" height="10"/>
+                    <h:panelGrid id="panelProcedimiento" width="500" columns="1" >
+                        <p:panel header="Procedimiento">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText id="nombreProcedimiento" value="#{procedimientoControlador.procedimientoActual.nombre}"
+                                             size="40" maxlength="100" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="nombreProcedimiento" display="text"/>
+                                <p:outputLabel value="SQL"/>
+                                <p:inputTextarea id="sqlProcedimiento" value="#{procedimientoControlador.procedimientoActual.sql}"
+                                                 autoResize="true" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="sqlProcedimiento" display="text"/>
+                                <p:outputLabel value="Conexión"/>
+                                <p:inputText id="conexionProcedimiento" value="#{procedimientoControlador.procedimientoActual.conexion}"
+                                             size="40" maxlength="50" required="true" requiredMessage="no puede estar vacio"/>
+                                <p:message for="conexionProcedimiento" display="text"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton id="btnGuardar" value="Guardar"
+                                                         action="#{procedimientoControlador.guardarProcedimiento()}"
+                                                         icon="ui-icon-disk"
+                                                         process="@this,panelProcedimiento" 
+                                                         update=":frmProcedimiento:panelListProcedimiento,panelProcedimiento,msgs"
+                                                         async="true" global="false"/>
+                                        <p:commandButton id="btnNuevo" value="Nuevo"
+                                                         action="#{procedimientoControlador.nuevoProcedimiento()}"
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmProcedimiento:panelListProcedimiento,panelProcedimiento,msgs"
+                                                         async="true" global="false">
+                                            <p:resetInput target=":frmProcedimiento:panelProcedimiento"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelListProcedimiento">
+                        <h:panelGrid columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable id="dtListProcedimiento" paginator="true" rows="10" 
+                                         value="#{procedimientoControlador.listaProcedimientos}" var="var"   
+                                         selectionMode="single" rowKey="#{var.idProc}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Procedimientos" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{var.idProc}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{var.nombre}" headerText="Nombre" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{var.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="SQL" width="220" style="font-size:12px;">
+                                    <h:outputText value="#{var.sql}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column filterBy="#{var.sql}" headerText="Conexión" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{var.conexion}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-pencil" 
+                                                     action="#{procedimientoControlador.editarProcedimiento(var)}"
+                                                     process="@this" 
+                                                     update=":frmProcedimiento:panelProcedimiento,:frmProcedimiento:panelListProcedimiento,:frmProcedimiento:msgs" 
+                                                     async="true" global="false">
+                                        <p:resetInput target=":frmProcedimiento:panelProcedimiento"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{procedimientoControlador.eliminarProcedimiento(var)}"
+                                                     process="@this" 
+                                                     update=":frmProcedimiento:panelListProcedimiento,:frmProcedimiento:msgs" 
+                                                     async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable> 
+                        </h:panelGrid>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>                    
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

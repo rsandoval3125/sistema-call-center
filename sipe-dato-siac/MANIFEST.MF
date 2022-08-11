@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.7
+Created-By: 1.8.0_311-b11 (Oracle Corporation)
+Dependencies: deployment.sipe-conexion-siac.jar, deployment.sipe-entid
+ ades-siac-jar.jar, deployment.sipe-negocio-siac-jar.jar
+

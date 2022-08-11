@@ -1,0 +1,337 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">        
+        <ui:define name="contenido">
+            <h:form id="frmGestionPersonal">   
+                <p:growl id="msgs" showDetail="true"/>
+                <script>
+                    function soloNumeros(event) {
+                        var charCode = (event.which) ? event.which : event.keyCode;
+                        console.log(charCode);
+                        if (charCode == 46 || charCode == 8 || charCode == 0)
+                            return true;
+                        if (charCode &lt; 48 || charCode &gt; 57)
+                                return false;
+
+                    }
+                </script>
+                <center>
+                    <h:panelGrid id="panelContienePersonal" width="1000" columns="1" >
+                        <p:panel header="Administración - Personal">
+                            <h:panelGrid >
+                                <p:fieldset legend="Datos personales">
+                                    <h:panelGrid columns="6">
+                                        <p:outputLabel value="Identificación"/>
+                                        <p:inputText   id="persIdentificacion" value="#{gestionPersonalControlador.objAdmPersonalActual.identificacion}" onkeypress="return soloNumeros(event);" 
+                                                       size="40"  maxlength="20" required="true" requiredMessage="Identificación no puede estar vacío" />
+                                        <p:message for="persIdentificacion" display="icon"/>    
+
+                                        <h:outputText/> <h:outputText/> <h:outputText/>                                       
+
+                                        <p:outputLabel value="Apellidos"/>
+                                        <h:panelGrid columns="2" style="width:102%; position: relative; left:-3px;">
+                                            <p:inputText   id="persPrimerApellido" value="#{gestionPersonalControlador.objAdmPersonalActual.primerApellido}"  
+                                                           style="width:100%"  maxlength="20"  required="true" requiredMessage="Apellido no puede estar vacío"/>
+                                            <p:inputText   id="persSegundoApellido" value="#{gestionPersonalControlador.objAdmPersonalActual.segundoApellido}"  
+                                                           style="width:100%"  maxlength="20"  />
+                                        </h:panelGrid>
+                                        <p:message for="persPrimerApellido" display="icon"/>   
+
+                                        <p:outputLabel value="Nombres"/>
+                                        <h:panelGrid columns="2" style="width:102%; position: relative; left:-3px;">
+                                            <p:inputText   id="persPrimerNombre" value="#{gestionPersonalControlador.objAdmPersonalActual.primerNombre}"  
+                                                           style="width:100%"  maxlength="20"  required="true" requiredMessage="Nombre no puede estar vacío"/>
+                                            <p:inputText   id="persSegundoNombre" value="#{gestionPersonalControlador.objAdmPersonalActual.segundoNombre}"  
+                                                           style="width:100%" maxlength="20"  />
+                                        </h:panelGrid>
+                                        <p:message for="persPrimerNombre" display="icon"/> 
+
+                                        <p:outputLabel value="Dirección"/>
+                                        <p:inputText  id="persDireccion"  value="#{gestionPersonalControlador.objAdmPersonalActual.direccion}" 
+                                                      size="40"    maxlength="1280" />
+                                        <p:message for="persDireccion" display="icon"/> 
+
+                                        <h:outputText/> <h:outputText/> <h:outputText/>
+
+                                        <p:outputLabel value="Nivel de instrucción"/>                                
+                                        <p:selectOneMenu id="persNivelInstruccion" value="#{gestionPersonalControlador.objAdmPersonalActual.codNivelInstruccion}" converter="catalogoConverter" panelStyle="width:280px"
+                                                       filter="true" filterMatchMode="contains"  effect="fade" required="false" requiredMessage="Nivel de instrucción necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.nivelesInstruccion}" var="nivel" itemLabel="#{nivel.nombre}" itemValue="#{nivel}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persNivelInstruccion" display="icon"/>
+
+                                        <p:outputLabel value="Titulo"/>
+                                        <p:inputText   id="persTitulo" value="#{gestionPersonalControlador.objAdmPersonalActual.nombreTitulo}"  
+                                                       size="40"  maxlength="40"  />
+                                        <p:message for="persTitulo" display="icon"/>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <p:fieldset legend="Datos de trabajo">
+                                    <h:panelGrid columns="6">
+                                        <p:outputLabel value="Provincia"/>
+                                        <p:selectOneMenu id="persProvincia" value="#{gestionPersonalControlador.provinciaSelected}" converter="catalogoConverter" panelStyle="width:280px"
+                                                       filter="true" filterMatchMode="contains"  effect="fade" required="#{gestionPersonalControlador.provinciaRequerido}" requiredMessage="Provincia necesita ser seleccionado" >
+                                            <p:ajax listener="#{gestionPersonalControlador.onChangeProvincia}" update="persCanton, persCodDpa" />
+                                            <f:param name="action" value="provincia" />
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.provincias}" var="cargo" itemLabel="#{cargo.nombre}" itemValue="#{cargo}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persProvincia" display="icon"/>  
+                                        
+                                        <p:outputLabel value="Cantón"/>
+                                        <p:selectOneMenu id="persCanton" value="#{gestionPersonalControlador.cantonSelected}" converter="catalogoConverter" panelStyle="width:280px"
+                                                       filter="true" filterMatchMode="contains"  effect="fade" required="#{gestionPersonalControlador.cantonRequerido}" requiredMessage="Cantón necesita ser seleccionado" >
+                                             <p:ajax listener="#{gestionPersonalControlador.onChangeCanton}" update="persCodDpa" />
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.cantones}" var="cargo" itemLabel="#{cargo.nombre}" itemValue="#{cargo}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persCanton" display="icon"/>  
+                                        
+                                        <p:outputLabel value="Parroquia"/>
+                                        <p:selectOneMenu id="persCodDpa" value="#{gestionPersonalControlador.objAdmPersonalActual.codDpa}" converter="catalogoConverter" panelStyle="width:280px"
+                                                       filter="true" filterMatchMode="contains"  effect="fade" required="true" requiredMessage="Parroquia necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.parroquias}" var="cargo" itemLabel="#{cargo.nombre}" itemValue="#{cargo}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persCodDpa" display="icon"/>  
+
+                                        <p:outputLabel  value="Fecha salida" />
+                                        <p:calendar id="persFechaSalida" size="40" disabled="#{!gestionPersonalControlador.habilitaEdicion}" value="#{gestionPersonalControlador.objAdmPersonalActual.fechaSalida}" pattern="dd-MM-yyyy" mask="true" label="Fecha fin"/>
+                                        <p:message for="persFechaSalida" display="icon"/>
+
+                                        <p:outputLabel value="Institución" />                               
+                                        <p:selectOneMenu id="persInstitucion" value="#{gestionPersonalControlador.institucion}" converter="institucionConverter" panelStyle="width:280px"
+                                                         effect="fade" var="t" filter="true" filterMatchMode="contains" required="false" requiredMessage="Institución necesita ser seleccionado">
+                                             <p:ajax listener="#{gestionPersonalControlador.onChangeInstitucion}" update="persOrganigrama" />
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.instituciones}" var="institucion" itemLabel="#{institucion.nombre}" itemValue="#{institucion}" />
+
+                                            <p:column style="width:10%">
+                                                <h:outputText value="#{t.idInstitucion}" />
+                                            </p:column>
+
+                                            <p:column>
+                                                <h:outputText value="#{t.nombre}" />
+                                            </p:column>
+                                        </p:selectOneMenu>
+                                        <p:message for="persInstitucion" display="icon"/>
+
+                                        <p:outputLabel value="Organigrama" />                               
+                                        <p:selectOneMenu id="persOrganigrama" value="#{gestionPersonalControlador.organigrama}" converter="organigramaConverter" panelStyle="width:280px"
+                                                         effect="fade" var="t" filter="true" filterMatchMode="contains" required="false" requiredMessage="Organigrama necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.organigramas}" var="organigrama" itemLabel="#{organigrama.nombre}" itemValue="#{organigrama}" />
+
+                                            <p:column style="width:10%">
+                                                <h:outputText value="#{t.idOrganigrama}" />
+                                            </p:column>
+
+                                            <p:column>
+                                                <h:outputText value="#{t.nombre}" />
+                                            </p:column>
+                                        </p:selectOneMenu>
+                                        <p:message for="persOrganigrama" display="icon"/>
+
+                                        <p:outputLabel value="Cargo"/>                               
+                                        <p:selectOneMenu id="persCargo" value="#{gestionPersonalControlador.objAdmPersonalActual.codCargo}" converter="catalogoConverter" panelStyle="width:280px"
+                                                       filter="true" filterMatchMode="contains"  effect="fade" required="false" requiredMessage="Cargo necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.cargos}" var="cargo" itemLabel="#{cargo.nombre}" itemValue="#{cargo}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persCargo" display="icon"/>
+
+                                        <p:outputLabel value="Descripción Cargo"/>
+                                        <p:inputText   id="persCargoDescripcion" value="#{gestionPersonalControlador.objAdmPersonalActual.cargoDescripcion}"  
+                                                       size="40"  maxlength="120"  />
+                                        <p:message for="persCargoDescripcion"/>
+
+                                        <p:outputLabel value="Tipo de contrato"/>                                
+                                        <p:selectOneMenu id="persTipoContrato" value="#{gestionPersonalControlador.objAdmPersonalActual.codTipoContrato}" converter="catalogoConverter" panelStyle="width:280px"
+                                                      filter="true" filterMatchMode="contains"   effect="fade" required="false" requiredMessage="Tipo de contrato necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionPersonalControlador.tipoContratos}" var="contrato" itemLabel="#{contrato.nombre}" itemValue="#{contrato}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persTipoContrato" display="icon"/>
+
+                                        <p:outputLabel value="Nivel salarial"/>                                
+                                        <p:selectOneMenu id="persNivelSalarial" value="#{gestionPersonalControlador.objAdmPersonalActual.codNivelSalarial}" converter="catalogoConverter" panelStyle="width:280px"
+                                                        filter="true" filterMatchMode="contains" effect="fade" required="false" requiredMessage="Nivel salarial necesita ser seleccionado" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue=""/>
+                                            <f:selectItems value="#{gestionPersonalControlador.nivelesSalario}" var="nivel" itemLabel="#{nivel.nombre}" itemValue="#{nivel}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="persNivelSalarial" display="icon"/>
+                                        <!--
+                                        <p:outputLabel value="Usuario"/>
+                                        <p:inputText   id="persUsuario" value="#{gestionPersonalControlador.objAdmPersonalActual.usuario}"  
+                                                       size="40"  maxlength="40"  readonly="true"/>
+                                        <p:message for="persUsuario" display="icon"/>
+                                        <h:panelGrid columns="2" style="width:100%">
+                                            <p:outputLabel value="Contraseña" style="position: relative; left: -3px;"/>                                        
+                                            <input type="text" name="usuario_fake" id="usuario_fake" value="" style="display: none;" />
+                                            <input type="password" name="password_fake" id="password_fake" value="" style="display: none;" />
+                                        </h:panelGrid>
+                                        <p:password  id="persContraseña" value="#{gestionPersonalControlador.objAdmPersonalActual.contrasenia}"  
+                                                     style="width:100%"   maxlength="255" redisplay="true" readonly="true"  />
+
+                                        <p:message for="persContraseña" display="icon"/>
+                                        -->
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <p:fieldset legend="Datos de contacto">
+                                    <h:panelGrid columns="6">
+                                        <p:outputLabel value="Correo trabajo"/>
+                                        <p:inputText    id="persCorreoInstitucional"  value="#{gestionPersonalControlador.objAdmPersonalActual.correoInstitucional}" validatorMessage="Correo trabajo inválido." 
+                                                        maxlength="80"  size="40">
+                                            <f:validateRegex pattern="(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$){0,}" />
+                                        </p:inputText>
+                                        <p:message for="persCorreoInstitucional" display="icon"/>   
+
+                                        <p:outputLabel value="Teléfono trabajo"/>
+                                        <h:panelGrid columns="3" style="width:102%; position: relative; left:-3px;">
+                                            <p:inputText    id="persTelfInstitucional"  value="#{gestionPersonalControlador.objAdmPersonalActual.telefonoInstitucional}" 
+                                                            maxlength="10"    size="17" onkeypress="return soloNumeros(event);"/>
+                                            <p:outputLabel value="Ext."/>
+                                            <p:inputText    id="persExtInstitucional"  value="#{gestionPersonalControlador.objAdmPersonalActual.extensionInstitucional}" 
+                                                            maxlength="5" size="13" onkeypress="return soloNumeros(event);"/>
+                                        </h:panelGrid>
+                                        <p:message for="persTelfInstitucional" display="icon"/>    
+
+                                        <p:outputLabel value="Correo personal"/>
+                                        <p:inputText    id="persCorreoPersonal"  value="#{gestionPersonalControlador.objAdmPersonalActual.correoPersonal}" validatorMessage="Correo personal inválido." 
+                                                        maxlength="80"  size="40">
+                                            <f:validateRegex pattern="(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$){0,}" />
+                                        </p:inputText>
+                                        <p:message for="persCorreoPersonal" display="icon"/>
+
+                                        <h:outputText/> <h:outputText/> <h:outputText/>
+
+                                        <p:outputLabel value="Teléfono local"/>
+                                        <p:inputText    id="persTelfLocal"  value="#{gestionPersonalControlador.objAdmPersonalActual.telefonoLocal}" 
+                                                        maxlength="10"    size="40" onkeypress="return soloNumeros(event);"/>
+                                        <p:message for="persTelfLocal" display="icon"/>
+
+                                        <p:outputLabel value="Teléfono celular"/>
+                                        <p:inputText    id="persTelfCelular"  value="#{gestionPersonalControlador.objAdmPersonalActual.telefonoCelular}" 
+                                                        maxlength="10"    size="40"  onkeypress="return soloNumeros(event);"/>
+                                        <p:message for="persTelfCelular" display="icon"/>   
+
+                                        <p:outputLabel value="Facebook"/>
+                                        <p:inputText   id="persFacebook" value="#{gestionPersonalControlador.objAdmPersonalActual.facebook}"  
+                                                       size="40"  maxlength="80"  />
+                                        <p:message for="persFacebook" display="icon"/>
+
+                                        <p:outputLabel value="Twiter"/>
+                                        <p:inputText   id="persTwiter" value="#{gestionPersonalControlador.objAdmPersonalActual.twiter}"  
+                                                       size="40"  maxlength="80"  />
+                                        <p:message for="persTwiter" display="icon"/>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                            </h:panelGrid>
+                            <f:facet name="footer"> <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionPersonalControlador.guardarPersonal()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContienePersonal" 
+                                                         update=":frmGestionPersonal:panelConieneListas,panelContienePersonal,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionPersonalControlador.permisosBoton['PAG_INSRT'] || gestionPersonalControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListPersonal').filter();"/>
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionPersonalControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionPersonal:panelConieneListas,panelContienePersonal,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionPersonalControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target=":frmGestionPersonal:panelContienePersonal"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center></f:facet>
+
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListPersonal" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListPersonal" value="#{gestionPersonalControlador.listarPersonals}"  var="perColumna"   
+                                         selectionMode="single" rowKey="#{perColumna.idPersonal}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListPersonal"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Personal" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.idPersonal}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Identificación" width="70" style="font-size:12px;" filterBy="#{perColumna.identificacion}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.identificacion}" style="font-size:12px;" />
+                                </p:column> 
+
+                                <p:column   headerText="Nombre" width="150" style="font-size:12px;" filterBy="#{perColumna.primerApellido} #{perColumna.segundoApellido} #{perColumna.primerNombre} #{perColumna.segundoNombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.primerApellido} #{perColumna.segundoApellido} #{perColumna.primerNombre} #{perColumna.segundoNombre}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Cargo" width="100" style="font-size:12px;" filterBy="#{perColumna.codCargo.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.codCargo.nombre}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Tipo contrato" width="100" style="font-size:12px;" filterBy="#{perColumna.codTipoContrato.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.codTipoContrato.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Organigrama" width="200" style="font-size:12px;" filterBy="#{perColumna.codOrganigrama.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.codOrganigrama.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Provincia-Canton" width="150" style="font-size:12px;" filterBy="#{perColumna.codDpa.codPadre1.codPadre1.nombre} #{perColumna.codDpa.codPadre1.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.codDpa.codPadre1.codPadre1.nombre} - #{perColumna.codDpa.codPadre1.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Correo trabajo" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.correoInstitucional}" style="font-size:12px;" />                                    
+                                </p:column>
+                                <p:column headerText="Teléfono" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.telefonoInstitucional}" style="font-size:12px;" />
+                                    <h:outputText value=" Ext. #{perColumna.extensionInstitucional}" rendered="#{!(perColumna.extensionInstitucional eq null || perColumna.extensionInstitucional eq '')}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionPersonalControlador.recuperarPersonalCampos(perColumna)}" 
+                                                       process="@this" update=":frmGestionPersonal:panelContienePersonal,:frmGestionPersonal:panelConieneListas,:frmGestionPersonal:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionPersonalControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionPersonal:panelContienePersonal"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionPersonalControlador.confirmaEliminar(perColumna)}" 
+                                                     process="@this" update=":frmGestionPersonal:panelConieneListas,:frmGestionPersonal:message" 
+                                                     async="true" global="false" disabled="#{!gestionPersonalControlador.permisosBoton['PAG_ELIM']}"
+                                                      oncomplete="PF('wVarTablaListPersonal').filter();">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionPersonal:panelContienePersonal"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

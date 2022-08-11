@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <composite:attribute name="valor" required="true"/>
+        <composite:attribute name="converter" required="true"/>
+        <composite:attribute name="ancho" default="50"/>
+        <composite:attribute name="tamanioLetra" default="10"/>
+        <composite:attribute name="lista" required="true"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2" style="font-size: #{cc.attrs.tamanioLetra}px;">
+            <p:selectOneMenu id="cmb#{cc.attrs.id}" value="#{cc.attrs.valor}"
+                             converter="#{cc.attrs.converter}" var="v"
+                             style="width:#{cc.attrs.ancho}px !important;">
+                <f:selectItems value="#{cc.attrs.lista}" var="var" itemLabel="#{var}" itemValue="#{var}"/>
+                <p:column width="#{cc.attrs.ancho}" style="white-space: normal">  
+                    <h:outputText escape="false" value="#{v}" style="font-size: 10px"/> 
+                </p:column> 
+            </p:selectOneMenu>
+            <p:message for="cmb#{cc.attrs.id}"/>
+        </h:panelGrid>
+    </cc:implementation>
+</html>

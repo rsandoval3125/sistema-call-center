@@ -1,0 +1,474 @@
+<html
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+       
+        <ui:composition>
+                                
+            <p:panel id="manage-inquietudes-content" class="ui-fluid">
+                <p:outputPanel rendered="#{not empty inquietudesControlador.captDetalleH}">
+                    <p:growl id="messages" showDetail="true"/>
+                    <div class="card">
+                        
+                            <p:panelGrid id="idFormularioInquietudes"
+                                         columns="6"
+                                         columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank ui-fluid"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-12">
+                                        <p style="font-size: 18px">Registre su consulta</p>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <span>Lugar de Residencia</span>
+                                       <p:divider/>
+                                   </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Provincia"/>
+                                        <p:selectOneMenu
+                                            id="dpaProvSelect"
+                                            value="#{inquietudesControlador.provinciaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            requiredMessage="Provincia necesita ser seleccionado">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaDpaProvinciaSelect}"
+                                                var="prov"
+                                                itemLabel="#{prov.nombre}"
+                                                itemValue="#{prov}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCanSelect"
+                                                process="@this"
+                                                listener="#{inquietudesControlador.onChangeProvincia}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cantón"/>
+                                        <p:selectOneMenu
+                                            id="dpaCanSelect"
+                                            value="#{inquietudesControlador.cantonSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaDpaCantonSelect}"
+                                                var="can"
+                                                itemLabel="#{can.nombre}"
+                                                itemValue="#{can}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"
+                                                listener="#{inquietudesControlador.onChangeCanton}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Ciudad o Parroquia"/>
+                                        <p:selectOneMenu
+                                            id="dpaCiuSelect"
+                                            value="#{inquietudesControlador.parroquiaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaDpaCiudadSelect}"
+                                                var="ciu"
+                                                itemLabel="#{ciu.nombre}"
+                                                itemValue="#{ciu}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <span>Información del Ciudadano</span>
+                                       <p:divider />
+                                   </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                         <p:outputLabel for="@next" value="Tipos de usuarios"/>
+                                          <p:selectOneMenu
+                                            id="idTipoUsuario"
+                                            value="#{inquietudesControlador.tipoUsuario}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaTipoUsuario}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idTipoUsuario"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+<!--                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="nacionalidad" value="Nacionalidad"></p:outputLabel>
+                                        <p:selectOneRadio id="nacionalidad" 
+                                                          value="#{inquietudesControlador.nacionalidad}"  
+                                                          unselectable="true"
+                                                          required="true"
+                                                          requiredMessage="Seleccione Nacionalidad">
+                                            <f:selectItem itemLabel="Ecuatoriana" itemValue="ECUATORIANO"/>
+                                            <f:selectItem itemLabel="Extranjero" itemValue="EXTRANJERO"/>
+                                        </p:selectOneRadio>
+                                    </p:column>
+                                </p:row>-->
+
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-3">
+                                         <p:outputLabel for="@next" value="Tipo de identificación"/>
+                                          <p:selectOneMenu
+                                            id="idTipoIdentificacion"
+                                            value="#{inquietudesControlador.tipoIdentificacion}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaTipoIdentificacion}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idTipoIdentificacion idFormularioInquietudes"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:outputLabel for="@next" value="Cédula de Identidad" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}"/>
+                                        <p:inputText id="idCedula" 
+                                                     value="#{inquietudesControlador.numeroDocumento}" 
+                                                     maxlength="10" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}">
+                                                <p:keyFilter regEx="/[0-9 ]/i"/>
+                                                <f:validator
+                                                            binding="${cedulaValidador}"
+                                                            for="cedula" />
+                                                <p:ajax event="blur"
+                                                        process="@this"
+                                                        listener="#{inquietudesControlador.consultaCiudadanoPorCedula(actionEvent)}"
+                                                        update="@this, messageCedula nombre apellido"/>
+
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messageCedula nombre apellido"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messageCedula" for="idCedula" display="icon text" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}"/>
+                                        
+                                        <p:outputLabel for="@next" value="Ruc" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}"/>
+                                        <p:inputText id="idRuc" 
+                                                     value="#{inquietudesControlador.numeroDocumento}" 
+                                                     maxlength="13" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}">
+                                                <p:keyFilter regEx="/[0-9 ]/i"/>
+                                                <f:validator
+                                                            binding="${rucValidador}"
+                                                            for="cedula" />
+<!--                                                <p:ajax event="blur"
+                                                        process="@this"
+                                                        listener="#{inquietudesControlador.consultaCiudadanoPorCedula(actionEvent)}"
+                                                        update="@this, messageCedula nombre apellido"/>-->
+
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messageRuc"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messageRuc" for="idRuc" display="icon text" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}"/>
+                                        
+                                        <p:outputLabel for="@next" value="Numero de Pasaporte" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}"/>
+                                        <p:inputText id="idPasaporte" 
+                                                     value="#{inquietudesControlador.numeroDocumento}" 
+                                                     maxlength="20" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}">
+                                                <p:keyFilter regEx="/[A-Za-z0-9]+/g"/>
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messagePasaporte"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messagePasaporte" for="idPasaporte" display="icon text" rendered="#{inquietudesControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}"/>
+                                        
+                                    </p:column>
+                                
+                                    <p:column styleClass="ui-grid-col-6">
+                                        
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="nombre" value="Nombres"/>
+                                        <p:inputText id="nombre" 
+                                                     value="#{inquietudesControlador.nombre}"                                                     
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                        
+                                                     maxlength="50"
+                                                     required="true" 
+                                                     requiredMessage="Nombre no puede estar vacío"
+                                                     >
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                     </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Apellidos"/>
+                                        <p:inputText id="apellido" 
+                                                     value="#{inquietudesControlador.apellido}"
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                          
+                                                     maxlength="50" 
+                                                     required="true"
+                                                     requiredMessage="Apellido no puede estar vacío"
+                                                     >
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Correo electrónico"/>
+                                        <p:inputText id="correo" 
+                                                     value="#{inquietudesControlador.correo}" 
+                                                     requiredMessage="Correo no tine formato correcto"   
+                                                     autocomplete="off"  
+                                                     maxlength="225">
+                                             <!--<f:validateRegex pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" />-->
+                                              <f:validator validatorId="custom.emailValidator" />
+					      <p:ajax />
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Número de teléfono de su domicilio"/>
+                                        <p:inputText id="telefono" 
+                                                     value="#{inquietudesControlador.telefono}" 
+                                                     maxlength="10">
+                                             <p:keyFilter regEx="/[0-9 ]/i"/>
+                                        </p:inputText>
+                                    </p:column>
+                                    
+                                </p:row>
+                                <p:row>
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <span>Información de la consulta</span>
+                                       <p:divider />
+                                   </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Tipo de consulta"/>
+                                        <div class="ui-inputgroup">
+                                        
+                                            <p:selectOneMenu
+                                                id="tipoReqSelect"
+                                                value="#{inquietudesControlador.tipoInfSelect}"
+                                                filter="true"
+                                                required="true"
+                                                filterMatchMode="contains"
+                                                converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem
+                                                    itemLabel="Seleccione uno"
+                                                    itemValue=""
+                                                    noSelectionOption="true" />
+                                                <f:selectItems
+                                                    value="#{inquietudesControlador.listaTipoInfSelect}"
+                                                    var="req"
+                                                    itemLabel="#{req.nombre}"
+                                                    itemValue="#{req}" />
+                                                <p:ajax
+                                                    event="valueChange"
+                                                    update="tipoReqSelect"
+                                                    process="@this"/>
+                                            </p:selectOneMenu>
+                                            <!--<p:commandButton icon="pi pi-search" styleClass="ui-button-warning"/>-->
+<!--                                             <p:commandButton   icon="pi pi-search" 
+                                                    action="#{inquietudesControlador.recuperarDatosInquietudes(entidad)}" 
+                                                    oncomplete="PF('dlgDescripcionCatalogo').show()"
+                                                    styleClass="ui-button-warning">
+                                                    
+                                              </p:commandButton>-->
+                                        </div>
+                                        <!--<p:outputLabel id="descripcion2" style="color:#B9B9B9;" value="#{inquietudesControlador.tipoInfSelect.descripcion}"/>-->
+                                        <!--<h:outputText id="displayRespuesta" class="p-d-block" />-->
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="idPlataforma" value="Plataforma" />
+                                        <p:selectOneMenu
+                                            id="idPlataforma"
+                                            value="#{inquietudesControlador.tipoPlatSelect}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaPlatSelect}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idPlataforma"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-12">
+                                            <p:outputLabel for="@next" value="Detalle de consulta"/>       
+                                            <p:inputTextarea id="detalle" 
+                                                             value="#{inquietudesControlador.detalleInf}"  
+                                                             style="text-transform:uppercase;" 
+                                                             onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                             required="true"
+                                                             requiredMessage="Detalle no puede estar vacío"
+                                                             counter="display"
+                                                             maxlength="1000"
+                                                             counterTemplate="{0} caracteres restantes."
+                                                             />
+                                            <h:outputText id="display" class="p-d-block" />
+                                     </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-12">
+                                         <p:outputLabel for="@next" value="Respuesta"><p1 style="color:#B9B9B9;">-Opcional</p1></p:outputLabel>       
+                                            <p:inputTextarea id="respuesta" 
+                                                             value="#{inquietudesControlador.respuesta}"  
+                                                             style="text-transform:uppercase;" 
+                                                             onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                             requiredMessage="Respuesta no puede estar vacío"
+                                                             counter="displayRespuesta"
+                                                             maxlength="1000"
+                                                             counterTemplate="{0} caracteres restantes."
+                                                             >
+                                                             <f:attribute name="idEstado" value="#{inquietudesControlador.tipoEstadoActividadSelect}"/>
+                                                             <f:validator binding="${respuestaValidador}" for="respuesta" />
+                                                
+                                                          
+                                            </p:inputTextarea>
+                                            <h:outputText id="displayRespuesta" class="p-d-block" />
+                                            
+                                             <!--<p:keyFilter regEx="/[0-9 ]/i"/>-->
+                                     </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-12">
+                                        <p:outputLabel for="@next" value="Estado" />
+                                         <p:selectOneMenu
+                                            id="idEstado"
+                                            value="#{inquietudesControlador.tipoEstadoActividadSelect}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            >
+                                            <f:selectItems
+                                                value="#{inquietudesControlador.listaEstadoActividadSelect}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idEstado"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <p:divider />
+                                   </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-8"/>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton 
+                                            value="Guardar" 
+                                            icon="pi pi-check" 
+                                            actionListener="#{inquietudesControlador.guardarInquietudes}"
+                                            onstart="PF('blockUIWidget1').block()"
+	                                    oncomplete="PF('blockUIWidget1').unblock()"
+                                            update="@(form:respuesta) manage-inquietudes-content idEstado" 
+                                            process="manage-inquietudes-content @this"
+                                            style="font-size: 2rem"
+                                            styleClass="ui-button-success"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton 
+                                            value="Cancelar" 
+                                            icon="pi pi-times" 
+                                            actionListener="#{inquietudesControlador.cancelar}"
+                                            class="ui-button-secondary"
+                                            process="@this" 
+                                            update="@form"
+                                            style="font-size: 2rem"/>
+                                     
+                                    </p:column>
+                                </p:row>
+                                 <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-12">
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                    
+                    </div>
+                      <br />
+	        
+                </p:outputPanel>
+      
+            </p:panel>
+             
+
+        </ui:composition>
+    </body>
+</html>

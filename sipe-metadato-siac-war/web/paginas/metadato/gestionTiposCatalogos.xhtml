@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionTipoCatalogo">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneTipoCatalogo" width="1000" columns="1" >
+                        <p:panel header="Metadato - Tipos de Catálogos">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="tipCatalogoNombre" value="#{gestionTipoCatalogoControlador.objTipoCatalogoActual.nombre}"  
+                                               size="40" maxlength="1280" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgtipCatalogoNombre" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="tipCatalogoNombre" display="icon" id="msgtipCatalogoNombre"/>                                                       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="tipCatalogoDescripcion"  value="#{gestionTipoCatalogoControlador.objTipoCatalogoActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="1280" autoResize="false" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgtipCatalogoDescripcion" async="true" global="false"/>
+                                </p:inputTextarea>
+                                <p:message for="tipCatalogoDescripcion" display="icon" id="msgtipCatalogoDescripcion"/>   
+
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="tipCatalogoAlias" value="#{gestionTipoCatalogoControlador.objTipoCatalogoActual.alias}"  
+                                               size="40" maxlength="20"  readonly="#{gestionTipoCatalogoControlador.habilitaEdicion}" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgtipCatalogoAlias" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="tipCatalogoAlias" display="icon" id="msgtipCatalogoAlias"/>
+
+                                <p:outputLabel value="Orden"/>
+                                <p:inputNumber   id="tipCatalogoOrden" value="#{gestionTipoCatalogoControlador.objTipoCatalogoActual.orden}"  
+                                                 maxlength="10"  maxValue="2147483647"  size="40" decimalPlaces="0" decimalSeparator="" thousandSeparator=""  required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgtipCatalogoOrden" async="true" global="false"/>
+                                </p:inputNumber>
+                                <p:message for="tipCatalogoOrden" display="icon" id="msgtipCatalogoOrden"/>
+
+                                <p:outputLabel value="Cache"/>
+                                <p:inputNumber    id="tipCatalogoModifica"  value="#{gestionTipoCatalogoControlador.objTipoCatalogoActual.modificadoCache}" 
+                                                  size="40" maxValue="32767" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="tipCatalogoModifica" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                   
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionTipoCatalogoControlador.guardarTipoCatalogo()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneTipoCatalogo" 
+                                                         update=":frmGestionTipoCatalogo:panelConieneListas,panelContieneTipoCatalogo,msgs"
+                                                         async="true"
+                                                         global="false"
+
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionTipoCatalogoControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionTipoCatalogo:panelConieneListas,panelContieneTipoCatalogo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         >
+                                            <p:resetInput target=":frmGestionTipoCatalogo:panelContieneTipoCatalogo"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListTipoCatalogo" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListTipoCatalogo" value="#{gestionTipoCatalogoControlador.listarTipoCatalogoes}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idTipoCatalogo}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Tipos de Catálogos" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idTipoCatalogo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="150" style="font-size:12px;" filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Descripción" width="250" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column   headerText="Alias" width="200" style="font-size:12px;" filterBy="#{aplColumna.alias}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Cache" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.modificadoCache}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionTipoCatalogoControlador.recuperarTipoCatalogoCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionTipoCatalogo:panelContieneTipoCatalogo,:frmGestionTipoCatalogo:panelConieneListas,:frmGestionTipoCatalogo:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionTipoCatalogo:panelContieneTipoCatalogo"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionTipoCatalogoControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionTipoCatalogo:panelConieneListas,:frmGestionTipoCatalogo:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

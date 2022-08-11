@@ -1,0 +1,1984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="2220" pageHeight="595" orientation="Landscape" columnWidth="2180" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="5d3ce977-47a2-4057-8b8b-ec78dbf1324b">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="idzonal" class="java.lang.String"/>
+	<parameter name="idprov" class="java.lang.Integer"/>
+	<parameter name="idcton" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+nombre,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nprov END nprov,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN ncton END ncton,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nparr END nparr,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nzn END nzn,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nastor END nastor,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nmz END nmz,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN ndstor END ndstor,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN totviv END totviv,
+CASE WHEN (nombre IS DISTINCT FROM lag(nombre) OVER (ORDER BY nombre)) THEN nhab END nhab,
+
+d1nombre,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1nzn END d1nzn,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1nastor END d1nastor,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1nmz END d1nmz,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1ndstor END d1ndstor,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1totviv END d1totviv,
+CASE WHEN (d1nombre IS DISTINCT FROM lag(d1nombre) OVER (ORDER BY nombre)) THEN d1nhab END d1nhab,
+
+d2nombre,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nombre END d2nombre,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nzn END d2nzn,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2ncstor END d2ncstor,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nmz END d2nmz,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2totviv END d2totviv,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nchab END d2nchab,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nldstor END d2nldstor,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nlastor  end d2nlastor, 
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nlamz  end d2nlamz, 
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2latotviv  end d2latotviv,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2nlahab  end d2nlahab, 
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2ndstor  end d2ndstor, 
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2dtotviv  end d2dtotviv,
+CASE WHEN (d2nombre IS DISTINCT FROM lag(d2nombre) OVER (ORDER BY nombre)) THEN d2ndhab  end d2ndhab,
+
+d3nombre,
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nzn end d3nzn, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3ncstor  end d3ncstor,
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nmz  end d3nmz, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3totviv  end d3totviv, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nchab  end d3nchab, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nldstor  end d3nldstor, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nlastor  end d3nlastor, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nlamz  end d3nlamz, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3latotviv  end d3latotviv,
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3nlahab  end d3nlahab, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3ndstor  end d3ndstor, 
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3dtotviv  end d3dtotviv,
+CASE WHEN (d3nombre IS DISTINCT FROM lag(d3nombre) OVER (ORDER BY nombre)) THEN d3ndhab  end d3ndhab
+
+FROM 
+(
+select 
+q1.nombre, q1.nprov, q1.ncton, q1.nparr, q1.nzn, q1.nastor, q1.nmz, q1.ndstor, q1.totviv, q1.nhab,
+q2.d1nombre, q2.d1nzn, q2.d1nastor, q2.d1nmz, q2.d1ndstor, q2.d1totviv, q2.d1nhab, 
+q3.d2nombre, q3.d2nzn, q3.d2ncstor, q3.d2nmz, q3.d2totviv, q3.d2nchab, 
+q3.d2nldstor, q3.d2nlastor, q3.d2nlamz, q3.d2latotviv, q3.d2nlahab, 
+q3.d2ndstor, q3.d2dtotviv, q3.d2ndhab, 
+q4.d3nombre, q4.d3nzn, q4.d3ncstor, q4.d3nmz, q4.d3totviv, q4.d3nchab,
+q4.d3nldstor, q4.d3nlastor, q4.d3nlamz, q4.d3latotviv, q4.d3nlahab,
+q4.d3ndstor, q4.d3dtotviv, q4.d3ndhab
+from 
+(
+select d.id_catalogo, d.nombre, 
+count(distinct(substring(b.info4,1,2))) nprov,
+count(distinct(substring(b.info4,1,4))) ncton,
+count(distinct(substring(b.info4,1,6))) nparr,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then substring(b.info4,1,9) end)) nzn,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then substring(b.info4,1,12) end)) nastor,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then b.info4 end)) nmz,
+count(distinct(case when substring(b.info4,7,3) = '999' then substring(b.info4,1,12) end)) ndstor,
+count(c.val14) totviv, 
+case when sum(NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int) is null then 0 else sum(NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int) end nhab
+from captura.capt_carga_control a
+inner join captura.capt_cabecera b on (a.id_car_con = b.cod_car_con) and (a.cod_mue_det = b.cod_muestra) 
+inner join captura.capt_detalle_h c on (b.id_cab = c.cod_cab)
+inner join metadato.met_catalogo d on (a.zonal = substring(d.valor,2,1)  and d.alias like '%CAT_COOR_ZONAL%')
+where (a.zonal = $P{idzonal} or $P{idzonal} = '')
+and a.estado_logico = true
+and b.estado_logico = true
+and b.info4 is not null
+and a.control5 is not null
+group by d.id_catalogo, d.nombre
+) q1
+LEFT JOIN 
+(
+select d1.id_catalogo, d1.cod_padre2, d1.nombre d1nombre, 
+count(distinct(substring(b.info4,1,2))) d1nprov,
+count(distinct(substring(b.info4,1,4))) d1ncton,
+count(distinct(substring(b.info4,1,6))) d1nparr,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then substring(b.info4,1,9) end)) d1nzn,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then substring(b.info4,1,12) end)) d1nastor,
+count(distinct(case when substring(b.info4,7,3) between '001' and '899' then b.info4 end)) d1nmz,
+count(distinct(case when substring(b.info4,7,3) = '999' then substring(b.info4,1,12)end)) d1ndstor,
+count(c.val14) d1totviv, 
+case when sum(NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int) is null then 0 else sum(NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int) end d1nhab
+from captura.capt_carga_control a
+inner join captura.capt_cabecera b on (a.id_car_con = b.cod_car_con) and (a.cod_mue_det = b.cod_muestra) 
+inner join captura.capt_detalle_h c on (b.id_cab = c.cod_cab)
+inner join metadato.met_catalogo d1 on (substring(b.info4,1,2) = d1.valor and d1.alias like '%CAT_DPA_PROV%')
+where (a.zonal = $P{idzonal} or $P{idzonal} = '')
+and a.estado_logico = true
+and b.estado_logico = true
+and b.info4 is not null
+and a.control5 is not null
+and (d1.id_catalogo = $P{idprov} or $P{idprov} = 0)
+group by d1.id_catalogo, d1.cod_padre2, d1.nombre
+) q2 ON (q1.id_catalogo = q2.cod_padre2)
+LEFT JOIN 
+(
+select d2.id_catalogo, d2.cod_padre1, d2.nombre d2nombre,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then substring(b.info4,1,9) end)) d2nzn,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then substring(b.info4,1,12) end)) d2ncstor,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then b.info4 end)) d2nmz,
+count(case when (substring(b.info4,7,3) between '001' and '899') then c.val14 end) d2totviv,
+case when sum(case when (substring(b.info4,7,3) between '001' and '899') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) between '001' and '899') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d2nchab,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '999') then substring(b.info4,1,12) end)) d2nldstor,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '998') then substring(b.info4,1,12) end)) d2nlastor,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '998') then b.info4 end)) d2nlamz,
+count(case when (substring(b.info4,7,3) between '900' and '998') then c.val14 end) d2latotviv,
+case when sum(case when (substring(b.info4,7,3) between '900' and '998') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) between '900' and '998') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d2nlahab,
+count(distinct(case when (substring(b.info4,7,3) = '999') then substring(b.info4,1,12) end)) d2ndstor,
+count(case when (substring(b.info4,7,3) = '999') then c.val14 end) d2dtotviv,
+case when sum(case when (substring(b.info4,7,3) = '999') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) = '999') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d2ndhab
+from captura.capt_carga_control a
+inner join captura.capt_cabecera b on (a.id_car_con = b.cod_car_con) and (a.cod_mue_det = b.cod_muestra) 
+inner join captura.capt_detalle_h c on (b.id_cab = c.cod_cab)
+inner join metadato.met_catalogo d2 on (substring(b.info4,1,4) = d2.valor and d2.alias like '%CAT_DPA_CANTON%')
+where (a.zonal = $P{idzonal} or $P{idzonal} = '')
+and a.estado_logico = true
+and b.estado_logico = true
+and b.info4 is not null
+and a.control5 is not null
+and (d2.id_catalogo = $P{idcton} or $P{idcton} = 0)
+and substring(b.info4,3,2) = '01'
+group by d2.id_catalogo, d2.cod_padre1, d2.nombre
+) q3 ON (q2.id_catalogo = q3.cod_padre1)
+LEFT JOIN 
+(
+select d3.id_catalogo, d3.cod_padre1, d3.nombre d3nombre,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then substring(b.info4,1,9) end)) d3nzn,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then substring(b.info4,1,12) end)) d3ncstor,
+count(distinct(case when (substring(b.info4,7,3) between '001' and '899') then b.info4 end)) d3nmz,
+count(case when (substring(b.info4,7,3) between '001' and '899') then c.val14 end) d3totviv,
+case when sum(case when (substring(b.info4,7,3) between '001' and '899') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) between '001' and '899') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d3nchab,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '999') then substring(b.info4,1,12) end)) d3nldstor,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '998') then substring(b.info4,1,12) end)) d3nlastor,
+count(distinct(case when (substring(b.info4,7,3) between '900' and '998') then b.info4 end)) d3nlamz,
+count(case when (substring(b.info4,7,3) between '900' and '998') then c.val14 end) d3latotviv,
+case when sum(case when (substring(b.info4,7,3) between '900' and '998') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) between '900' and '998') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d3nlahab,
+count(distinct(case when (substring(b.info4,7,3) = '999') then substring(b.info4,1,12) end)) d3ndstor,
+count(case when (substring(b.info4,7,3) = '999') then c.val14 end) d3dtotviv,
+case when sum(case when (substring(b.info4,7,3) = '999') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) is null then 0 
+else sum(case when (substring(b.info4,7,3) = '999') then NULLIF(regexp_replace(c.val25,'\D','','g'),'')::int end) end d3ndhab
+from captura.capt_carga_control a
+inner join captura.capt_cabecera b on (a.id_car_con = b.cod_car_con) and (a.cod_mue_det = b.cod_muestra) 
+inner join captura.capt_detalle_h c on (b.id_cab = c.cod_cab)
+inner join metadato.met_catalogo d3 on (substring(b.info4,1,4) = d3.valor and d3.alias like '%CAT_DPA_CANTON%')
+where (a.zonal = $P{idzonal} or $P{idzonal} = '')
+and a.estado_logico = true
+and b.estado_logico = true
+and b.info4 is not null
+and a.control5 is not null
+and (d3.id_catalogo = $P{idcton} or $P{idcton} = 0)
+and substring(b.info4,3,2) <> '01'
+group by d3.id_catalogo, d3.cod_padre1, d3.nombre
+) q4 ON (q2.id_catalogo = q4.cod_padre1)
+) q7
+order by nombre,nprov NULLS LAST]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre de la conexion]]></fieldDescription>
+	</field>
+	<field name="nprov" class="java.lang.Long"/>
+	<field name="ncton" class="java.lang.Long"/>
+	<field name="nparr" class="java.lang.Long"/>
+	<field name="nzn" class="java.lang.Long"/>
+	<field name="nastor" class="java.lang.Long"/>
+	<field name="nmz" class="java.lang.Long"/>
+	<field name="ndstor" class="java.lang.Long"/>
+	<field name="totviv" class="java.lang.Long"/>
+	<field name="nhab" class="java.lang.Long"/>
+	<field name="d1nombre" class="java.lang.String"/>
+	<field name="d1nzn" class="java.lang.Long"/>
+	<field name="d1nastor" class="java.lang.Long"/>
+	<field name="d1nmz" class="java.lang.Long"/>
+	<field name="d1ndstor" class="java.lang.Long"/>
+	<field name="d1totviv" class="java.lang.Long"/>
+	<field name="d1nhab" class="java.lang.Long"/>
+	<field name="d2nombre" class="java.lang.String"/>
+	<field name="d2nzn" class="java.lang.Long"/>
+	<field name="d2ncstor" class="java.lang.Long"/>
+	<field name="d2nmz" class="java.lang.Long"/>
+	<field name="d2totviv" class="java.lang.Long"/>
+	<field name="d2nchab" class="java.lang.Long"/>
+	<field name="d2nldstor" class="java.lang.Long"/>
+	<field name="d2nlastor" class="java.lang.Long"/>
+	<field name="d2nlamz" class="java.lang.Long"/>
+	<field name="d2latotviv" class="java.lang.Long"/>
+	<field name="d2nlahab" class="java.lang.Long"/>
+	<field name="d2ndstor" class="java.lang.Long"/>
+	<field name="d2dtotviv" class="java.lang.Long"/>
+	<field name="d2ndhab" class="java.lang.Long"/>
+	<field name="d3nombre" class="java.lang.String"/>
+	<field name="d3nzn" class="java.lang.Long"/>
+	<field name="d3ncstor" class="java.lang.Long"/>
+	<field name="d3nmz" class="java.lang.Long"/>
+	<field name="d3totviv" class="java.lang.Long"/>
+	<field name="d3nchab" class="java.lang.Long"/>
+	<field name="d3nldstor" class="java.lang.Long"/>
+	<field name="d3nlastor" class="java.lang.Long"/>
+	<field name="d3nlamz" class="java.lang.Long"/>
+	<field name="d3latotviv" class="java.lang.Long"/>
+	<field name="d3nlahab" class="java.lang.Long"/>
+	<field name="d3ndstor" class="java.lang.Long"/>
+	<field name="d3dtotviv" class="java.lang.Long"/>
+	<field name="d3ndhab" class="java.lang.Long"/>
+	<variable name="nprov" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nprov}]]></variableExpression>
+	</variable>
+	<variable name="ncton" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ncton}]]></variableExpression>
+	</variable>
+	<variable name="nparr" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nparr}]]></variableExpression>
+	</variable>
+	<variable name="nzn" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nzn}]]></variableExpression>
+	</variable>
+	<variable name="nastor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nastor}]]></variableExpression>
+	</variable>
+	<variable name="nmz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nmz}]]></variableExpression>
+	</variable>
+	<variable name="ndstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ndstor}]]></variableExpression>
+	</variable>
+	<variable name="totviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{totviv}]]></variableExpression>
+	</variable>
+	<variable name="nhab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{nhab}]]></variableExpression>
+	</variable>
+	<variable name="d1nzn" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1nzn}]]></variableExpression>
+	</variable>
+	<variable name="d1nastor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1nastor}]]></variableExpression>
+	</variable>
+	<variable name="d1nmz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1nmz}]]></variableExpression>
+	</variable>
+	<variable name="d1ndstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1ndstor}]]></variableExpression>
+	</variable>
+	<variable name="d1totviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1totviv}]]></variableExpression>
+	</variable>
+	<variable name="d1nhab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d1nhab}]]></variableExpression>
+	</variable>
+	<variable name="d2nzn" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nzn}]]></variableExpression>
+	</variable>
+	<variable name="d2ncstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2ncstor}]]></variableExpression>
+	</variable>
+	<variable name="d2nmz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nmz}]]></variableExpression>
+	</variable>
+	<variable name="d2totviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2totviv}]]></variableExpression>
+	</variable>
+	<variable name="d2nchab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nchab}]]></variableExpression>
+	</variable>
+	<variable name="d2nldstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nldstor}]]></variableExpression>
+	</variable>
+	<variable name="d2nlastor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nlastor}]]></variableExpression>
+	</variable>
+	<variable name="d2nlamz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nlamz}]]></variableExpression>
+	</variable>
+	<variable name="d2latotviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2latotviv}]]></variableExpression>
+	</variable>
+	<variable name="d2nlahab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2nlahab}]]></variableExpression>
+	</variable>
+	<variable name="d2ndstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2ndstor}]]></variableExpression>
+	</variable>
+	<variable name="d2dtotviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2dtotviv}]]></variableExpression>
+	</variable>
+	<variable name="d2ndhab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d2ndhab}]]></variableExpression>
+	</variable>
+	<variable name="d3nzn" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nzn}]]></variableExpression>
+	</variable>
+	<variable name="d3ncstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3ncstor}]]></variableExpression>
+	</variable>
+	<variable name="d3nmz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nmz}]]></variableExpression>
+	</variable>
+	<variable name="d3totviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3totviv}]]></variableExpression>
+	</variable>
+	<variable name="d3nchab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nchab}]]></variableExpression>
+	</variable>
+	<variable name="d3nldstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nldstor}]]></variableExpression>
+	</variable>
+	<variable name="d3nlastor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nlastor}]]></variableExpression>
+	</variable>
+	<variable name="d3nlamz" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nlamz}]]></variableExpression>
+	</variable>
+	<variable name="d3latotviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3latotviv}]]></variableExpression>
+	</variable>
+	<variable name="d3nlahab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3nlahab}]]></variableExpression>
+	</variable>
+	<variable name="d3ndstor" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3ndstor}]]></variableExpression>
+	</variable>
+	<variable name="d3dtotviv" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3dtotviv}]]></variableExpression>
+	</variable>
+	<variable name="d3ndhab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{d3ndhab}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="140" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="164" height="62" uuid="8ffa2cd9-8647-4ddd-b0c2-081f4e5fa828"/>
+				<imageExpression><![CDATA["INEC.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="287" y="57" width="286" height="22" uuid="51897736-7325-43ed-9cd2-eb92de1f390b"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="11" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[RESUMEN GLOBAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="0" y="114" width="550" height="22" forecolor="#000000" uuid="2611e85d-afff-47e4-8337-3b26d3348a42"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[PARA USO DEL RESPONSABLE NACIONAL /  ZONAL DE CARTOGRAFÍA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="10" width="339" height="42" uuid="7fe3b834-b131-4eef-b322-02005c23151b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIII CENSO DE POBLACIÓN Y VII DE VIVIENDA 2020. ACTUALIZACIÓN CARTOGRÁFICA Y PRECENSO DE VIVIENDAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Title" x="0" y="79" width="45" height="22" uuid="492a54eb-0dd5-4c91-901c-86bec2e5523a"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Zonal:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="Title" x="45" y="79" width="264" height="22" uuid="47e80496-7d69-49a8-a3b0-ee1f0a154b08"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{idzonal}.equals("N") ? "Administración Central Campo 4" 
+                                : $P{idzonal}.equals("C") ? "Coordinación Zonal Centro 3"
+                                : $P{idzonal}.equals("L") ? "Coordinación Zonal Litoral 8"
+                                : $P{idzonal}.equals("S") ? "Coordinación Zonal Sur 6"
+                                : ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="103" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="0" y="0" width="130" height="100" forecolor="#000000" backcolor="#CCCCCC" uuid="253cd0fb-73fd-4ff5-b050-493093508f97"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[COORDINACIÓN ZONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="130" y="60" width="40" height="40" forecolor="#000000" uuid="ff4ecbaa-65ea-4e44-a492-3f16d5f03c00"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE PROVINCIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="170" y="60" width="40" height="40" forecolor="#000000" uuid="8921b741-7c9d-41ea-96ef-685ab34f5100"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE CANTONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="210" y="60" width="40" height="40" forecolor="#000000" uuid="9cc8acc7-be42-4d23-ba91-82fe053495d6"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE PARROQUIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="250" y="60" width="40" height="40" forecolor="#000000" uuid="7126097a-49de-4724-8afb-2415e83b526e"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE ZONAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="290" y="60" width="40" height="40" forecolor="#000000" uuid="f5cc58ff-1701-44a1-8ff1-5419e6eb5864"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE SECTOR AMANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="330" y="60" width="40" height="40" forecolor="#000000" uuid="4ea6202f-2a94-498d-9e56-5e0512b17d30"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="370" y="60" width="40" height="40" forecolor="#000000" uuid="453caf30-1443-4d1c-8072-6db5dfe0d516"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE SECTOR DISP.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="410" y="60" width="40" height="40" forecolor="#000000" uuid="efb4fa6f-9ac8-4c08-b246-69d65113422a"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE VIVIENDAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="450" y="60" width="40" height="40" forecolor="#000000" uuid="9b0eb98b-9173-40df-9b61-a196108b3b78"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE HABITANTES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="130" y="0" width="360" height="60" forecolor="#000000" uuid="804d0498-de7e-4431-ba2f-bd331c2a8852"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="490" y="0" width="130" height="100" forecolor="#000000" backcolor="#FFCC99" uuid="afaa68b1-2a02-438c-a1fc-66d10485bd64"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[PROVINCIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="620" y="60" width="40" height="40" forecolor="#000000" uuid="d8b6efc7-90af-4aa5-bb37-4aaf9f6454e5"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE ZONAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="660" y="60" width="40" height="40" forecolor="#000000" uuid="9d48c6de-2670-425e-8909-f79485c3953b"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE SECTOR AMANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="700" y="60" width="40" height="40" forecolor="#000000" uuid="3b7a9b2d-8c51-4553-88a2-adbbe8be8119"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="740" y="60" width="40" height="40" forecolor="#000000" uuid="b9175e55-7938-430f-81c4-e37299c153c0"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE SECTOR DISP.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="780" y="60" width="40" height="40" forecolor="#000000" uuid="92b853fa-9060-489e-a5eb-c01c1c45272f"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="820" y="60" width="40" height="40" forecolor="#000000" uuid="d0a4298e-ad02-4adb-b91a-1c8906bdaaa3"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="620" y="0" width="240" height="60" forecolor="#000000" uuid="aa41f762-e4d0-4d0e-bae5-3d7aa31de4d1"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="860" y="0" width="130" height="100" forecolor="#000000" backcolor="#CCFFCC" uuid="427f47d7-b578-42bd-be9f-d69a82b5bec4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CANTONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="990" y="40" width="40" height="60" forecolor="#000000" uuid="11228202-855d-427c-a1e4-d98aefd4c822"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE ZONAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1030" y="40" width="40" height="60" forecolor="#000000" uuid="aaa56400-0c46-4b4c-a031-ba4298c06d25"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE SECTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1070" y="40" width="40" height="60" forecolor="#000000" uuid="aa7b12e9-c155-4132-b217-4c6d856208dd"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1110" y="40" width="40" height="60" forecolor="#000000" uuid="9a26f8d9-ac8f-498b-acb4-12c074ed7824"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1150" y="40" width="40" height="60" forecolor="#000000" uuid="d158c8b9-f7d9-4e8c-bd5d-2bac1cac4197"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1190" y="40" width="40" height="60" forecolor="#000000" uuid="a828cbb4-6f5d-46ba-b232-36977a3fc24b"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1230" y="60" width="40" height="40" forecolor="#000000" uuid="b551f4cd-6cd7-4d71-afa0-374e63c6c760"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE SECTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1270" y="60" width="40" height="40" forecolor="#000000" uuid="192a424a-396d-4e39-9c6f-7ae69bcdefa1"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1310" y="60" width="40" height="40" forecolor="#000000" uuid="31def43a-1790-4b30-bb16-562e22213c09"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1350" y="60" width="40" height="40" forecolor="#000000" uuid="ee3316e5-8775-4e8f-8f2c-86ef35dc2da9"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1390" y="60" width="40" height="40" forecolor="#000000" uuid="ac467ee9-29d0-4050-a9d0-a7fc569f830a"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1430" y="60" width="40" height="40" forecolor="#000000" uuid="ae4befed-9796-493b-b282-febf847fda5a"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1470" y="60" width="40" height="40" forecolor="#000000" uuid="1e6b4813-8e4c-4c2d-8924-f8e44d8bfc32"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="1510" y="0" width="130" height="100" forecolor="#000000" backcolor="#00CCCC" uuid="45c221a2-8563-4eef-9dcc-a83e48882286"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CANTONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1640" y="40" width="40" height="60" forecolor="#000000" uuid="6db073eb-ec47-4d6f-92eb-da2c937d7d15"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE ZONAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1680" y="40" width="40" height="60" forecolor="#000000" uuid="021f378a-f0b8-4332-8322-9059eea55bb2"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE SECTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1720" y="40" width="40" height="60" forecolor="#000000" uuid="e5419494-a231-4dd9-92e6-3e189f9120e7"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1760" y="40" width="40" height="60" forecolor="#000000" uuid="8fe696c7-e0b5-4075-900d-5203041794f7"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1800" y="40" width="40" height="60" forecolor="#000000" uuid="2875d50a-d531-4419-b507-416230338ff4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1840" y="40" width="40" height="60" forecolor="#000000" uuid="d39a0c35-3bf9-4f53-9e07-44156d1010ba"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1880" y="60" width="40" height="40" forecolor="#000000" uuid="d14fe3c0-eb45-4f45-9b99-226fb49599c0"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE SECTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1920" y="60" width="40" height="40" forecolor="#000000" uuid="034a83ac-2a87-445f-a109-f234a2eff593"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE MANZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1960" y="60" width="40" height="40" forecolor="#000000" uuid="db28c2bb-e404-4b63-8467-e75fe3924b17"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2000" y="60" width="40" height="40" forecolor="#000000" uuid="7b471cb4-4668-4219-a547-fc528fb673eb"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2040" y="60" width="40" height="40" forecolor="#000000" uuid="e67026f9-98ab-46dc-95b9-5ee592656a6d"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2080" y="60" width="40" height="40" forecolor="#000000" uuid="ea912477-3901-438d-b5d4-579327897b86"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE VIVIEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2120" y="60" width="40" height="40" forecolor="#000000" uuid="4fb6d808-b26e-4d83-84d0-79af563306eb"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HABITAN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="990" y="20" width="200" height="20" forecolor="#000000" uuid="35e0eb91-e570-40bb-ac59-c62c3aa63988"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CIUDADES CAB. CANTONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="990" y="0" width="520" height="20" forecolor="#000000" uuid="13fde003-5ad1-4abb-aa20-98b734a0b275"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CABECERAS CANTONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1190" y="20" width="320" height="20" forecolor="#000000" uuid="3aabb1ef-7f06-4c1c-b8ab-733e37571e27"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SECTORES DISPERSOS / LOCALIDADES AMANZANADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1230" y="40" width="160" height="20" forecolor="#000000" uuid="f04f0684-3200-4318-ab79-1b09e3f42cb4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[LOCALIDADES AMANZANADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1390" y="40" width="120" height="20" forecolor="#000000" uuid="6d740de5-676c-47e8-8035-410661b56bc1"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DISPERSOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2040" y="40" width="120" height="20" forecolor="#000000" uuid="f7c3faf7-422b-4891-a803-cd47f7ca4451"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DISPERSOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1880" y="40" width="160" height="20" forecolor="#000000" uuid="e8e1d16b-f571-4b47-9b8b-e7335260aeb4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[LOCALIDADES AMANZANADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1640" y="0" width="520" height="20" forecolor="#000000" uuid="0870ea21-9fa1-4bb3-a5fe-ac693bc687db"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CANTONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1640" y="20" width="200" height="20" forecolor="#000000" uuid="21d7cbf6-8be9-4f18-96f4-5f3d8840fe9e"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CANTONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1840" y="20" width="320" height="20" forecolor="#000000" uuid="f72ba0bf-4a61-4e8b-9514-195ac7644736"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SECTORES DISPERSOS / LOCALIDADES AMANZANADAS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Transparent" x="0" y="0" width="2160" height="15" uuid="74debb3a-a70e-4fe1-91a7-cfc653000033"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="0" y="0" width="130" height="15" uuid="ee47b564-f474-4638-b308-9e619b9b73b9"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="130" y="0" width="40" height="15" uuid="4df26991-becc-4a1b-896a-2d16bd29a8e5"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nprov}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="170" y="0" width="40" height="15" uuid="bbeff686-46d8-4994-908f-0e6f3c9f1452"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ncton}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="210" y="0" width="40" height="15" uuid="d7c8e5dc-fc27-4479-bb27-55b45bd7d4e1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nparr}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="250" y="0" width="40" height="15" uuid="91feb9d3-adf1-4697-a1d1-79c1be60e0ec"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nzn}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="290" y="0" width="40" height="15" uuid="f2285e88-8d1f-4ebd-bbc8-45ac29c70363"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nastor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="330" y="0" width="40" height="15" uuid="c8b20f78-6d04-45cf-acc9-726764ef65dc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nmz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="370" y="0" width="40" height="15" uuid="f8706027-74b2-419c-80bd-dd253427962f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ndstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="410" y="0" width="40" height="15" uuid="c39ae6df-cd20-4089-aaf5-c19103930450"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{totviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="450" y="0" width="40" height="15" uuid="074ed76e-2f3c-4de0-aa36-26d6f53bc00e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nhab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="490" y="0" width="130" height="15" uuid="048aa16c-c73d-4e74-bdc6-8e7015b1be1c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="620" y="0" width="40" height="15" uuid="3c90dd2d-e1eb-4dd8-b607-5a41abf619b7"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1nzn}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="660" y="0" width="40" height="15" uuid="b9328dbf-bff2-4673-bd55-2c719604a87c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1nastor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="700" y="0" width="40" height="15" uuid="c47d6baa-e2c3-4356-a672-82bd5fd003cd"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1nmz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="740" y="0" width="40" height="15" uuid="d84efe6c-862b-4431-875c-6ed7b1b32abe"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1ndstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="780" y="0" width="40" height="15" uuid="74c0085c-d95e-437f-9459-bf5ea480d4ba"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1totviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="820" y="0" width="40" height="15" uuid="2d3eb0cd-4919-425f-8a9a-3255fe07864c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d1nhab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="860" y="0" width="130" height="15" uuid="839766ca-addb-47ee-822c-ce8fcde19109"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="990" y="0" width="40" height="15" uuid="0704e3b7-3e9b-4638-ba32-a741cd242484"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nzn}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1030" y="0" width="40" height="15" uuid="dbdce224-aa3d-4e49-b65c-4b849d517bd1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2ncstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1070" y="0" width="40" height="15" uuid="7e875ba9-849d-457b-a974-52d50fd40b1e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nmz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1110" y="0" width="40" height="15" uuid="b5260ae9-1525-4ad8-8c85-57d74ffd5cce"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2totviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1150" y="0" width="40" height="15" uuid="c157de17-7966-4368-b458-aa95371206ef"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nchab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1190" y="0" width="40" height="15" uuid="c844b970-36c6-4c1c-8436-f6d63f1e5762"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nldstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1230" y="0" width="40" height="15" uuid="05e430d3-a063-428a-a912-0c5a1a7b7afd"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nlastor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1270" y="0" width="40" height="15" uuid="8f1e5179-d9fe-4beb-b008-65804d63d911"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nlamz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1310" y="0" width="40" height="15" uuid="39340f20-40d6-4697-bfa7-6a53829696e5"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2latotviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1350" y="0" width="40" height="15" uuid="ee615b8e-2ad2-4f8f-ae13-29c31dc5e055"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2nlahab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1390" y="0" width="40" height="15" uuid="5201dc84-b2c1-4f88-bc9d-70862861cc95"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2ndstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1430" y="0" width="40" height="15" uuid="032effa6-13c0-4e4f-b029-d2a6cfc8ca0a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2dtotviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1470" y="0" width="40" height="15" uuid="0f022938-495c-4cea-9937-f59a75c2d96d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d2ndhab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1510" y="0" width="130" height="15" uuid="4735a19b-6504-4a59-bd5c-b6468cd029cf"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1640" y="0" width="40" height="15" uuid="aa77a93a-9cde-4d26-ac03-be1d58978744"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nzn}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1680" y="0" width="40" height="15" uuid="48dab947-b1cc-4fb0-b2c3-e8d082c55f8e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3ncstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1720" y="0" width="40" height="15" uuid="39f76f2d-a61c-4067-bc9f-ec730efa3b53"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nmz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1760" y="0" width="40" height="15" uuid="f9b01dbf-6325-459d-b479-47a178314c43"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3totviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1800" y="0" width="40" height="15" uuid="8616848a-ba26-4c8e-a73e-d1b9bf3caaa3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nchab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1840" y="0" width="40" height="15" uuid="0909c140-2810-4de2-bcd0-c0c402425b24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nldstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1880" y="0" width="40" height="15" uuid="e82a8bba-74ed-4cc1-be49-57350f75a340"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nlastor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1920" y="0" width="40" height="15" uuid="ef8baa62-e03d-42a8-a182-2dbc0ae14c0e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nlamz}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1960" y="0" width="40" height="15" uuid="661dc9e5-6fd2-4319-9eeb-636039ba4d88"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3latotviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="2000" y="0" width="40" height="15" uuid="a4f446e8-532c-4d31-8fe5-7814857a52fb"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3nlahab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="2040" y="0" width="40" height="15" uuid="08c0c4fe-55ea-47b1-a83d-2c10718c885f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3ndstor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="2080" y="0" width="40" height="15" uuid="69b7fbee-f24b-4ee4-8dde-2514f575f7eb"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3dtotviv}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="2120" y="0" width="40" height="15" uuid="5c4b203b-0521-454a-91c2-51aa033b3dab"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{d3ndhab}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="2180" height="1" uuid="646af359-3696-40e4-83e6-a702df043611"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="94" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="70" width="2180" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="ea7818d8-a913-43d7-98ac-570cf6c43045"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="2128" y="1" width="40" height="20" forecolor="#000000" uuid="c50d8097-d2bf-4962-a4b1-25ac38289e1d"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="2048" y="1" width="80" height="20" forecolor="#000000" uuid="0a8a662e-c9b1-4fb1-8403-c872bf994602"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#000000" uuid="4480a036-8b2b-49b6-81de-2a08f0cea054"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+			<image>
+				<reportElement x="1600" y="1" width="580" height="67" uuid="2ec69980-c3d3-42c4-8c6f-564c06f9c2c8"/>
+				<imageExpression><![CDATA["bFooDerGlobal.png"]]></imageExpression>
+			</image>
+			<frame>
+				<reportElement x="0" y="1" width="835" height="53" uuid="1e89406b-ccdd-469b-842a-78c81fe21e6f"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<staticText>
+					<reportElement style="SubTitle" x="0" y="1" width="443" height="22" forecolor="#000000" uuid="b950d43e-2eea-4963-b8b6-bbe6379465fa"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<pen lineWidth="0.0" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font fontName="Arial" size="11" isBold="true" pdfFontName="Times-Roman"/>
+					</textElement>
+					<text><![CDATA[OBSERVACIONES:]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="20" uuid="65a877a7-aabd-49da-a15c-c7e144342a87"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="40" height="20" uuid="336554eb-e022-4c5f-a981-eeaba7492639"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nprov}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="170" y="0" width="40" height="20" uuid="655710e6-7d6b-4c3d-b628-f4e173e8938d"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ncton}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="40" height="20" uuid="02215b90-94b5-4590-981a-1c4cd4775e18"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nparr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="40" height="20" uuid="336554eb-e022-4c5f-a981-eeaba7492639"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nzn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="290" y="0" width="40" height="20" uuid="655710e6-7d6b-4c3d-b628-f4e173e8938d"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nastor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="330" y="0" width="40" height="20" uuid="02215b90-94b5-4590-981a-1c4cd4775e18"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nmz}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="40" height="20" uuid="336554eb-e022-4c5f-a981-eeaba7492639"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ndstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="0" width="40" height="20" uuid="655710e6-7d6b-4c3d-b628-f4e173e8938d"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="0" width="40" height="20" uuid="02215b90-94b5-4590-981a-1c4cd4775e18"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nhab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="740" y="0" width="40" height="20" uuid="253d00c2-65f4-48fa-8dff-886b02cce310"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1ndstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="780" y="0" width="40" height="20" uuid="664924a5-4a13-45fe-8f47-f79fa2220109"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1totviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="700" y="0" width="40" height="20" uuid="7d0534a4-8acd-46d5-9546-c52b848a2489"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1nmz}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="620" y="0" width="40" height="20" uuid="beee60c5-5e35-4412-8c81-d137d029c45b"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1nzn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="820" y="0" width="40" height="20" uuid="da1bf2a4-2d04-4809-8d01-fab8d2a2f6e2"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1nhab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="660" y="0" width="40" height="20" uuid="99e382ee-f57d-43f0-9022-871c28f3c624"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d1nastor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1070" y="0" width="40" height="20" uuid="9af269f6-49d4-4114-8ec2-391ae8a05766"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nmz}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1150" y="0" width="40" height="20" uuid="7b8ba40c-e8cd-41a6-8c13-f0b11db7ec94"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nchab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1030" y="0" width="40" height="20" uuid="9762f9f7-b2e1-41d2-a7d7-87f4a8dba987"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2ncstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="990" y="0" width="40" height="20" uuid="667f25d9-e74a-48f6-b2bb-476472bedce0"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nzn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1110" y="0" width="40" height="20" uuid="63166a1b-fbf5-460d-bbd6-7daaf9d605e9"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2totviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1350" y="0" width="40" height="20" uuid="779fc3a8-00f3-4ab0-af59-0ec5a7ecdfde"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nlahab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1270" y="0" width="40" height="20" uuid="59684dcb-9f1b-41e7-a6a7-b6c1e591b80b"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nlamz}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1190" y="0" width="40" height="20" uuid="962d3b6a-d395-4fc8-8ba3-69fb8de786b9"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nldstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1310" y="0" width="40" height="20" uuid="f1241afa-3b4f-49c3-a50a-f12d784d5569"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2latotviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1230" y="0" width="40" height="20" uuid="7ebdbe6a-a63a-4fa4-aa6f-b52ba5e5140f"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2nlastor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1470" y="0" width="40" height="20" uuid="215a9bf7-0449-495b-9741-0d0157aaf7f3"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2ndhab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1430" y="0" width="40" height="20" uuid="9e2c7b70-599f-4a90-a48f-0424831911c1"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2dtotviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1390" y="0" width="40" height="20" uuid="2f6b28f6-ed35-44e7-89a4-889c5ad1e42f"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d2ndstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1800" y="0" width="40" height="20" uuid="bb5bce60-f683-408e-9e83-c03532ac6876"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nchab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1720" y="0" width="40" height="20" uuid="d66e7921-0b75-4566-8bfe-b8c8ff8612c4"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nmz}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1880" y="0" width="40" height="20" uuid="79cf5753-2c68-4d0c-ba82-39887f7f117a"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nlastor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1840" y="0" width="40" height="20" uuid="331aa4c4-e6bd-4ca4-9145-61ed595b8f73"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nldstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="2120" y="0" width="40" height="20" uuid="08ec553a-71a6-4260-af3b-7d1a3a99d8dd"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3ndhab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="2040" y="0" width="40" height="20" uuid="f8c0fa95-53b1-42f4-b4d8-0e63ee7ca0ee"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3ndstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1680" y="0" width="40" height="20" uuid="ad96159c-c7f0-447f-b96b-c89ddc6964be"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3ncstor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1640" y="0" width="40" height="20" uuid="c931cf9f-5187-4fd5-9cb6-829925807d87"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nzn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1760" y="0" width="40" height="20" uuid="5e161090-f3bc-40ae-a398-9df7b44fb00b"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3totviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="2080" y="0" width="40" height="20" uuid="e71df7e8-3afd-414f-952b-74b093dc62fe"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3dtotviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1960" y="0" width="40" height="20" uuid="0e620b73-d139-4e56-85bc-d22fa47952b0"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3latotviv}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="2000" y="0" width="40" height="20" uuid="2e2e47c3-637c-4228-89ca-7d70331d16a3"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nlahab}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1920" y="0" width="40" height="20" uuid="bc2d733f-1f6e-44a7-89dd-6e98b0d65447"/>
+				<box leftPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{d3nlamz}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

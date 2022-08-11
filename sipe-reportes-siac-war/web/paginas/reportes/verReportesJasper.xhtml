@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pinec="http://java.sun.com/jsf/composite/pinec">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="script_pagina">   
+            <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/jgrowl.js"></script>
+        </ui:define>
+        <ui:define name="css_pagina">
+            <link href="${facesContext.externalContext.requestContextPath}/css/jcssgrowl.css" rel="stylesheet" type="text/css"/>
+        </ui:define>
+
+        <ui:define name="contenido">       
+
+            <h:form id="frmJasper" styleClass="hform_bg_width">
+
+                <pinec:visualizar_reporte_jasper id="idReporteJasperPanel" frm1="frmJasper:idReporteJasperPanel" ></pinec:visualizar_reporte_jasper>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

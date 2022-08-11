@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+        <p:dialog header="#{baseControlador.datosGenerales.dialogGifheader}" widgetVar="#{baseControlador.datosGenerales.dialogGifwidgetVar}" showHeader="false"
+                  draggable="false" footer="#{baseControlador.datosGenerales.dialogGiffooter}"
+                  modal="true"  appendTo="@(body)"  resizable="false" closable="false">  
+            <p:graphicImage rendered="true" id="img_validando" value="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.dialogGifimagen}" />
+        </p:dialog>  
+    </ui:composition>
+</html>

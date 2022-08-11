@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionFormulario">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneFormulario" width="1000" columns="1" >
+                        <p:panel header="Metadato - Formulario">
+                            <h:panelGrid columns="3">
+                                
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="formularioNombre" value="#{gestionFormularioControlador.objFormulario.nombre}"  
+                                               size="40" maxlength="100" required="true" requiredMessage="no puede estar vacio"  />
+                                <p:message for="formularioNombre" display="text"/>
+
+                                <p:outputLabel value="Tipo Operativo"/>                                  
+                                <p:selectOneMenu id="opeTipo" value="#{gestionFormularioControlador.objFormulario.codOperativo}"  panelStyle="width:280px" converter="tipoOperativoConverter"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="no puede estar vacio">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionFormularioControlador.operativo}" var="tipoOpe" itemLabel="#{tipoOpe.identificador}" itemValue="#{tipoOpe}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idOperativo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.identificador}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="opeTipo" display="text"/>
+                    
+                                <p:outputLabel value="Codificación"/>
+                                <p:inputText   id="formularioCodificacion" value="#{gestionFormularioControlador.objFormulario.codificacion}"  required="true" requiredMessage="no puede estar vacio" 
+                                               size="40" maxlength="100"  />
+                                <p:message for="formularioCodificacion" display="text"/>
+                                
+                                <p:outputLabel value="Estilo"/>
+                                <p:inputText   id="formularioEstilo" value="#{gestionFormularioControlador.objFormulario.estilo}" required="true" requiredMessage="no puede estar vacio" 
+                                               size="40" maxlength="100"  />
+                                <p:message for="formularioEstilo" display="text"/>
+                                
+                                <p:outputLabel value="Muestra"/>
+                                <p:inputText   id="formularioMuestra" value="#{gestionFormularioControlador.objFormulario.muestra}"  
+                                               size="40" maxlength="4">
+                                               <p:keyFilter regEx="/[\d\-]/"/>
+                                </p:inputText>
+                                <p:message for="formularioMuestra" display="text"/>
+                                
+                                <p:outputLabel value="Requerimiento"/>
+                                <p:inputTextarea  id="formularioRequerimiento"  value="#{gestionFormularioControlador.objFormulario.requerimiento}" 
+                                                  cols="38" rows="4"   maxlength="150" autoResize="false" />
+                                <p:message for="formularioRequerimiento" display="text"/> 
+                                
+                                <p:outputLabel value="Estado"/>
+                                <p:inputText   id="formularioEstado" value="#{gestionFormularioControlador.objFormulario.estado}"  
+                                               size="40" maxlength="4">
+                                                <p:keyFilter regEx="/[\d\-]/"/> 
+                                </p:inputText>
+                                <p:message for="formularioEstado" display="text"/>
+                                
+                                <p:outputLabel value="Móvil"/>
+                                <p:inputText   id="formularioMovil" value="#{gestionFormularioControlador.objFormulario.movil}"  
+                                               size="40" maxlength="4"  >
+                                               <p:keyFilter regEx="/[\d\-]/"/>
+                                </p:inputText>
+                                <p:message for="formularioMovil" display="text"/>
+                                
+                                <p:outputLabel value="Web"/>
+                                <p:inputText   id="formularioWeb" value="#{gestionFormularioControlador.objFormulario.web}"  
+                                               size="40" maxlength="4">
+                                               <p:keyFilter regEx="/[\d\-]/"/>
+                                </p:inputText>
+                                <p:message for="formularioWeb" display="text"/>
+                               
+                                <p:outputLabel value="Fecha de Publicación" />
+                                <p:calendar id="formularioFechaPublicacion" value="#{gestionFormularioControlador.objFormulario.fechaHora}" showOn="button" />
+                                <p:message for="formularioFechaPublicacion" display="text"/>
+                                
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar"
+                                                         action="#{gestionFormularioControlador.guardarFormualario()}"
+                                                         icon="ui-icon-disk"
+                                                         process="@this,panelContieneFormulario" 
+                                                         update=":frmGestionFormulario:panelConieneListas,panelContieneFormulario,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionFormularioControlador.refrescaNuevoFormulario()}"
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmGestionFormulario:panelConieneListas,panelContieneFormulario,msgs"
+                                                         async="true"
+                                                         global="false"                                                         
+                                                                                                                  
+                                                         >
+                                            <p:resetInput target=":frmGestionFormulario:panelContieneFormulario"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListFormulario" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListFormulario" value="#{gestionFormularioControlador.listarFormulario}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idFormulario}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Formulario" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idFormulario}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Codificación" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codificacion}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Operativo1" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codOperativo.identificador}" style="font-size:12px;" />
+                                </p:column>
+<!--                                <p:column   headerText="Periodo" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codPer.nombre}" style="font-size:12px;" />
+                                </p:column>-->
+                                <p:column   headerText="Periodo" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codOperativo.codPer.nombre}" style="font-size:12px;" />
+                                </p:column>
+<!--                                <p:column   headerText="Periodo1" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{gestionFormularioControlador.mapaPeriodo[aplColumna.idOperativo.codPer]}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Operación Estadística" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{gestionFormularioControlador.mapaOpeEs[aplColumna.idOperativo.codOpe]}" style="font-size:12px;" />
+                                </p:column>-->
+                                <p:column   headerText="Operación Estadística" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codOperativo.codOpe.nombre}" style="font-size:12px;" />
+                                </p:column>-->
+                                <p:column   headerText="Estilo" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.estilo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Fecha Creación" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.fechaHora}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionFormularioControlador.recuperarFormularioCampos(aplColumna)}"
+                                                       process="@this" update=":frmGestionFormulario:panelContieneFormulario,:frmGestionFormulario:panelConieneListas,:frmGestionFormulario:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionFormulario:panelContieneFormulario"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionFormularioControlador.confirmaEliminarFormulario(aplColumna)}" 
+                                                     process="@this" update=":frmGestionFormulario:panelConieneListas,:frmGestionFormulario:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                                
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

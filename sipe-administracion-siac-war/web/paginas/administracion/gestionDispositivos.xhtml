@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionDispositivo">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneDispositivo" width="1000" columns="1" >
+                        <p:panel header="Administración - Dispositivos">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="disNombre" value="#{gestionDispositivoControlador.objDispositivoActual.nombre}"  
+                                               size="40" maxlength="50" required="true" requiredMessage="Nombre no puede estar vacío"  />
+                                <p:message for="disNombre" display="icon"/>                                                       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputText   id="disDescripcion" value="#{gestionDispositivoControlador.objDispositivoActual.descripcion}"  
+                                               size="40" maxlength="200" />
+                                <p:message for="disDescripcion" display="icon"/>   
+
+                                <p:outputLabel value="Código INEC"/>
+                                <p:inputText   id="disCodInec"  value="#{gestionDispositivoControlador.objDispositivoActual.codigoInec}" 
+                                               maxlength="20" size="40"/>
+                                <p:message for="disCodInec" display="icon"/>
+
+                                <p:outputLabel value="Dirección IP"/>
+                                <p:inputText    id="disIP"  value="#{gestionDispositivoControlador.objDispositivoActual.direccionIp}" 
+                                                size="40" maxlength="15"/>
+                                <p:message for="disIP" display="icon"/>
+
+                                <p:outputLabel value="Serie"/>
+                                <p:inputText    id="disSerie"  value="#{gestionDispositivoControlador.objDispositivoActual.serie}" 
+                                                size="40" maxlength="50" required="true" requiredMessage="Serie no puede estar vacío"/>
+                                <p:message for="disSerie" display="icon"/>   
+                                
+                                <p:outputLabel id="etZon" value="Zonal:" />
+
+                                <p:selectOneMenu id="lstZon" value="#{gestionDispositivoControlador.zonalActual}" 
+                                                 converter="#{catConverter}" var="t" required="true" requiredMessage="Zonal no puede estar vacío"
+                                                 rendered="#{gestionDispositivoControlador.habilitaZonal == true}">
+                                    <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                    <f:selectItems value="#{gestionDispositivoControlador.lstZonales}" 
+                                                   var="theme" 
+                                                   itemLabel="#{theme.nombre}" 
+                                                   itemValue="#{theme}" />                                                       
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" /> 
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="lstZon" rendered="#{gestionDispositivoControlador.habilitaZonal == true}"/> 
+
+                                <p:outputLabel id="etZonNom" value="#{gestionDispositivoControlador.zonalActual.nombre}" rendered="#{gestionDispositivoControlador.habilitaZonal == false}"/> 
+                                   <p:message for="etZonNom" rendered="#{gestionDispositivoControlador.habilitaZonal == false}" /> 
+
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                            
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionDispositivoControlador.guardarDispositivo()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneDispositivo" 
+                                                         update=":frmGestionDispositivo:panelConieneListas,panelContieneDispositivo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionDispositivoControlador.permisosBoton['PAG_INSRT'] || gestionDispositivoControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListDispositivo').filter();"/>
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionDispositivoControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionDispositivo:panelConieneListas,panelContieneDispositivo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionDispositivoControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target=":frmGestionDispositivo:panelContieneDispositivo"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListDispositivo" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListDispositivo" value="#{gestionDispositivoControlador.listarDispositivoes}"  var="disColumna"   
+                                         selectionMode="single" rowKey="#{disColumna.idDispositivo}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListDispositivo"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Dispositivos" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="35" style="font-size:12px;">
+                                    <h:outputText value="#{disColumna.idDispositivo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="150" style="font-size:12px;" filterBy="#{disColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{disColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Descripción" width="100" style="font-size:12px;" filterBy="#{disColumna.descripcion}" filterMatchMode="contains">
+                                    <h:outputText value="#{disColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Código INEC" width="100" style="font-size:12px;" filterBy="#{disColumna.codigoInec}" filterMatchMode="contains">
+                                    <h:outputText value="#{disColumna.codigoInec}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Dirección IP" width="100" style="font-size:12px;" filterBy="#{disColumna.direccionIp}" filterMatchMode="contains">
+                                    <h:outputText value="#{disColumna.direccionIp}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Serie" width="170" style="font-size:12px;"  filterBy="#{disColumna.serie}" filterMatchMode="contains">
+                                    <h:outputText value="#{disColumna.serie}" style="font-size:12px;" />
+                                </p:column> 
+                                 <p:column headerText="Zonal" width="150" style="font-size:12px;"  filterBy="#{disColumna.codZonal.nombre}" filterMatchMode="contains">
+                                     <h:outputText value="#{disColumna.codZonal.nombre}" style="font-size:12px;" />
+                                </p:column> 
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionDispositivoControlador.recuperarDispositivoCampos(disColumna)}" 
+                                                       process="@this" update=":frmGestionDispositivo:panelContieneDispositivo,:frmGestionDispositivo:panelConieneListas,:frmGestionDispositivo:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionDispositivoControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionDispositivo:panelContieneDispositivo"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionDispositivoControlador.confirmaEliminar(disColumna)}" 
+                                                     process="@this" update=":frmGestionDispositivo,:frmGestionDispositivo:message" 
+                                                     async="true" global="false" disabled="#{!gestionDispositivoControlador.permisosBoton['PAG_ELIM']}"
+                                                     oncomplete="PF('wVarTablaListDispositivo').filter();">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionDispositivo:panelContieneDispositivo"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

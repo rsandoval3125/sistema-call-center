@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <!--<ui:composition template="../../META-INF.resources.plantillas/plantillabootPublico.xhtml">-->
+    <ui:composition template="../../META-INF.resources.plantillas/plantillabootPublico.xhtml">
+    <!--http://localhost:8080/sipe-captura-siac-war/formularios/publico/formularioPublicoNoCensado.xhtml-->
+    <h:outputStylesheet library="webjars" name="primeflex/3.0.1/primeflex.min.css" />
+        <ui:define name="contenido">
+            <div class="container">
+                <h:form id="formBusqueda" pt:autocomplete="off">
+                   
+                    <p:growl id="messages" showDetail="true"/>
+                    <!-- SPINER DE ESPERA CUANDO SE PROCESA UNA PETICION -->
+                    <ui:include src="../templates_no_form/peBlockUI.xhtml" />
+                    
+                    <p:outputPanel id="manage-autocenso-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty registroCensoEnLineaControlador.captDetalleH}">
+                            <style>
+                               /* reset on the showcase style*/
+                               body .ui-panelgrid .ui-panelgrid-cell {
+                                   background-color: transparent;
+                               }
+
+                               /* example use of styles for your form */
+                               .my-heading-row {
+                                   background-color: var(--surface-c);
+                                   font-weight: bold;
+                               }
+                           </style>
+                            <br></br>
+                            <p:panelGrid id ="idFormularioCensoEnLineaPublico" 
+                                         columns="6"
+                                         columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank ui-fluid"
+                                         style="border:0px none; background-color:transparent;">
+
+                                <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <div class="navbar-header" style="float: left">
+                                            <a class="navbar-brand navbar-link"
+                                               href='../../paginas/captura/inicioCapturaSiacPublico.xhtml' 
+                                               title="Home">
+                                                    <img src='#{baseControlador.getProfundidad()}imagenes/siac/SIAC-home.png' width="70%"/>
+                                            </a>
+                                        </div>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-10">
+                                        <br></br>
+                                         <p style="font-size: 18px">Registre su requerimiento para novedad en censo en línea</p>
+                                    </p:column>
+                                     
+                                </p:row>   
+                                <p:row>
+                                <p:column styleClass="ui-grid-col-12">
+                                        <span>Lugar de Residencia</span>
+                                        <p:divider/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Provincia"/>
+                                        <p:selectOneMenu
+                                            id="dpaProvSelect"
+                                            value="#{registroCensoEnLineaControlador.provinciaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            requiredMessage="Provincia necesita ser seleccionado">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaProvinciaSelect}"
+                                                var="prov"
+                                                itemLabel="#{prov.nombre}"
+                                                itemValue="#{prov}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCanSelect"
+                                                process="@this"
+                                                listener="#{registroCensoEnLineaControlador.onChangeProvincia}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="dpaProvSelect" display="icon text"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cantón"/>
+                                        <p:selectOneMenu
+                                            id="dpaCanSelect"
+                                            value="#{registroCensoEnLineaControlador.cantonSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaCantonSelect}"
+                                                var="can"
+                                                itemLabel="#{can.nombre}"
+                                                itemValue="#{can}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"
+                                                listener="#{registroCensoEnLineaControlador.onChangeCanton}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="dpaCanSelect" display="icon text"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Ciudad o Parroquia"/>
+                                        <p:selectOneMenu
+                                            id="dpaCiuSelect"
+                                            value="#{registroCensoEnLineaControlador.parroquiaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaCiudadSelect}"
+                                                var="ciu"
+                                                itemLabel="#{ciu.nombre}"
+                                                itemValue="#{ciu}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                        <p:message for="dpaCiuSelect" display="icon text"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-12">
+                                        <span>Infromación del Ciudadano</span>
+                                        <p:divider />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                         <p:outputLabel for="@next" value="Tipos de usuarios"/>
+                                          <p:selectOneMenu
+                                            id="idTipoUsuario"
+                                            value="#{registroCensoEnLineaControlador.tipoUsuario}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaTipoUsuario}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idTipoUsuario"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                               <p:row>
+                                     <p:column styleClass="ui-grid-col-3">
+                                         <p:outputLabel for="@next" value="Tipo de identificación"/>
+                                          <p:selectOneMenu
+                                            id="idTipoIdentificacion"
+                                            value="#{registroCensoEnLineaControlador.tipoIdentificacion}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaTipoIdentificacion}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idTipoIdentificacion idFormularioCensoEnLineaPublico"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:outputLabel for="@next" value="Cédula de Identidad" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}"/>
+                                        <p:inputText id="idCedula" 
+                                                     value="#{registroCensoEnLineaControlador.numeroDocumento}" 
+                                                     maxlength="10" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}">
+                                                <p:keyFilter regEx="/[0-9 ]/i"/>
+                                                <f:validator
+                                                            binding="${cedulaValidador}"
+                                                            for="cedula" />
+<!--                                                <p:ajax event="blur"
+                                                        process="@this"
+                                                        listener="#{registroCensoEnLineaControlador.consultaCiudadanoPorCedula(actionEvent)}"
+                                                        update="@this, messageCedula nombre apellido"/>-->
+
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messageCedula nombre apellido"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messageCedula" for="idCedula" display="icon text" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}"/>
+                                        
+                                        <p:outputLabel for="@next" value="Ruc" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}"/>
+                                        <p:inputText id="idRuc" 
+                                                     value="#{registroCensoEnLineaControlador.numeroDocumento}" 
+                                                     maxlength="13" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}">
+                                                <p:keyFilter regEx="/[0-9 ]/i"/>
+                                                <f:validator
+                                                            binding="${rucValidador}"
+                                                            for="cedula" />
+<!--                                                <p:ajax event="blur"
+                                                        process="@this"
+                                                        listener="#{registroCensoEnLineaControlador.consultaCiudadanoPorCedula(actionEvent)}"
+                                                        update="@this, messageCedula nombre apellido"/>-->
+
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messageRuc"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messageRuc" for="idRuc" display="icon text" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_02' ? true : false}"/>
+                                        
+                                        <p:outputLabel for="@next" value="Numero de Pasaporte" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}"/>
+                                        <p:inputText id="idPasaporte" 
+                                                     value="#{registroCensoEnLineaControlador.numeroDocumento}" 
+                                                     maxlength="20" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío"
+                                                     rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}">
+                                                <p:keyFilter regEx="/[A-Za-z0-9]+/g"/>
+                                                <p:ajax event="change"
+                                                        process="@this"
+                                                        update="@this, messagePasaporte"/>
+                                                
+                                        </p:inputText>
+                                        <p:message id="messagePasaporte" for="idPasaporte" display="icon text" rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_04' ? true : false}"/>
+                                        
+                                    </p:column>
+                                
+                                    <p:column styleClass="ui-grid-col-6">
+                                        
+                                    </p:column>
+                                </p:row>
+                                 <p:row rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}">
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:captcha id="captchaCedula" label="Captcha" language="es"/>
+                                        <p:message id="messagecaptchaCedula" for="captchaCedula" display="icon text"/>
+                                    </p:column>
+                                     
+                                </p:row>
+                                <p:row rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? true : false}">
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:commandButton 
+                                                   id="botonConcultaApi"
+                                                   widgetVar="boton-buscarApi"
+                                                   value="Buscar"
+                                                   actionListener="#{registroCensoEnLineaControlador.consultaCiudadanoPorCedula(actionEvent)}"
+                                                   onclick="PF('peBlockUI').block(); PF('boton-buscarApi').disable()"
+                                                   ondblclick="PF('peBlockUI').block(); PF('boton-buscarApi').disable()"	
+                                                   onstart="PF('peBlockUI').block(); PF('boton-buscarApi').disable()"
+                                                   oncomplete="PF('peBlockUI').unblock(); PF('boton-buscarApi').enable()"
+                                                   icon="pi pi-search"
+                                                   process="@this, formBusqueda:captchaCedula"
+                                                   update="nombre, apellido, messagecaptchaCedula"
+                                                   style="font-size:12px"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Nombres"/>
+                                        <p:inputText id="nombre" 
+                                                     value="#{registroCensoEnLineaControlador.nombre}"                                                     
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                        
+                                                     maxlength="50"
+                                                     required="true" 
+                                                     requiredMessage="Nombre no puede estar vacío">
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                        <p:message for="nombre" display="icon text"/>
+                                     </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Apellidos"/>
+                                        <p:inputText id="apellido" 
+                                                     value="#{registroCensoEnLineaControlador.apellido}"
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                          
+                                                     maxlength="50" 
+                                                     required="true"
+                                                     requiredMessage="Apellido no puede estar vacío">
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                        <p:message for="apellido" display="icon text"/>
+                                    </p:column>
+                                </p:row>  
+                                <p:row>
+                                        <p:column styleClass="ui-grid-col-3">
+                                            <p:outputLabel for="@next" value="Número de teléfono de su domicilio"/>
+                                            <p:inputMask id="telefono" value="#{registroCensoEnLineaControlador.telefono}" mask="(999) 999-9999" validateMask="true"/>
+                                        </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:outputLabel for="@next" value="Correo electrónico"/>
+                                        <p:inputText id="idCorreo1" 
+                                                     value="#{registroCensoEnLineaControlador.correo}" 
+                                                     placeholder="usuario@correo.com"
+                                                     requiredMessage="Correo no tine formato correcto"   
+                                                     autocomplete="off"  
+                                                     maxlength="225">
+                                             <!--<f:validateRegex pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" />-->
+                                              <f:validator validatorId="custom.emailValidator" />
+                                              <p:ajax event="change"
+                                                   process="@this"
+                                                   update="@this, idCorreo1, messageIdCorreo"/>
+					   
+                                        </p:inputText>
+                                        <p:message id="messageIdCorreo" for="idCorreo1" display="icon text"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-3">
+                                         <p:outputLabel for="@next" value="Confirmar Correo electrónico"/>
+                                         <p:inputText id="idCorreo2" 
+                                                     value="#{registroCensoEnLineaControlador.correo2}" 
+                                                     requiredMessage="Correo no tine formato correcto"   
+                                                     autocomplete="off"  
+                                                     maxlength="225"
+                                                     placeholder="usuario@correo.com">
+                                             <f:attribute name="idCorreo1" value="#{registroCensoEnLineaControlador.correo}"/>
+                                             <f:validator binding="${compararEmailValidator}" for="correo2" />
+           
+                                             <p:ajax event="valueChange"
+                                                    update="@this, idCorreo2, messageIdCorreo2"
+                                                    process="@this" />
+                                        </p:inputText>
+                                        <p:message id="messageIdCorreo2"  for="idCorreo2" display="icon text"/>
+                                    </p:column>
+                                
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-12">
+                                        <span>Información de la Incidencia</span>
+                                        <p:divider />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-3">
+                                        <p:outputLabel value="Código de censo en línea"  />  
+                                        <p:inputText id="idCodigoCensoLinea" 
+                                                     value="#{registroCensoEnLineaControlador.codigoCensoLinea}" 
+                                                     maxlength="5">
+                                             <p:keyFilter regEx="/[0-9 ]/i"/>
+                                        </p:inputText>
+                                    </p:column>
+
+                                </p:row>
+                                <p:row>
+                                    <!--placeholder="Registre el código del certificado"-->
+                                    <p:column styleClass="ui-grid-col-12">
+                                            <p:outputLabel for="@next" value="Descripción del requerimiento"/>       
+                                            <p:inputTextarea id="descSolicitud" 
+                                                             value="#{registroCensoEnLineaControlador.descSolicitud}"  
+                                                             style="text-transform:uppercase;" 
+                                                             onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                             required="true"
+                                                             requiredMessage="Descripción Denuncia no puede estar vacío"
+                                                             counter="display"
+                                                             maxlength="1000"
+                                                             counterTemplate="{0} caracteres restantes."/>
+                                            <h:outputText id="display" class="p-d-block" />
+                                            <p:message for="descSolicitud" display="icon text"/>
+                                     </p:column>
+                                </p:row>
+                                <p:row rendered="#{registroCensoEnLineaControlador.tipoIdentificacion.alias eq 'SIAC_TPI_01' ? false : true}">                                                                  
+                                    <p:captcha id="captcha" label="Captcha" language="es"/>                                         
+                                </p:row>
+                                 <p:row>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton
+                                            id="guardar"
+                                            widgetVar="boton-guardar"
+                                            value="Guardar"
+                                            actionListener="#{registroCensoEnLineaControlador.guardarCensoEnLineaPublico}"
+                                            onclick="PF('peBlockUI').block(); PF('boton-guardar').disable()"
+                                            ondblclick="PF('peBlockUI').block(); PF('boton-guardar').disable()"	
+                                            onstart="PF('peBlockUI').block(); PF('boton-guardar').disable()"
+                                            oncomplete="PF('peBlockUI').unblock(); PF('boton-guardar').enable()"
+                                            update="@form"
+                                            icon="pi pi-check"
+                                            style="font-size: 2rem"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:button
+                                            value="Regresar"
+                                            outcome="/paginas/captura/inicioCapturaSiacPublico.xhtml"
+                                            icon="pi pi-angle-left"
+                                            class="ui-button-secondary" style="font-size: 2rem"/>
+                                    </p:column>
+                                </p:row>
+                              </p:panelGrid>
+                          </p:outputPanel>
+                     </p:outputPanel>                   
+                </h:form>
+            </div>
+               
+             
+                   
+         
+          
+        </ui:define>
+    </ui:composition>
+</html>

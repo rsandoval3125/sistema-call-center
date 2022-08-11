@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionCatalogo">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneCatalogo" width="1000" columns="1" >
+                        <p:panel header="Metadato - Catálogos">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Tipo Catalogo"/>                                  
+                                <p:selectOneMenu id="catalogoTipo" value="#{gestionCatalogoControlador.objCatalogoActual.codTipoCatalogo}" converter="tipoCatalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionCatalogoControlador.tiposCatalgos}" var="tipoCatalogo" itemLabel="#{tipoCatalogo.nombre}" itemValue="#{tipoCatalogo}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idTipoCatalogo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoTipo" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="catalogoTipo" display="icon" id="msgcatalogoTipo"/>
+
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="catalogoNombre" value="#{gestionCatalogoControlador.objCatalogoActual.nombre}"  
+                                               size="40" maxlength="1280"  required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoNombre" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="catalogoNombre" display="icon" id="msgcatalogoNombre"/>                                                       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="catalogoDescripcion"  value="#{gestionCatalogoControlador.objCatalogoActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="1280" autoResize="false" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoDescripcion" async="true" global="false"/>
+                                </p:inputTextarea>
+                                <p:message for="catalogoDescripcion" display="icon" id="msgcatalogoDescripcion"/>  
+
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="catalogoAlias" value="#{gestionCatalogoControlador.objCatalogoActual.alias}"  
+                                               size="40" maxlength="20" readonly="#{gestionCatalogoControlador.habilitaEdicion}" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoAlias" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="catalogoAlias" display="icon" id="msgcatalogoAlias"/>
+
+                                <p:outputLabel value="Valor"/>
+                                <p:inputText   id="catalogoValor" value="#{gestionCatalogoControlador.objCatalogoActual.valor}"  
+                                               size="40" maxlength="50"  />
+                                <p:message for="catalogoValor" display="icon"/>
+                                
+                                <p:outputLabel value="Orden"/>
+                                <p:inputNumber    id="catalogoOrden"  value="#{gestionCatalogoControlador.objCatalogoActual.orden}" required="true" requiredMessage="Valor Requerido"
+                                                  size="40"  maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator="">
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoOrden" async="true" global="false"/>
+                                </p:inputNumber>
+                                <p:message for="catalogoOrden" display="icon" id="msgcatalogoOrden"/>  
+                                
+                                <p:outputLabel value="Nivel"/>
+                                <p:inputNumber    id="catalogoNivel"  value="#{gestionCatalogoControlador.objCatalogoActual.nivel}" required="true" requiredMessage="Valor Requerido"
+                                                  size="40"  maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator="">
+                                    <p:ajax event="blur" process="@this" update="msgcatalogoNivel" async="true" global="false"/>
+                                </p:inputNumber>
+                                <p:message for="catalogoNivel" display="icon" id="msgcatalogoNivel"/>  
+
+                                <p:outputLabel value="Catalogo padre1"/>
+                                <p:selectOneMenu id="catalogoCodPadre1" value="#{gestionCatalogoControlador.objCatalogoActual.codPadre1}" converter="catalogoConverter"  panelStyle="width:280px"
+                                                 effect="fade" var="c" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionCatalogoControlador.catalogosPadre}" var="catalogoPadre" itemLabel="#{catalogoPadre.nombre}" itemValue="#{catalogoPadre}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{c.idCatalogo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{c.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="catalogoCodPadre1" display="icon"/>
+
+                                <p:outputLabel value="Catalogo padre2"/>
+                                <p:selectOneMenu id="catalogoCodPadre2" value="#{gestionCatalogoControlador.objCatalogoActual.codPadre2}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="c" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionCatalogoControlador.catalogosPadre}" var="catalogoPadre" itemLabel="#{catalogoPadre.nombre}" itemValue="#{catalogoPadre}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{c.idCatalogo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{c.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="catalogoCodPadre2" display="icon"/>
+
+                                <p:outputLabel value="Catalogo padre3"/>
+                                <p:selectOneMenu id="catalogoCodPadre3" value="#{gestionCatalogoControlador.objCatalogoActual.codPadre3}"  converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="c" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionCatalogoControlador.catalogosPadre}" var="catalogoPadre" itemLabel="#{catalogoPadre.nombre}" itemValue="#{catalogoPadre}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{c.idCatalogo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{c.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="catalogoCodPadre3" display="icon"/>
+
+                                <p:outputLabel value="Estilo"/>                           
+                                <p:inputTextarea  id="catalogoEstilo"  value="#{gestionCatalogoControlador.objCatalogoActual.estilo}" 
+                                                  cols="38" rows="4"   maxlength="1280" autoResize="false" />
+                                <p:message for="catalogoEstilo" display="icon"/>
+
+                                <p:outputLabel value="Imagen"/>
+                                <p:inputText    id="catalogoImagen"  value="#{gestionCatalogoControlador.objCatalogoActual.imagen}" 
+                                                size="40" maxlength="255" />
+                                <p:message for="catalogoImagen" display="icon"/>
+
+                                <p:outputLabel value="Modificado"/>
+                                <p:inputNumber    id="catalogoModifica"  value="#{gestionCatalogoControlador.objCatalogoActual.modificadoCache}" 
+                                                  size="40" maxValue="32767" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="catalogoModifica" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionCatalogoControlador.guardarCatalogo()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneCatalogo" 
+                                                         update=":frmGestionCatalogo:panelConieneListas,panelContieneCatalogo,msgs"
+                                                         async="true"
+                                                         global="false"
+
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionCatalogoControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmGestionCatalogo:panelConieneListas,panelContieneCatalogo,msgs"
+                                                         async="true"
+                                                         global="false"                                                         
+                                                         >
+                                            <p:resetInput target=":frmGestionCatalogo:panelContieneCatalogo"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListCatalogo" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListCatalogo" value="#{gestionCatalogoControlador.listarCatalogoes}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idCatalogo}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Catálogos" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idCatalogo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Tipo Catálogo" width="100" style="font-size:12px;" filterBy="#{aplColumna.codTipoCatalogo.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.codTipoCatalogo.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="100" style="font-size:12px;" filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>                               
+                                <p:column headerText="Descripción" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Valor" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.valor}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Catalogo padre1" width="55" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codPadre1.nombre}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Catalogo padre2" width="55" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codPadre2.nombre}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Catalogo padre3" width="55" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codPadre3.nombre}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Nivel" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.nivel}" style="font-size:12px;" />
+                                </p:column>                  
+                                <p:column headerText="Estilo" width="75" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.estilo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Imagen" width="90" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.imagen}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionCatalogoControlador.recuperarCatalogoCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionCatalogo:panelContieneCatalogo,:frmGestionCatalogo:panelConieneListas,:frmGestionCatalogo:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionCatalogo:panelContieneCatalogo"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionCatalogoControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionCatalogo:panelConieneListas,:frmGestionCatalogo:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

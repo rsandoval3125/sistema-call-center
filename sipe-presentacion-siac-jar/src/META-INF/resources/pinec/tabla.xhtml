@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <!--COMPONENTE PARA LA VISUALIZACION DE 1 TABLA INTERFACE version: 04-06-2015-->
+    <cc:interface>
+        <composite:attribute name="tabla" required="true"/>
+        <composite:attribute name="ancho" default="500"/>
+        <composite:attribute name="tamanioLetra" default="12"/>
+        <composite:attribute name="background" default="ffffff"/>
+        <composite:attribute name="color" default="000000"/>
+        <composite:attribute name="muestraMetadato" default="false"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        
+        <h:panelGrid width="#{cc.attrs.ancho}%" style="font-size: #{cc.attrs.tamanioLetra}px !important;"
+                     bgcolor="#{cc.attrs.background}" >
+            <p:dataTable id="lst#{cc.attrs.id}" value="#{cc.attrs.tabla.filasTabla}"
+                         var="fila" emptyMessage="#{txt.cues_estructura_sin_variables}"
+                         rowIndexVar="rowIndex">
+                <f:facet name="header">
+                    #{cc.attrs.tabla.tituloEstruc}
+                </f:facet>
+                <p:column width="10" style="background:##{cc.attrs.background};" rendered="#{cc.attrs.tabla.muestraNumeracion}">
+                    <p:outputLabel value="#{rowIndex+1}"/>
+                </p:column>
+                <p:column width="150" style="background:##{cc.attrs.background};" rendered="#{cc.attrs.tabla.muestraDescripcionFila}">
+                    <p:outputLabel value="#{fila.descripcionFila}" escape="false"/>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[0]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 1}">
+                    <p:inputText id="valT_IT1" value="#{fila.valoresNumerico[0]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT1">#{fila.celdasVariable[0].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[1]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 2}">
+                    <p:inputText id="valT_IT2" value="#{fila.valoresNumerico[1]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT2">#{fila.celdasVariable[1].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[2]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 3}">
+                    <p:inputText id="valT_IT3" value="#{fila.valoresNumerico[2]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT3">#{fila.celdasVariable[2].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[3]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 4}">
+                    <p:inputText id="valT_IT4" value="#{fila.valoresNumerico[3]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT4">#{fila.celdasVariable[3].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[4]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 5}">
+                    <p:inputText id="valT_IT5" value="#{fila.valoresNumerico[4]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT5">#{fila.celdasVariable[4].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[5]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 6}">
+                    <p:inputText id="valT_IT6" value="#{fila.valoresNumerico[5]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT6">#{fila.celdasVariable[5].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[6]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 7}">
+                    <p:inputText id="valT_IT7" value="#{fila.valoresNumerico[6]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT7">#{fila.celdasVariable[6].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[7]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 8}">
+                    <p:inputText id="valT_IT8" value="#{fila.valoresNumerico[7]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT8">#{fila.celdasVariable[7].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[8]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 9}">
+                    <p:inputText id="valT_IT9" value="#{fila.valoresNumerico[8]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT9">#{fila.celdasVariable[8].varNombre}</p:tooltip>
+                </p:column>
+                <p:column width="75" headerText="#{cc.attrs.tabla.lstDescCols[9]}" style="background:##{cc.attrs.background}; " rendered="#{cc.attrs.tabla.numColumnas ge 10}">
+                    <p:inputText id="valT_IT10" value="#{fila.valoresNumerico[9]}" size="10">
+                    </p:inputText>
+                    <p:tooltip for="valT_IT10">#{fila.celdasVariable[9].varNombre}</p:tooltip>
+                </p:column>
+            </p:dataTable>
+        </h:panelGrid>
+    </cc:implementation>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="form1">
+                <!--<p:panelGrid columns="2" style="width: 1200px; height: 10px;">
+                    <p:inputText value="Resultado" readonly="true"  />
+                    <p:inputText value="Ingrese las secuencias de comando" readonly="true" />
+                <f:facet name="header" >lp
+                        
+                    </f:facet>
+                </p:panelGrid>-->
+                <p:panelGrid columns="2" style="width: 1200px; height: 600px;" styleClass="ui-noborder">
+
+                    <p:inputTextarea id="script" value="#{ejecutarRControlador.script}" style="height: 100%; width: 100%;"/>
+                    <p:inputTextarea id="resultado" value="#{ejecutarRControlador.resultado}" style="height: 100%; width: 100%;" readonly="true"/>
+                </p:panelGrid>
+                <p:commandButton id="asdx"
+                                 value="ejecutarb" 
+                                 action="#{ejecutarRControlador.ejecutarSentenciasR}"
+                                 process=":form1"
+                                 update=":form1"
+                                 />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

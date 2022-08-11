@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGenFor">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="pnlGenFor">
+                        <br/><br/>
+                        <p:panel header="Generación de Estructura JSF de Formularios">
+                            <h:panelGrid id="pnlBusqueda" columns="3">
+                                <p:outputLabel value="Operativo:"/>
+                                <p:selectOneMenu id="ope" value="#{generacionFormularioControlador.operativoActual.idOperativo}" style="width: 200px;">
+                                    <f:selectItem itemLabel="Seleccione.." itemValue="#{null}"/>
+                                    <f:selectItems value="#{generacionFormularioControlador.listaOperativo}" var="ope" itemLabel="#{ope.codOpe.nombre}-#{ope.codPer.nombre}" itemValue="#{ope.idOperativo}"/>
+                                    <p:ajax event="change" async="true" global="false" process="@this"
+                                            listener="#{generacionFormularioControlador.listarFormulariosPorOperativo}" update="for"/>
+                                </p:selectOneMenu>
+                                <p:message for="ope"/>
+
+                                <p:outputLabel value="Formulario:"/>
+                                <p:selectOneMenu id="for" value="#{generacionFormularioControlador.formularioActual.idFormulario}" style="width: 400px;">
+                                    <f:selectItems value="#{generacionFormularioControlador.listaFormularios}" var="for" itemLabel="#{for.nombre}" itemValue="#{for.idFormulario}"/>
+                                </p:selectOneMenu>
+                                <p:message for="for"/>
+                                <p:outputLabel value="Solo generar Código:"/>
+                                <p:selectBooleanCheckbox id="scod" value="#{generacionFormularioControlador.soloCodigo}" style="width: 400px;">
+                                    <p:ajax update="pnlSoloCodigo,pnlIrVistaPrevia" process="@this" async="true" global="false"
+                                            listener="#{generacionFormularioControlador.limpiarNombreArchivo()}"/>
+                                </p:selectBooleanCheckbox>
+                                <p:message for="scod"/>
+                                <f:verbatim/>
+                                <h:panelGrid id="pnlSoloCodigo" columns="3">
+
+                                    <p:outputLabel value="Nombre del Controlador:" rendered="#{generacionFormularioControlador.soloCodigo}"/>
+                                    <p:inputText id="ncon" value="#{generacionFormularioControlador.nombreControlador}"
+                                                 required="true" size="25" maxlength="25" rendered="#{generacionFormularioControlador.soloCodigo}"/>
+                                    <p:message for="ncon"/>
+                                    <p:outputLabel value="Nombre del Objeto Lista de Valores de Almacenamiento Vertical:" rendered="#{generacionFormularioControlador.soloCodigo}"
+                                                   style="display: block;width:100px;"/>
+                                    <p:inputText id="nobjl" value="#{generacionFormularioControlador.nombreObjetoValoresVertical}"
+                                                 required="true" size="25" maxlength="25" rendered="#{generacionFormularioControlador.soloCodigo}"/>
+                                    <p:message for="nobjl"/>
+                                    <p:outputLabel value="Nombre de los Objetos Lista de Valores de Almacenamiento Horizontal:" rendered="#{generacionFormularioControlador.soloCodigo}"
+                                                   style="display: block;width:150px;"/>
+                                    <p:outputLabel value="Los objetos se nombran de forma estándar: lista+alias de Sección. Ejemplo: listaF02S04A" rendered="#{generacionFormularioControlador.soloCodigo}"
+                                                   style="display: block;width:230px;"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton id="btnGenForm" value="Generar" action="#{generacionFormularioControlador.generarFormulario()}"
+                                             process="@this,for,pnlSoloCodigo" async="true" global="false" update="pnlIrVistaPrevia,msgs"
+                                             onstart="PF('dlgValidando').show();PF('pbAjax').start();"
+                                             oncomplete="PF('dlgValidando').hide();"/>
+                            
+                            <!-- <p:commandButton id="btnGenSintaxisSPSS" value="Generar Sintaxis SPSS" action="#{generacionFormularioControlador.generarSPSSFormulario()}"
+                                             process="@this,for" async="true" global="false" update="pnlIrVistaPrevia,msgs"
+                                             onstart="PF('dlgValidando').show();PF('pbAjax').start();"
+                                             oncomplete="PF('dlgValidando').hide();"/> -->
+
+
+                            <h:panelGrid id="pnlIrVistaPrevia" columns="1">
+                                <p:dataList value="#{generacionFormularioControlador.listaErrores}" var="error" rendered="#{generacionFormularioControlador.listaErrores.size() gt 0}">
+                                    <f:facet name="header">
+                                        Errores
+                                    </f:facet>
+                                    #{error}
+                                </p:dataList>
+                                <br/>
+                                <br/>
+                                <h:outputLink value="/sipe-metadato-siac-war/archivos/#{generacionFormularioControlador.nombreArchivoDescarga}.xhtml" target="_blank"
+                                              style="color:blue;font-size: 14px;"
+                                              rendered="#{generacionFormularioControlador.listaErrores.size()==0 and generacionFormularioControlador.nombreArchivoDescarga.length() gt 1 and !generacionFormularioControlador.soloCodigo and  !generacionFormularioControlador.nombreArchivoDescarga.contains('sintaxis_spss')}">
+                                    (Clik para Ver Vista Previa en otra pestaña)</h:outputLink>
+
+                                <h:panelGrid rendered="#{generacionFormularioControlador.listaErrores.size()==0 and generacionFormularioControlador.nombreArchivoDescarga.length() gt 1 and generacionFormularioControlador.soloCodigo}">
+                                    <a href="/sipe-metadato-siac-war/archivos/#{generacionFormularioControlador.nombreArchivoDescarga}.txt"
+                                       download="#{generacionFormularioControlador.nombreArchivoDescarga}.txt" style="font-size: 14px;color:blue;">
+                                        (Click para descargar el código JSF)</a>  
+                                
+                                     <br/>
+                                     <br/>
+                                     <p:outputLabel escape="false" value="//Definición de Objetos en Controlador #{generacionFormularioControlador.nombreControlador}" style="font-weight: bold;"/><br/>
+                                     <p:outputLabel value="private List&lt;CaptVarV&gt; #{generacionFormularioControlador.nombreObjetoValoresVertical};"/><br/>
+                                     <p:outputLabel escape="false" value="#{generacionFormularioControlador.nombreObjetosListasValoresHorizontal}"/>
+                                </h:panelGrid>
+                                <h:panelGrid rendered="#{generacionFormularioControlador.listaErrores.size()==0 and generacionFormularioControlador.nombreArchivoDescarga.length() gt 1 and generacionFormularioControlador.nombreArchivoDescarga.contains('sintaxis_spss')}">
+                                    <a href="/sipe-metadato-siac-war/archivos/#{generacionFormularioControlador.nombreArchivoDescarga}.txt"
+                                       download="#{generacionFormularioControlador.nombreArchivoDescarga}.txt" style="font-size: 14px;color:blue;">
+                                        (Click para descargar el código de la sintaxis)</a>  
+                                
+                                     <br/>
+                                </h:panelGrid>
+                                
+                                
+                                <h:panelGrid id="pnlOmisiones">
+                                    <h:panelGrid id="pnlParamOmisiones" columns="3">
+                                        <p:outputLabel value="Cod F"/>
+                                        <p:outputLabel value="Cod S"/>
+                                        <p:outputLabel value="Tabla"/>
+                                    <h:inputText id="cfO" value="#{generacionFormularioControlador.codFormOmisiones}"
+                                                 size="2"/>
+                                    <h:inputText id="csO" value="#{generacionFormularioControlador.codSeccionesOmisiones}"
+                                                 size="20"/>
+                                    <h:inputText id="csT" value="#{generacionFormularioControlador.tablaOmisiones}"
+                                                 size="50"/>
+                                    </h:panelGrid>
+                                    <p:commandButton id="btnGenConsultaOmision" value="Generar ConsultaDeOmision" action="#{generacionFormularioControlador.generarConsultasOmision()}"
+                                             process="@this,pnlParamOmisiones" async="true" global="false" 
+                                             onstart="PF('dlgValidando').show();"
+                                             oncomplete="PF('dlgValidando').hide();"
+                                             update="pnlOmisiones"/>
+                                    <h:panelGrid rendered="#{generacionFormularioControlador.listaErrores.size()==0 and generacionFormularioControlador.nombreArchivoDescarga.length() gt 1 and generacionFormularioControlador.nombreArchivoDescarga.contains('sql_omisiones')}">
+                                    <a href="/sipe-metadato-siac-war/archivos/#{generacionFormularioControlador.nombreArchivoDescarga}.txt"
+                                       download="#{generacionFormularioControlador.nombreArchivoDescarga}.txt" style="font-size: 14px;color:blue;">
+                                        (Click para descargar el sql)</a>  
+                                
+                                     <br/>
+                                </h:panelGrid>
+                                
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,287 @@
+<html
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+       
+        <ui:composition>
+    <!--modal="true"-->
+            <p:dialog header="#{registroCensoEnLineaControlador.cabeceraActual.info1}" 
+                      modal="true"
+                      showEffect="fade" 
+                      widgetVar="manageAsignacionesDialog"
+                      responsive="true">  
+                 <p:outputPanel id="manage-asignaciones-content" class="ui-fluid">
+                    <p:outputPanel rendered="#{not empty registroCensoEnLineaControlador.captDetalleH}">
+             
+                        <div class="card">
+                             <style>
+                                /* reset on the showcase style*/
+                                body .ui-panelgrid .ui-panelgrid-cell {
+                                    background-color: transparent;
+                                }
+
+                                /* example use of styles for your form */
+                                .my-heading-row {
+                                    background-color: var(--surface-c);
+                                    font-weight: bold;
+                                }
+                            </style>
+                            <p:panelGrid columns="6"
+                                         columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank ui-fluid"
+                                         style="border:0px none; background-color:transparent;">
+
+<!--                                <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-12">
+                                        DATOS BIOGRÁFICOS
+                                    </p:column>
+                                </p:row>-->
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Provincia"/>
+                                        <p:selectOneMenu
+                                            id="dpaProvSelect"
+                                            value="#{registroCensoEnLineaControlador.provinciaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            requiredMessage="Provincia necesita ser seleccionado">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaProvinciaSelect}"
+                                                var="prov"
+                                                itemLabel="#{prov.nombre}"
+                                                itemValue="#{prov}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCanSelect"
+                                                process="@this"
+                                                listener="#{registroCensoEnLineaControlador.onChangeProvincia}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cantón"/>
+                                        <p:selectOneMenu
+                                            id="dpaCanSelect"
+                                            value="#{registroCensoEnLineaControlador.cantonSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaCantonSelect}"
+                                                var="can"
+                                                itemLabel="#{can.nombre}"
+                                                itemValue="#{can}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"
+                                                listener="#{registroCensoEnLineaControlador.onChangeCanton}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Ciudad o Parroquia"/>
+                                        <p:selectOneMenu
+                                            id="dpaCiuSelect"
+                                            value="#{registroCensoEnLineaControlador.parroquiaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaDpaCiudadSelect}"
+                                                var="ciu"
+                                                itemLabel="#{ciu.nombre}"
+                                                itemValue="#{ciu}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+<!--                                <p:row>
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <p:divider />
+                                   </p:column>
+                                </p:row>-->
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cédula de Identidad"/>
+                                        <p:inputText id="cedula" 
+                                                     value="#{registroCensoEnLineaControlador.cedula}" 
+                                                     maxlength="10" 
+                                                     required="true"
+                                                     requiredMessage="Identificación no puede estar vacío">
+                                             <p:keyFilter regEx="/[0-9 ]/i"/>
+                                             <f:validator
+                                                binding="${cedulaValidador}"
+                                                for="cedula" />
+                                        </p:inputText>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Nombres"/>
+                                        <p:inputText id="nombre" 
+                                                     value="#{registroCensoEnLineaControlador.nombre}"                                                     
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                        
+                                                     maxlength="50"
+                                                     required="true" 
+                                                     requiredMessage="Nombre no puede estar vacío">
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                     </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Apellidos"/>
+                                        <p:inputText id="apellido" 
+                                                     value="#{registroCensoEnLineaControlador.apellido}"
+                                                     style="text-transform:uppercase;" 
+                                                     onkeyup="javascript:this.value=this.value.toUpperCase();"                                                          
+                                                     maxlength="50" 
+                                                     required="true"
+                                                     requiredMessage="Apellido no puede estar vacío">
+                                            <p:keyFilter regEx="/[A-Z ]/i"/>
+                                        </p:inputText>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-6">
+                                        <p:outputLabel for="@next" value="Correo"/>
+                                        <p:inputText id="correo" 
+                                                     value="#{registroCensoEnLineaControlador.correo}" 
+                                                     requiredMessage="Correo no tine formato correcto"   
+                                                     autocomplete="off"  
+                                                     maxlength="225">
+                                             <f:validateRegex pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" />
+                                        </p:inputText>
+                                    </p:column>                                    
+                                </p:row>                            
+                                <p:row>
+                                <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="idPlataforma" value="Plataforma" />
+                                        <p:selectOneMenu
+                                            id="idPlataforma"
+                                            value="#{registroCensoEnLineaControlador.plataformaSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaPlatSelect}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idPlataforma"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                  <p:column styleClass="ui-grid-col-12">
+                                            <p:outputLabel for="@next" value="Descripción de la Denuncia"/>       
+                                            <p:inputTextarea id="descSolicitud" 
+                                                             value="#{registroCensoEnLineaControlador.descSolicitud}"  
+                                                             style="text-transform:uppercase;" 
+                                                             onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                             required="true"
+                                                             requiredMessage="Descripción Denuncia no puede estar vacío"
+                                                             counter="display"
+                                                             maxlength="1000"
+                                                             counterTemplate="{0} caracteres restantes."/>
+                                            <h:outputText id="display" class="p-d-block" />
+                                     </p:column>
+                                </p:row>
+                                <p:row>
+                                     <p:column styleClass="ui-grid-col-12">
+                                            <p:outputLabel for="@next" value="Novedad al sistema"/>       
+                                            <p:inputTextarea id="novedad" 
+                                                             value="#{registroCensoEnLineaControlador.novedad}"  
+                                                             style="text-transform:uppercase;" 
+                                                             onkeyup="javascript:this.value=this.value.toUpperCase();"
+                                                             required="true"
+                                                             requiredMessage="Novedad no puede estar vacío"
+                                                             counter="display"
+                                                             maxlength="1000"
+                                                             counterTemplate="{0} caracteres restantes."/>
+                                            <h:outputText id="display1" class="p-d-block" />
+                                     </p:column>
+                                 </p:row>
+<!--                                <p:row rendered="#{registroCensoEnLineaControlador.habilitaEdicion}">
+                                   <p:column styleClass="ui-grid-col-12">
+                                       <p:divider />
+                                   </p:column>
+                                </p:row>-->
+                                <p:row>
+                                <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="idEstado" value="Estado" />
+                                        <p:selectOneMenu
+                                            id="idEstado"
+                                            value="#{registroCensoEnLineaControlador.tipoEstadoActividadSelected}"
+                                            filter="true"
+                                            required="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue="#{null}"
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{registroCensoEnLineaControlador.listaEstadoActividadSelect}"
+                                                var="req"
+                                                itemLabel="#{req.nombre}"
+                                                itemValue="#{req}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="idEstado"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>                
+                            </p:panelGrid>
+                        </div>                        
+                    </p:outputPanel>
+                 </p:outputPanel>
+      
+                <f:facet name="footer">
+                    <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{registroCensoEnLineaControlador.guardarAutocenso}"
+                                     update="manage-asignaciones-content" process="manage-asignaciones-content @this"/>
+                    <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageAutocensoDialog').hide()"
+                                     class="ui-button-secondary"/>
+                </f:facet>
+
+            </p:dialog>
+            
+            <p:confirmDialog widgetVar="deleteAutocensoDialog" showEffect="fade" width="300"
+                         message="Delete the product?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{crudView.deleteProduct}"
+                                 process="@this" oncomplete="PF('deleteAutocensoDialog').hide()"/>
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteAutocensoDialog').hide()"/>
+            </p:confirmDialog>
+    
+        </ui:composition>
+    </body>
+</html>

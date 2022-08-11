@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <!--<ui:composition template="/plantillas/inec_plantilla_captura.xhtml">-->
+     <!--<ui:composition template="/plantillas/inec_plantilla.xhtml">-->
+    <ui:composition template="../../META-INF.resources.plantillas/plantillaboot.xhtml">
+      
+        <ui:define name="contenido">
+            
+            <h:form id="frmCaptura">
+
+
+                <!--<p:growl id="msgs" showDetail="true" life="8000"/>-->
+                <div id="content"  style="overflow: auto">
+                    <h:graphicImage id="abrirAPP" value="#{baseControlador.getProfundidad()}imagenes/siac/LogoCenso150.png" onclick="PF('dlgNewMiembro1').show();" class="slider-arrow show" rendered="#{(enemduControlador2107.uc.usuarioTieneRol('ROL_REVIS')) or (enemduControlador2107.uc.usuarioTieneRol('ROL_VALID'))}"/> 
+                </div>
+
+                <p:dialog modal="true" widgetVar="dlgNewMiembro1" closable="false" 
+                          style="font-size:16px;" 
+                          width="40%" position="center"  
+                          >
+
+                </p:dialog>
+                <center>
+                    <div class="logoderecha">
+                        <img src='#{baseControlador.getProfundidad()}imagenes/siac/SIAC-03.png' width="100%"/>
+                    </div>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionConceptos">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneConceptos" width="1000" columns="1" >
+                        <p:panel header="Metadato - Conceptos">
+                            <h:panelGrid columns="3">
+                                
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="conceptoAlias" value="#{gestionConceptoControlador.objConceptoActual.identificador}"  
+                                               size="40" maxlength="120" readonly="#{gestionConceptoControlador.habilitaEdicion}" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgconceptoAlias" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="conceptoAlias" display="icon" id="msgconceptoAlias"/>
+                                
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="conceptoNombre" value="#{gestionConceptoControlador.objConceptoActual.nombre}"  
+                                               size="40" maxlength="128"  required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgconceptoNombre" async="true" global="false"/>
+                                </p:inputText>
+                                <p:message for="conceptoNombre" display="icon" id="msgconceptoNombre"/>                                                       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="conceptoDescripcion"  value="#{gestionConceptoControlador.objConceptoActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="1280" autoResize="false" required="true" requiredMessage="Valor Requerido">
+                                    <p:ajax event="blur" process="@this" update="msgconceptoDescripcion" async="true" global="false"/>
+                                </p:inputTextarea>
+                                <p:message for="conceptoDescripcion" display="icon" id="msgconceptoDescripcion"/>  
+                                
+                                <p:outputLabel value="Categoria Concepto"/>                                  
+                                <p:selectOneMenu id="conceptoTipoConcepto" value="#{gestionConceptoControlador.objConceptoActual.codCatConcepto}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposConcepto}" var="tipoConcepto" itemLabel="#{tipoConcepto.nombre}" itemValue="#{tipoConcepto}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoTipoConcepto" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoTipoConcepto" display="icon" id="msgconceptoTipoConcepto"/>
+                                
+                                <p:outputLabel value="Tipo de Dato"/>                                  
+                                <p:selectOneMenu id="conceptoTipoDato" value="#{gestionConceptoControlador.objConceptoActual.codCatDato}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposDato}" var="tipoDato" itemLabel="#{tipoDato.nombre}" itemValue="#{tipoDato}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoTipoDato" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoTipoDato" display="icon" id="msgconceptoTipoDato"/>
+                                
+                                <p:outputLabel value="Longitud Mínima"/>
+                                <p:inputNumber    id="conceptoLongMin"  value="#{gestionConceptoControlador.objConceptoActual.longitudMinima}" 
+                                                  size="40"  maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="conceptoLongMin" display="icon"/>
+                                
+                                <p:outputLabel value="Longitud Máxima"/>
+                                <p:inputNumber    id="conceptoLongMax"  value="#{gestionConceptoControlador.objConceptoActual.longitudMaxima}" 
+                                                  size="40"  maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="conceptoLongMin" display="icon"/>
+                                
+                                <p:outputLabel value="Rango Mínimo"/>
+                                <p:inputText   id="conceptoRangoMin" value="#{gestionConceptoControlador.objConceptoActual.rangoMinimo}"  
+                                               size="40" maxlength="10"  />
+                                <p:message for="conceptoRangoMin" display="icon"/>
+                                
+                                <p:outputLabel value="Rango Máximo"/>
+                                <p:inputText   id="conceptoRangoMax" value="#{gestionConceptoControlador.objConceptoActual.rangoMaximo}"  
+                                               size="40" maxlength="15"  />
+                                <p:message for="conceptoRangoMax" display="icon"/>
+                                
+                                <p:outputLabel value="Categórica"/>
+                                <p:selectBooleanCheckbox id="conceptoCategorica" value="#{gestionConceptoControlador.objConceptoActual.categorica}" >
+                                    <p:ajax event="change" process="@this" update="frmGestionConceptos:panelContieneConceptos" async="true" global="false"/>
+                                </p:selectBooleanCheckbox>
+                                <p:message for="conceptoCategorica" display="icon"/>
+                                
+                                <p:outputLabel value="Tipo Catálogo" rendered="#{gestionConceptoControlador.objConceptoActual.categorica}"/>                                  
+                                <p:selectOneMenu id="conceptoTipoCatalogo" value="#{gestionConceptoControlador.objConceptoActual.codTipoCatalogo}" converter="tipoCatalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" rendered="#{gestionConceptoControlador.objConceptoActual.categorica}"
+                                                 required="#{gestionConceptoControlador.objConceptoActual.categorica}" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposCatalogos}" var="tipoCatalogo" itemLabel="#{tipoCatalogo.nombre}" itemValue="#{tipoCatalogo}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoTipoCatalogo" display="icon" rendered="#{gestionConceptoControlador.objConceptoActual.categorica}"/>
+                                
+                                <p:outputLabel value="Investigación"/>                                  
+                                <p:selectOneMenu id="conceptoInvestigacion" value="#{gestionConceptoControlador.objConceptoActual.codCatInvestigacion}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposInvestigacion}" var="tipoInvestigacion" itemLabel="#{tipoInvestigacion.nombre}" itemValue="#{tipoInvestigacion}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoInvestigacion" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoInvestigacion" display="icon" id="msgconceptoInvestigacion"/>
+                                
+                                <p:outputLabel value="Clasificación"/>                                  
+                                <p:selectOneMenu id="conceptoClasificacion" value="#{gestionConceptoControlador.objConceptoActual.codCatClasificacion}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposClasificacion}" var="tipoClasificacion" itemLabel="#{tipoClasificacion.nombre}" itemValue="#{tipoClasificacion}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoClasificacion" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoClasificacion" display="icon" id="msgconceptoClasificacion"/>
+                                
+                                <p:outputLabel value="Seguridad"/>                                  
+                                <p:selectOneMenu id="conceptoSeguridad" value="#{gestionConceptoControlador.objConceptoActual.codCatSeguridad}" converter="catalogoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposSeguridad}" var="tipoSeguridad" itemLabel="#{tipoSeguridad.nombre}" itemValue="#{tipoSeguridad}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoSeguridad" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoSeguridad" display="icon" id="msgconceptoSeguridad"/>
+                                
+                                <p:outputLabel value="Institución"/>                                  
+                                <p:selectOneMenu id="conceptoInstitucion" value="#{gestionConceptoControlador.objConceptoActual.codInstitucion}" converter="institucionConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Valor Requerido">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionConceptoControlador.tiposInstitucion}" var="tipoInstitucion" itemLabel="#{tipoInstitucion.nombre}" itemValue="#{tipoInstitucion}" />
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="blur" process="@this" update="msgconceptoInstitucion" async="true" global="false"/>
+                                </p:selectOneMenu>
+                                <p:message for="conceptoInstitucion" display="icon" id="msgconceptoInstitucion"/>
+                                
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionConceptoControlador.guardarConcepto()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneConceptos" 
+                                                         update=":frmGestionConceptos:panelConieneListas,panelContieneConceptos,msgs"
+                                                         async="true"
+                                                         global="false"
+
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionConceptoControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmGestionConceptos:panelConieneListas,panelContieneConceptos,msgs"
+                                                         async="true"
+                                                         global="false"                                                         
+                                                         >
+                                            <p:resetInput target=":frmGestionConceptos:panelContieneConceptos"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListConcepto" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListConcepto" value="#{gestionConceptoControlador.listarConceptos}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idConcepto}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Conceptos" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idConcepto}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Alias" width="100" style="font-size:12px;" filterBy="#{aplColumna.identificador}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.identificador}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="100" style="font-size:12px;" filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>                               
+                                <p:column headerText="Descripción" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Categoria Concepto" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codCatConcepto.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Tipo de Dato" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codCatDato.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Longitud Mínima" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.longitudMinima}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Longitud Máxima" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.longitudMaxima}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Rango Mínimo" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.rangoMinimo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Rango Máximo" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.rangoMaximo}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Categórica" width="100" style="font-size:12px;">
+                                    <p:selectBooleanCheckbox disabled="true"  value="#{aplColumna.categorica}"/>
+                                </p:column>
+                                <p:column headerText="Tipo Catálogo" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codTipoCatalogo.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Investigación" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codCatInvestigacion.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Clasificación" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codCatClasificacion.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Seguridad" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codCatSeguridad.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Institución" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codInstitucion.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionConceptoControlador.recuperarConceptosCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionConceptos:panelContieneConceptos,:frmGestionConceptos:panelConieneListas,:frmGestionConceptos:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionConceptos:panelContieneConceptos"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionConceptoControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionConceptos:panelConieneListas,:frmGestionConceptos:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

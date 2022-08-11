@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://172.16.2.9:8080/LOGINEC-war/LoginWebService?wsdl" uri="wsdl/172.16.2.9_8080/LOGINEC-war/LoginWebService.wsdl"/>
+    <system systemId="http://172.16.2.9:8080/LOGINEC-war/UserSessionWebService?wsdl" uri="wsdl/172.16.2.9_8080/LOGINEC-war/UserSessionWebService.wsdl"/>
+    <system systemId="http://172.16.2.9:8080/LOGINEC-war/RolWebService?wsdl" uri="wsdl/172.16.2.9_8080/LOGINEC-war/RolWebService.wsdl"/>
+    <system systemId="http://localhost:8080/CIQ-WS/ejecutaSentenciaTablas?wsdl" uri="wsdl/localhost_8080/CIQ-WS/ejecutaSentenciaTablas.wsdl"/>
+    <system systemId="http://localhost:8080/LOGINEC-war/LoginWebService?wsdl" uri="wsdl/localhost_8080/LOGINEC-war/LoginWebService.wsdl"/>
+    <system systemId="http://localhost:8080/LOGINEC-war/UserSessionWebService?wsdl" uri="wsdl/localhost_8080/LOGINEC-war/UserSessionWebService.wsdl"/>
+    <system systemId="http://localhost:8080/LOGINEC-war/RolWebService?wsdl" uri="wsdl/localhost_8080/LOGINEC-war/RolWebService.wsdl"/>
+    <system systemId="http://172.16.2.27:8080/LOGINEC-war/LoginWebService?wsdl" uri="wsdl/172.16.2.27_8080/LOGINEC-war/LoginWebService.wsdl"/>
+    <system systemId="http://172.16.2.27:8080/LOGINEC-war/UserSessionWebService?wsdl" uri="wsdl/172.16.2.27_8080/LOGINEC-war/UserSessionWebService.wsdl"/>
+</catalog>

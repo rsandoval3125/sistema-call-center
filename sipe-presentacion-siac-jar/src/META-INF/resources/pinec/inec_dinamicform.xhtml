@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <!--COMPONENTE PARA LA VISUALIZACION DE FORMULARIO DINAMICOS-->
+    <cc:interface>
+        <cc:attribute name="modelo"/>
+        <cc:attribute name="beanControlador"  required="true"/>
+        <cc:attribute name="tipo" required="true"/>
+        <cc:attribute name="btnguardarAction" />
+        <cc:attribute name="btnEliminarAction" />
+        <cc:attribute name="process"/>
+        <cc:attribute name="update"/>
+    </cc:interface>
+    <cc:implementation>
+
+        <span id="#{cc.clientId}">
+            <h:panelGroup id="dynaFormGroupcomponent">  
+                <pe:dynaForm id="dynaForm" value="#{cc.attrs.modelo}" var="data" >  
+                    <pe:dynaFormControl >  
+                        <h:outputText value="#{data}"/>  
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="separator" styleClass="separator ui-state-disabled">  
+                        <h:panelGrid columns="2" style="width:100%;" columnClasses="separatorText">  
+                            <h:outputText value="#{data}"/>  
+                            <p:separator/>  
+                        </h:panelGrid>  
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="label" styleClass="separator ui-state-disabled">  
+                        <h:panelGrid columns="2" style="width:100%;" >  
+                            <h:outputText value="#{data}"/>  
+                        </h:panelGrid>  
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="input" for="txt">  
+                        <p:inputText id="txt" value="#{data.value}" required="#{data.required}" disabled="#{data.habilitado}" widgetVar="#{data.idInec}">
+                            <c:if test="#{data.update!=null}">
+                                <p:ajax event="change" update="#{data.update}" rendered="#{data.update!=null}" listener="#{cc.attrs.beanControlador[data.accion]}"/>
+                            </c:if>
+                        </p:inputText>  
+                    </pe:dynaFormControl>  
+                    <pe:dynaFormControl type="calendar" for="cal" styleClass="calendar">  
+                        <p:calendar id="cal" value="#{cc.attrs.beanControlador[data.value]}" required="#{data.required}" showOn="button" widgetVar="#{data.idInec}" navigator="true" pattern="dd-MM-yyyy">
+                            <c:if test="#{data.update!=null}">
+                                <p:ajax event="dateSelect" update="#{data.update}" rendered="#{data.update!=null}" listener="#{cc.attrs.beanControlador[data.accion]}"/>
+                            </c:if>
+                        </p:calendar>      
+                    </pe:dynaFormControl>
+                    <!--<pe:dynaFormControl type="imagen" for="img">
+                        <h:graphicImage id="img" value="#{data.value}"/>
+                    </pe:dynaFormControl>-->
+                    <pe:dynaFormControl type="selectOneListbox" for="selOneListbox">
+                        <p:selectOneListbox id="selOneListbox" value="#{cc.attrs.beanControlador[data.name]}" var="itemsel" required="#{data.required}" >
+                            <f:selectItems value="#{data.value}" var="lista" itemLabel="#{lista}" itemValue="#{lista}" />
+
+                            <p:column>
+                                <p:graphicImage value="../../imagenes/#{itemsel}.png" width="40" height="50"/>
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{itemsel}" />
+                            </p:column>
+                            <c:if test="#{data.update!=null}">
+                                <p:ajax event="change" update="@none"
+                                        listener="#{cc.attrs.beanControlador[data.accion]}" />
+                            </c:if>
+                        </p:selectOneListbox>
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="selectJS" for="selJS" styleClass="select"> 
+                        <p:selectOneMenu id="selJS"  value="#{cc.attrs.beanControlador[data.name]}" required="#{data.required}" converter="#{data.value2==null? STRING_LITERAL:data.value2}" widgetVar="#{data.idInec}">  
+                                <f:selectItems value="#{data.value}" var="lista" itemLabel="#{data.label=='NoLabel'?lista:lista[data.label]}" itemValue="#{lista}" /> 
+                                <p:ajax event="change" oncomplete="#{data.accionjs}"/>
+                            </p:selectOneMenu> 
+                    </pe:dynaFormControl> 
+                    <pe:dynaFormControl type="select" for="sel" styleClass="select"> 
+                        <p:selectOneMenu id="sel"  value="#{cc.attrs.beanControlador[data.name]}" required="#{data.required}" widgetVar="#{data.idInec}" >  
+                            <c:if test="#{data.creaSelect}">
+                                <f:selectItem itemLabel="Seleccione" itemValue="-1"/>
+                            </c:if>
+                                <f:selectItems value="#{data.value}" var="lista" itemLabel="#{data.label=='NoLabel'?lista:lista[data.label]}" itemValue="#{data.value2==''?lista:lista[data.value2]}" /> 
+                                <p:ajax event="change" listener="${cc.attrs.beanControlador[data.accion]}"  update="${data.update}"/>
+                            </p:selectOneMenu> 
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="fileUpload" for="fileup">
+                        <p:fileUpload id="fileup" listener="#{cc.attrs.beanControlador[data.accion]}" 
+                                      mode="advanced" multiple="false" auto="false" immediate="true" 
+                                      uploadLabel="Subir" cancelLabel="Cancelar" update="#{data.update}"
+                                      allowTypes="#{data.name}"/>
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="booleanchoice">
+                        <h:outputText value="#{data.label}" ></h:outputText>
+                        <p:selectBooleanCheckbox id="bc" value="#{cc.attrs.beanControlador[data.value]}" required="#{data.required}"  
+                                                 style="vertical-align:middle;" widgetVar="#{data.idInec}" onchange="#{data.accionjs}">
+                            <c:if test="#{data.update!=null}">
+                                <p:ajax event="change" update="#{data.update}" rendered="#{data.update!=null}" listener="#{cc.attrs.beanControlador[data.accion]}"/>
+                            </c:if>
+                        </p:selectBooleanCheckbox>  
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="textarea" for="tarea">  
+                        <p:inputTextarea id="tarea" value="#{data.value}" required="#{data.required}" autoResize="false"/>  
+                    </pe:dynaFormControl>  
+                    <pe:dynaFormControl type="rating" for="rat">  
+                        <p:rating id="rat" value="#{data.value}" required="#{data.required}"/>  
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="button" >
+                        <p:commandButton value="#{data.label}" action="#{cc.attrs.beanControlador[data.accion]}" process="#{data.process}"
+                                         update="#{data.update}" oncomplete="#{data.accionjs}"/>
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="dialogButton">
+                        <p:commandButton id="diaBut" value="#{data.label}" oncomplete="#{data.accion}" update="#{data.update}" />
+                    </pe:dynaFormControl>
+                    <pe:dynaFormControl type="jsButton">
+                        <p:commandButton id="jsBut" value="#{data.label}" onclick="#{data.accionjs}"  type="button"/>
+                    </pe:dynaFormControl>
+                    <c:if test="#{cc.attrs.tipo}">
+                        <f:facet name="buttonBar" >  
+                            <p:commandButton value="Guardar" action="#{cc.attrs.beanControlador[cc.attrs.btnguardarAction]}"  
+                                             process="dynaForm" update="dynaForm"  rendered="#{cc.attrs.tipo}"
+                                             /> 
+                            <p:commandButton value="Eliminar" action="#{cc.attrs.beanControlador[cc.attrs.btnEliminarAction]}"  
+                                             process="dynaForm" update="dynaForm"  rendered="#{cc.attrs.tipo}"
+                                             /> 
+                            <p:commandButton type="Reset" value="Reset" style="margin-left: 5px;" rendered="#{cc.attrs.tipo}"/>
+                        </f:facet>  
+                    </c:if>
+                </pe:dynaForm>  
+            </h:panelGroup> 
+        </span>
+    </cc:implementation>
+</html>

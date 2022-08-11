@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionOperacionEstadistica">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneOperacionEstadistica" width="1000" columns="1" >
+                        <p:panel header="Administración - Operaciones Estadísticas">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="operacionENombre" value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.nombre}"  
+                                               size="40"  maxlength="200"  required="true" requiredMessage="Nombre no puede estar vacío"/>
+                                <p:message for="operacionENombre" display="icon"/>       
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="operacionEDescripcion"  value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false" />
+                                <p:message for="operacionEDescripcion" display="icon"/> 
+
+                                <p:outputLabel value="Sigla"/>
+                                <p:inputText   id="operacionESigla"  value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.sigla}" 
+                                               maxlength="20" size="40"/>
+                                <p:message for="operacionESigla" display="icon"/>                               
+
+                                <p:outputLabel value="Institución" />                               
+                                <p:selectOneMenu id="operacionEInstitucion" value="#{gestionOperacionEstadisticaControlador.institucion}" converter="institucionConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" filter="true" filterMatchMode="contains" required="#{gestionOperacionEstadisticaControlador.institucionRequerido}" requiredMessage="Institución necesita ser seleccionado">
+                                   <p:ajax listener="#{gestionOperacionEstadisticaControlador.onChangeInstitucion}" update="operacionEOrganigrama, operacionECodPadre" />
+                                   <f:param name="action" value="institucion" />
+                                   <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionOperacionEstadisticaControlador.instituciones}" var="institucion" itemLabel="#{institucion.nombre}" itemValue="#{institucion}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idInstitucion}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="operacionEInstitucion" display="icon"/>
+
+                                <p:outputLabel value="Organigrama" />                               
+                                <p:selectOneMenu id="operacionEOrganigrama" value="#{gestionOperacionEstadisticaControlador.organigrama}" converter="organigramaConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" filter="true" filterMatchMode="contains" required="#{gestionOperacionEstadisticaControlador.organigramaRequerido}" requiredMessage="Organigrama necesita se seleccionado" >
+                                    <p:ajax listener="#{gestionOperacionEstadisticaControlador.onChangeOrganigrama}" update="operacionECodPadre" />
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionOperacionEstadisticaControlador.organigramas}" var="organigrama" itemLabel="#{organigrama.nombre}" itemValue="#{organigrama}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idOrganigrama}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="operacionEOrganigrama" display="icon"/>
+
+                                <p:outputLabel value="Operación Estadística Padre"/>
+                                <p:selectOneMenu id="operacionECodPadre" value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.codPadre}" converter="operacionEstadisticaConverter"  panelStyle="width:280px"
+                                                filter="true" filterMatchMode="contains" effect="fade"  >
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionOperacionEstadisticaControlador.operacionEstadisticasPadre}" var="opEstadisticaPadre" itemLabel="#{opEstadisticaPadre.nombre}" itemValue="#{opEstadisticaPadre}" />
+                                </p:selectOneMenu>
+                                <p:message for="operacionECodPadre" display="icon"/>
+
+                                <p:outputLabel value="Nivel"/>
+                                <p:inputNumber    id="operacionENivel"  value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.nivel}" 
+                                                  minValue="0"   maxlength="10" maxValue="32767"  size="40" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="operacionENivel" display="icon"/>                                
+
+                                <p:outputLabel  value="Imagen" />
+                                <p:inputText    id="operacionEImagen"  value="#{gestionOperacionEstadisticaControlador.objAdmOperacionEstadisticaActual.imagen}" 
+                                                maxlength="255"  size="40"/>
+                                <p:message for="operacionEImagen" display="icon"/>                              
+                            </h:panelGrid>
+                            <f:facet name="footer">
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionOperacionEstadisticaControlador.guardarOperacionEstadistica()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneOperacionEstadistica" 
+                                                         update=":frmGestionOperacionEstadistica:panelConieneListas,panelContieneOperacionEstadistica,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionOperacionEstadisticaControlador.permisosBoton['PAG_INSRT'] || gestionOperacionEstadisticaControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListOperacionEstadistica').filter();"/>
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionOperacionEstadisticaControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionOperacionEstadistica,panelContieneOperacionEstadistica,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionOperacionEstadisticaControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target=":frmGestionOperacionEstadistica:panelContieneOperacionEstadistica"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListOperacionEstadistica" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListOperacionEstadistica" value="#{gestionOperacionEstadisticaControlador.listarOperacionEstadisticas}"  var="perColumna"   
+                                         selectionMode="single" rowKey="#{perColumna.idOpeEst}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListOperacionEstadistica"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Operaciones Estadísticas" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.idOpeEst}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="100" style="font-size:12px;" filterBy="#{perColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Descripción" width="150" style="font-size:12px;" filterBy="#{perColumna.descripcion}" filterMatchMode="contains">
+                                    <h:outputText value="#{perColumna.descripcion}" style="font-size:12px;" />
+                                </p:column>                                 
+
+                                <p:column headerText="Sigla" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.sigla}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Institución" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.codInstitucion.nombre}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Organigrama" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.codOrganigrama.nombre}" style="font-size:12px;" />
+                                </p:column>
+
+                                <p:column headerText="Operación Estadística Padre" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.codPadre.nombre}" style="font-size:12px;" />
+                                </p:column>                                
+                                <p:column headerText="Nivel" width="60" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.nivel}" style="font-size:12px;" >
+                                    </h:outputText>
+                                </p:column>     
+                                <p:column headerText="Imagen" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{perColumna.imagen}" style="font-size:12px;" >
+                                    </h:outputText>
+                                </p:column>     
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionOperacionEstadisticaControlador.recuperarOperacionEstadisticaCampos(perColumna)}" 
+                                                       process="@this" update=":frmGestionOperacionEstadistica:panelContieneOperacionEstadistica,:frmGestionOperacionEstadistica:panelConieneListas,:frmGestionOperacionEstadistica:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionOperacionEstadisticaControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionOperacionEstadistica:panelContieneOperacionEstadistica"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionOperacionEstadisticaControlador.confirmaEliminar(perColumna)}" 
+                                                     process="@this" update=":frmGestionOperacionEstadistica,:frmGestionOperacionEstadistica:message" 
+                                                     async="true" global="false" disabled="#{!gestionOperacionEstadisticaControlador.permisosBoton['PAG_ELIM']}">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionOperacionEstadistica:panelContieneOperacionEstadistica" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

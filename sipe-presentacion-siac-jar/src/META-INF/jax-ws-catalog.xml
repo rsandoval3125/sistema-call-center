@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/GIINEC_EJB/TablaServicioWebService/TablaServicioWebService?wsdl" uri="wsdl/localhost_8080/GIINEC_EJB/TablaServicioWebService/TablaServicioWebService.wsdl"/>
+    <system systemId="http://localhost:8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService?wsdl" uri="wsdl/localhost_8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService.wsdl"/>
+    <system systemId="http://localhost:8080/GIINEC_EJB/ColumnaWebService/ColumnaWebService?wsdl" uri="wsdl/localhost_8080/GIINEC_EJB/ColumnaWebService/ColumnaWebService.wsdl"/>
+    <system systemId="http://localhost:8080/GIINEC_EJB/ColumnaWebService/ColumnaWebService?wsdl" uri="wsdl/localhost_8080/GIINEC_EJB/ColumnaWebService/ColumnaWebService.wsdl"/>
+    <system systemId="http://localhost:8080/GIINEC_EJB/TablaWebService/TablaWebService?wsdl" uri="wsdl/localhost_8080/GIINEC_EJB/TablaWebService/TablaWebService.wsdl"/>
+    <system systemId="http://localhost:8080/GIINEC_EJB/ProyectoWebService/ProyectoWebService?wsdl" uri="wsdl/localhost_8080/GIINEC_EJB/ProyectoWebService/ProyectoWebService.wsdl"/>
+    <system systemId="http://localhost:8080/INEC_R_EJB/EjecutaRWS/EjecutaRWS?wsdl" uri="wsdl/localhost_8080/INEC_R_EJB/EjecutaRWS/EjecutaRWS.wsdl"/>
+    <system systemId="http://localhost:8080/geoinec_ejb/IndiceValorWS/IndiceValorWS?wsdl" uri="wsdl/localhost_8080/geoinec_ejb/IndiceValorWS/IndiceValorWS.wsdl"/>
+    <system systemId="http://localhost:8080/INEC_EJB/CatalogoWS/CatalogoWS?wsdl" uri="wsdl/localhost_8080/INEC_EJB/CatalogoWS/CatalogoWS.wsdl"/>
+    <system systemId="http://localhost:8080/INEC_EJB/TareasWS/TareasWS?wsdl" uri="wsdl/localhost_8080/INEC_EJB/TareasWS/TareasWS.wsdl"/>
+    <system systemId="http://172.16.2.9:8080/LOGINEC-war/LoginWebService?wsdl" uri="wsdl/172.16.2.9_8080/LOGINEC-war/LoginWebService.wsdl"/>
+    <system systemId="http://172.16.6.7:8080/INEC_EJB/TareasWS/TareasWS?wsdl" uri="wsdl/172.16.6.7_8080/INEC_EJB/TareasWS/TareasWS.wsdl"/>
+</catalog>

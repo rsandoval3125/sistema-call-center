@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://172.16.2.122:8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService?wsdl" uri="wsdl/172.16.2.122_8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService.wsdl"/>
+    <system systemId="http://172.16.2.242:8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService?wsdl" uri="wsdl/172.16.2.242_8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService.wsdl"/>
+</catalog>

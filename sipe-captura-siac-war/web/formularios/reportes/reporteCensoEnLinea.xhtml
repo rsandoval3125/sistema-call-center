@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    
+    <h:head>        
+        <link rel="stylesheet" type="text/css" href="../../resources/css/hidden-columns-excel.css"/>         
+    </h:head>
+
+    <!--<ui:composition template="/plantillas/inec_plantilla.xhtml">-->
+    <ui:composition template="../../META-INF.resources.plantillas/plantillaboot.xhtml">
+    <!--http://localhost:8080/sipe-captura-siac-war/formularios/inquietudes/listaInquietudesNuevo.xhtml-->
+    <h:outputStylesheet library="webjars" name="primeflex/3.0.1/primeflex.min.css" />
+        <ui:define name="contenido">
+         
+            <h:form id="form">
+                <style>
+                    .abierto {
+                         background-color: #def9e2 !important;
+                         background-image: none !important;
+                         color: #145a32 !important;
+                     }
+                     .proceso{
+                         background-color: #fef9e7 !important;
+                         background-image: none !important;
+                         color: #2c3e50 !important;
+                     }
+                     .cerrado {
+                         background-color: #fadbd8 !important;
+                         background-image: none !important;
+                         color: #922b21 !important;
+                     }
+                </style>
+                <div class="card">
+                    <p:growl id="messages" showDetail="true"/>
+                    <p:panel id="reportes-filtro" class="ui-fluid">
+                        <p:outputPanel>
+                            <p:panelGrid columns="6"
+                                         columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-6"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank ui-fluid"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:row styleClass="my-heading-row">
+                                    <p:column styleClass="ui-grid-col-12">
+                                        REPORTE DE CENSO EN LÍENA - PARÁMETROS DE BúSQUEDA
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Provincia"/>
+                                        <p:selectOneMenu
+                                            id="dpaProvSelect_1"
+                                            value="#{incidenciasBuscarControlador.provinciaSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaProvinciaSelect}"
+                                                var="prov"
+                                                itemLabel="#{prov.nombre}"
+                                                itemValue="#{prov}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCanSelect_1"
+                                                process="@this"
+                                                listener="#{incidenciasBuscarControlador.onChangeProvincia}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Cantón"/>
+                                        <p:selectOneMenu
+                                            id="dpaCanSelect_1"
+                                            value="#{incidenciasBuscarControlador.cantonSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaCantonSelect}"
+                                                var="can"
+                                                itemLabel="#{can.nombre}"
+                                                itemValue="#{can}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect_1"
+                                                process="@this"
+                                                listener="#{incidenciasBuscarControlador.onChangeCanton}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="@next" value="Ciudad o Parroquia"/>
+                                        <p:selectOneMenu
+                                            id="dpaCiuSelect_1"
+                                            value="#{incidenciasBuscarControlador.parroquiaSelected}"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem
+                                                itemLabel="Seleccione uno"
+                                                itemValue=""
+                                                noSelectionOption="true" />
+                                            <f:selectItems
+                                                value="#{incidenciasBuscarControlador.listaDpaCiudadSelect}"
+                                                var="ciu"
+                                                itemLabel="#{ciu.nombre}"
+                                                itemValue="#{ciu}" />
+                                            <p:ajax
+                                                event="valueChange"
+                                                update="dpaCiuSelect_1"
+                                                process="@this"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="inicio_1" value="Fecha inicio"/>
+                                        <p:calendar id="inicio_1" value="#{incidenciasBuscarControlador.fechaInicio}" pattern="dd-MM-yyyy" mask="true"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4">
+                                        <p:outputLabel for="fin_1" value="Fecha fin"/>
+                                        <p:calendar id="fin_1" value="#{incidenciasBuscarControlador.fechaFin}" pattern="dd-MM-yyyy" mask="true"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column styleClass="ui-grid-col-4"/>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton 
+                                            value="Buscar" 
+                                            icon="pi pi-search" 
+                                            actionListener="#{incidenciasBuscarControlador.generarReportexFormulario('F004')}"
+                                            update="dt-censo-linea reportes-filtro" 
+                                            process="dt-censo-linea reportes-filtro @this"
+                                            style="font-size: 2rem"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-2">
+                                        <p:commandButton value="Limpiar" icon="pi pi-undo" actionListener="#{incidenciasBuscarControlador.limpiarDatos}"                                                
+                                                update="dt-censo-linea reportes-filtro" 
+                                                process="dt-censo-linea reportes-filtro @this"
+                                                class="ui-button-secondary"
+                                                style="font-size: 2rem"/>
+                                    </p:column>
+                                    <p:column styleClass="ui-grid-col-4"/>
+                                </p:row>                                   
+                            </p:panelGrid>                         
+                        </p:outputPanel>
+                    </p:panel> 
+                    
+                    <br/>
+                    <br/>
+                    <p:commandButton value="Exportar Excel" styleClass="p-mr-2 p-mb-2">
+                        <p:dataExporter type="xls" target="dt-censo-linea" fileName="reporteCensoEnLinea"/>
+                    </p:commandButton>
+                    <!-- <p:commandButton value="PDF" styleClass="p-mr-2 p-mb-2">
+                        <p:dataExporter type="pdf" target="dt-censo-linea" fileName="censoenlinea"/>
+                    </p:commandButton> -->
+                    
+                    <br/>
+                    <br/>
+                    
+                    <p:dataTable   paginator="true" 
+                                   rows="10" 
+                                   reflow="true" 
+                                   widgetVar="dt-censo-linea"
+                                   id="dt-censo-linea" 
+                                   value="#{incidenciasBuscarControlador.listarIncidencias}"  
+                                   var="entidad"   
+                                   selectionMode="single" 
+                                   rowKey="#{entidad.idDeth}" 
+                                   currentPageReportTemplate="{currentPage} de {totalPages}"
+                                   rowStyleClass="#{entidad.val20 eq 'CERRADO' ? 'cerrado': entidad.val20 eq 'PROCESO' ? 'proceso' : entidad.val20 eq 'ABIERTO' ? 'abierto' :null }">  
+
+                        <f:facet name="header">
+                           <span style="font-weight: bold">LISTA DE CENSO EN LINEA</span>
+                        </f:facet>
+                        
+                        <p:column   headerText="ID" style="width: 80px;">
+                            <h:outputText value="#{entidad.idDeth}"/>
+                        </p:column>
+
+                        <p:column headerText="Cédula" filterBy="#{entidad.val07}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val07}"/>
+                        </p:column> 
+                        
+                         <p:column headerText="Provincia" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val02}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Cantón" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val04}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Parroquia"  styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val06}"/>
+                        </p:column>
+
+                        <p:column headerText="Apellidos y Nombres" filterBy="#{entidad.val08} #{entidad.val09}" filterMatchMode="contains" style="width: 200px;">
+                            <h:outputText value="#{entidad.val08} #{entidad.val09}"  />
+                        </p:column> 
+
+                        <p:column headerText="Correo" filterBy="#{entidad.val10}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val10}"/>
+                        </p:column> 
+                        
+                        <p:column headerText="Descripción Solicitud" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val11}"/>
+                        </p:column>   
+                        
+                        <p:column headerText="Novedad" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val12}"/>
+                        </p:column>              
+                        
+                        <p:column headerText="Plataforma" filterBy="#{entidad.val16}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val16}" />
+                        </p:column>                    
+  
+                        <p:column headerText="Fecha Creación" filterBy="#{entidad.val28}" filterMatchMode="contains">
+                            <p:outputLabel value="#{entidad.val28}">
+                                    <f:convertDateTime type="date" pattern="MM/dd/yyyy" />
+                            </p:outputLabel>
+                        </p:column>
+                        
+                        <p:column headerText="Estado Ticket" filterBy="#{entidad.val20}" filterMatchMode="contains">
+                            <h:outputText style="font-weight:bold"  value="#{entidad.val20}"/>
+                        </p:column> 
+                        
+                        <p:column headerText="Respuesta" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val27}"/>
+                        </p:column>  
+   
+                        <p:column headerText="Tipo Usuario" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val27}"/>
+                        </p:column>         
+                        
+                        <p:column headerText="Tipo Formulario" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.tipoFormulario}"/>
+                        </p:column> 
+                        
+                        <p:column headerText="Codigo Auditoria" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val30}"/>
+                        </p:column>
+                        
+                         <p:column headerText="Estado Asignación" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val31}"/>
+                        </p:column>
+                        
+                        <p:column  headerText="Codigo Operador" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val32}"/>
+                        </p:column>
+                        
+                        <p:column  headerText="Nombre Operador" styleClass="hidden-columns-excel" style="width: 80px;" visible="false">
+                            <h:outputText value="#{entidad.val33}"/>
+                        </p:column>
+                        
+                        
+                        <p:column exportable="false">
+<!--                            <p:commandButton   icon="pi pi-pencil" 
+                                               update=":form:manage-inquietudes-content"
+                                               action="#{registroCensoEnLineaControlador.recuperarDatosCensoEnLinea(entidad)}" 
+                                               process="@this"
+                                               styleClass="edit-button rounded-button ui-button-success"
+                                              >
+                                <p:resetInput target=":form:manage-inquietudes-content"/>
+                            </p:commandButton>-->
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <!--<ui:include src="formularioInquietudes.xhtml"/>-->
+                      
+
+                 </div>
+             </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

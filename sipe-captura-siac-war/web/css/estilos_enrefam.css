@@ -1,0 +1,63 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22/03/2019, 11:52:45
+    Author     : dguano
+*/
+
+
+.checkboxValidar .ui-chkbox-box  {
+    width: 25px;
+    height: 25px;
+}
+.ui-datatable-header  {
+    background: #0474b4!important;
+}
+
+.btnOrange {
+	color: #fef4e9 !important;
+	border: solid 1px #da7c0c !important;
+	background: #f78d1d !important;
+	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20)) !important;
+	background: -moz-linear-gradient(top,  #faa51a,  #f47a20) !important;
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20') !important;
+}
+.btnOrange:hover {
+	background: #f47c20 !important;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015)) !important;
+	background: -moz-linear-gradient(top,  #f88e11,  #f06015) !important;
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015') !important;
+}
+.btnOrange:active {
+	color: #fcd3a5 !important;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a)) !important;
+	background: -moz-linear-gradient(top,  #f47a20,  #faa51a) !important;
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a') !important;
+}
+
+.btnReemp {
+        background-color: #17a2b8 !important;
+        color: #000000 !important;
+        background-image: -webkit-linear-gradient(top, #eb94d0, #2079b0) !important;
+        border-color:#17a2b8 !important;
+    } 
+    
+.btnReemp:hover {
+  background: #2079b0  !important;
+  background-image: -webkit-linear-gradient(top, #2079b0, #eb94d0) !important;
+  background-image: -moz-linear-gradient(top, #2079b0, #eb94d0) !important;
+  background-image: -ms-linear-gradient(top, #2079b0, #eb94d0) !important;
+  background-image: -o-linear-gradient(top, #2079b0, #eb94d0) !important;
+  background-image: linear-gradient(to bottom, #2079b0, #eb94d0) !important;
+  text-decoration: none !important;
+}
+
+.tblCebra tr:nth-child(even) {
+    background: #ddd !important;
+}
+.tblCebra tr:nth-child(odd) {
+    background: #fff !important;
+} 

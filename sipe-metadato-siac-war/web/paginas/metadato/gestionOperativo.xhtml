@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionOperativo">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneOperativo" width="1000" columns="1" >
+                        <p:panel header="Metadato - Operativo">
+                            <h:panelGrid columns="3">
+
+                                <p:outputLabel value="identificador"/>
+                                <p:inputText   id="oprativoIdentificador" value="#{gestionOperativoControlador.objOperativo.identificador}"  
+                                               size="40" maxlength="100"  />
+                                <p:message for="oprativoIdentificador" display="text"/>
+                                
+<!--                                <p:outputLabel value="Operación Estadística"/>                               
+                                <p:selectOneMenu id="operacion" value="#{gestionOperativoControlador.objOperativo.codOpe}" panelStyle="width:280px"
+                                                         effect="fade" style="width:315px" required="true" requiredMessage="no puede estar vacio" >
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                            <f:selectItems value="#{gestionOperativoControlador.opeEs}" var="opeEs" itemLabel="#{opeEs.nombre}" itemValue="#{opeEs.idOpeEst}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="operacion" display="icon"/>-->
+                                        
+                                <p:outputLabel value="Operación Estadística"/>    
+                                <p:selectOneMenu id="opeEs" value="#{gestionOperativoControlador.objOperativo.codOpe}"  panelStyle="width:280px" converter="operativoConverter"
+                                                 effect="fade" var="t" style="width:315px" required="true" requiredMessage="no puede estar vacio" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionOperativoControlador.opeEs}" var="peracionE" itemLabel="#{peracionE.nombre}" itemValue="#{peracionE}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idOpeEst}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="opeEs" display="text"/>        
+                                
+                                <p:outputLabel value="Periodo"/>    
+                                <p:selectOneMenu id="codPeriodo" value="#{gestionOperativoControlador.objOperativo.codPer}"  panelStyle="width:280px" converter="periodoConverter"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionOperativoControlador.periodo}" var="per" itemLabel="#{per.nombre}" itemValue="#{per}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idPeriodo}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="codPeriodo" display="icon"/>
+                                
+                                <p:outputLabel value="Resumen"/>
+                                <p:inputTextarea  id="operativoResumen"  value="#{gestionOperativoControlador.objOperativo.resumen}" 
+                                                  cols="38" rows="4"   maxlength="1280" autoResize="false" />
+                                <p:message for="operativoResumen" display="text"/>  
+                             
+                                <p:outputLabel value="Unidad de Análisis"/>
+                                <p:inputText   id="oprativoUniAnalsis" value="#{gestionOperativoControlador.objOperativo.unidadAnalisis}"  
+                                               size="40" maxlength="50"  />
+                                <p:message for="oprativoUniAnalsis" display="text"/>
+                                
+                                <p:outputLabel value="Alcance"/>
+                                <p:inputText   id="oprativoAlcance" value="#{gestionOperativoControlador.objOperativo.alcanceTematico}"  
+                                               size="40" maxlength="100"  />
+                                <p:message for="oprativoAlcance" display="text"/>
+                             
+                                <p:outputLabel value="Universo de Estudio"/>
+                                <p:inputText   id="oprativoUniverso" value="#{gestionOperativoControlador.objOperativo.universoEstudio}"  
+                                               size="40" maxlength="80"  />
+                                <p:message for="oprativoUniverso" display="text"/>
+                                
+                                <p:outputLabel value="Productor"/>
+                                <p:inputText   id="oprativoProdutor" value="#{gestionOperativoControlador.objOperativo.productor}"  
+                                               size="40" maxlength="80"  />
+                                <p:message for="oprativoProdutor" display="text"/>
+                                
+                                <p:outputLabel value="Antecedentes"/>
+                                <p:inputText   id="oprativoAntecedentes" value="#{gestionOperativoControlador.objOperativo.antecedentes}"  
+                                               size="40" maxlength="80"  />
+                                <p:message for="oprativoAntecedentes" display="text"/>
+                                
+                                <p:outputLabel value="Tipo de Dato"/>
+                                <p:inputText   id="oprativoTipoDato" value="#{gestionOperativoControlador.objOperativo.tipoDato}"  
+                                               size="40" maxlength="80"  />
+                                <p:message for="oprativoTipoDato" display="text"/>
+                                 
+                                <p:outputLabel value="Fecha de Investigación" />
+                                <p:calendar id="operativoFechaInvestigacion" value="#{gestionOperativoControlador.objOperativo.fechaInvestigacion}" showOn="button" />
+                                <p:message for="operativoFechaInvestigacion" display="text"/>
+                                
+                                <p:outputLabel value="Fecha de Publicación" />
+                                <p:calendar id="operativoFechaPublicacion" value="#{gestionOperativoControlador.objOperativo.fechaPublicacion}" showOn="button" />
+                                <p:message for="operativoFechaPublicacion" display="text"/>
+                            
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                    
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionOperativoControlador.guardarOperativo()}"
+                                                         icon="ui-icon-disk"
+                                                         process="@this,panelContieneOperativo" 
+                                                         update=":frmGestionOperativo:panelConieneListas,panelContieneOperativo,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                         
+                                                         id="btnNuevo" 
+                                                         action="#{gestionOperativoControlador.refrescaNuevoOperativo()}"
+                                                         icon="ui-icon-document"     
+                                                         process="@this" 
+                                                         update=":frmGestionOperativo:panelConieneListas,panelContieneOperativo,msgs"
+                                                         async="true"
+                                                         global="false"                                                         
+                                                                                                                  
+                                                         >
+                                            <p:resetInput target=":frmGestionOperativo:panelContieneOperativo"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListOperativo" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListOperativo" value="#{gestionOperativoControlador.listarOperativo}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idOperativo}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Operativo" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idOperativo}" style="font-size:12px;" />
+                                </p:column>
+                                
+                                <p:column   headerText="Identificador" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.identificador}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Operación Estadística" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codOpe.nombre}" style="font-size:12px;" />
+                                </p:column>
+<!--                                <p:column   headerText="Operación Estadística" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{gestionOperativoControlador.mapaOpeEs[aplColumna.codOpe]}" style="font-size:12px;" />
+                                </p:column>-->
+                                <p:column   headerText="Periodo" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.codPer.nombre}" style="font-size:12px;" />
+                                </p:column>
+<!--                                <p:column   headerText="Periodo" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{gestionOperativoControlador.mapaPeriodo[aplColumna.codOpe]}" style="font-size:12px;" />
+                                </p:column>-->
+                                <p:column   headerText="Resumen" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.resumen}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Unidad de Análisis" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.unidadAnalisis}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Alcance" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.alcanceTematico}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Productor" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.productor}" style="font-size:12px;" />
+                                </p:column>
+                                
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionOperativoControlador.recuperarOperativoCampos(aplColumna)}"
+                                                       process="@this" update=":frmGestionOperativo:panelContieneOperativo,:frmGestionOperativo:panelConieneListas,:frmGestionOperativo:msgs" async="true" global="false">
+                                        <p:resetInput target=":frmGestionOperativo:panelContieneOperativo"/>
+                                    </p:commandButton>
+                                </p:column>
+                                
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionOperativoControlador.confirmaEliminarOperativo(aplColumna)}" 
+                                                     process="@this" update=":frmGestionOperativo:panelConieneListas,:frmGestionOperativo:message" async="true" global="false">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>                               
+                               
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,1053 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://serviciosWS.general.inec.gob.ec/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="ActualizaBDWebService" targetNamespace="http://serviciosWS.general.inec.gob.ec/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://serviciosWS.general.inec.gob.ec/" xmlns:ns1="http://jaxb.dev.java.net/array" elementFormDefault="unqualified" targetNamespace="http://serviciosWS.general.inec.gob.ec/" version="1.0">
+
+  <xs:import namespace="http://jaxb.dev.java.net/array"/>
+
+  <xs:element name="actualizarbd" type="tns:actualizarbd"/>
+
+  <xs:element name="actualizarbdResponse" type="tns:actualizarbdResponse"/>
+
+  <xs:element name="columna" type="tns:columna"/>
+
+  <xs:element name="descargaMapaTiles" type="tns:descargaMapaTiles"/>
+
+  <xs:element name="descargaMapaTilesResponse" type="tns:descargaMapaTilesResponse"/>
+
+  <xs:element name="ejecutaSql" type="tns:ejecutaSql"/>
+
+  <xs:element name="ejecutaSqlCopy" type="tns:ejecutaSqlCopy"/>
+
+  <xs:element name="ejecutaSqlCopyResponse" type="tns:ejecutaSqlCopyResponse"/>
+
+  <xs:element name="ejecutaSqlResponse" type="tns:ejecutaSqlResponse"/>
+
+  <xs:element name="eliminarbd" type="tns:eliminarbd"/>
+
+  <xs:element name="eliminarbdResponse" type="tns:eliminarbdResponse"/>
+
+  <xs:element name="importarExcel" type="tns:importarExcel"/>
+
+  <xs:element name="importarExcelResponse" type="tns:importarExcelResponse"/>
+
+  <xs:element name="importarTxt" type="tns:importarTxt"/>
+
+  <xs:element name="importarTxtResponse" type="tns:importarTxtResponse"/>
+
+  <xs:element name="recuperaInformacion" type="tns:recuperaInformacion"/>
+
+  <xs:element name="recuperaInformacionDataTablaSql" type="tns:recuperaInformacionDataTablaSql"/>
+
+  <xs:element name="recuperaInformacionDataTablaSqlResponse" type="tns:recuperaInformacionDataTablaSqlResponse"/>
+
+  <xs:element name="recuperaInformacionDataTablaValor" type="tns:recuperaInformacionDataTablaValor"/>
+
+  <xs:element name="recuperaInformacionDataTablaValorJSON" type="tns:recuperaInformacionDataTablaValorJSON"/>
+
+  <xs:element name="recuperaInformacionDataTablaValorJSONResponse" type="tns:recuperaInformacionDataTablaValorJSONResponse"/>
+
+  <xs:element name="recuperaInformacionDataTablaValorResponse" type="tns:recuperaInformacionDataTablaValorResponse"/>
+
+  <xs:element name="recuperaInformacionList" type="tns:recuperaInformacionList"/>
+
+  <xs:element name="recuperaInformacionListGEOJSONCarga" type="tns:recuperaInformacionListGEOJSONCarga"/>
+
+  <xs:element name="recuperaInformacionListGEOJSONCargaResponse" type="tns:recuperaInformacionListGEOJSONCargaResponse"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINEC" type="tns:recuperaInformacionListJSONGEOINEC"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINECExt" type="tns:recuperaInformacionListJSONGEOINECExt"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINECExtPol" type="tns:recuperaInformacionListJSONGEOINECExtPol"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINECExtPolResponse" type="tns:recuperaInformacionListJSONGEOINECExtPolResponse"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINECExtResponse" type="tns:recuperaInformacionListJSONGEOINECExtResponse"/>
+
+  <xs:element name="recuperaInformacionListJSONGEOINECResponse" type="tns:recuperaInformacionListJSONGEOINECResponse"/>
+
+  <xs:element name="recuperaInformacionListJSONINFOCAPT" type="tns:recuperaInformacionListJSONINFOCAPT"/>
+
+  <xs:element name="recuperaInformacionListJSONINFOCAPTResponse" type="tns:recuperaInformacionListJSONINFOCAPTResponse"/>
+
+  <xs:element name="recuperaInformacionListResponse" type="tns:recuperaInformacionListResponse"/>
+
+  <xs:element name="recuperaInformacionListSQL" type="tns:recuperaInformacionListSQL"/>
+
+  <xs:element name="recuperaInformacionListSQLResponse" type="tns:recuperaInformacionListSQLResponse"/>
+
+  <xs:element name="recuperaInformacionListValor" type="tns:recuperaInformacionListValor"/>
+
+  <xs:element name="recuperaInformacionListValorResponse" type="tns:recuperaInformacionListValorResponse"/>
+
+  <xs:element name="recuperaInformacionResponse" type="tns:recuperaInformacionResponse"/>
+
+  <xs:complexType name="importarExcel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="archivoExcel" type="xs:string"/>
+      <xs:element name="nombrePrimeraFila" type="xs:boolean"/>
+      <xs:element name="numeroFilasRecuperar" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="importarExcelResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dataTabla"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dataTabla">
+    <xs:sequence>
+      <xs:element name="columnas">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="xs:int"/>
+                  <xs:element minOccurs="0" name="value" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dataColumnas" nillable="true" type="tns:dataColumna"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dataStringBuilder" nillable="true" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="tabla" nillable="true" type="xs:anyType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dataColumna">
+    <xs:sequence>
+      <xs:element name="autoincremental" type="xs:boolean"/>
+      <xs:element name="caseSensitivo" type="xs:boolean"/>
+      <xs:element name="conSigno" type="xs:boolean"/>
+      <xs:element name="escala" type="xs:int"/>
+      <xs:element minOccurs="0" name="esquema" type="xs:string"/>
+      <xs:element name="modificable" type="xs:boolean"/>
+      <xs:element name="moneda" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombreCatalogoBD" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombreClaseJava" type="xs:string"/>
+      <xs:element name="nulo" type="xs:int"/>
+      <xs:element name="posicion" type="xs:int"/>
+      <xs:element name="precision" type="xs:int"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="tamanoColumna" type="xs:int"/>
+      <xs:element minOccurs="0" name="textoPresentacion" type="xs:string"/>
+      <xs:element name="tipoDato" type="xs:int"/>
+      <xs:element minOccurs="0" name="tipoDatoString" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="wheremw" type="tns:columnaValor"/>
+      <xs:element name="limite" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="columnaValor">
+    <xs:sequence>
+      <xs:element name="andor" type="xs:int"/>
+      <xs:element minOccurs="0" name="columnaDerecha" type="tns:columna"/>
+      <xs:element minOccurs="0" name="columnaIzquierda" type="tns:columna"/>
+      <xs:element minOccurs="0" name="comparacion" type="xs:string"/>
+      <xs:element name="parentisiFin" type="xs:int"/>
+      <xs:element name="parentisisInicio" type="xs:int"/>
+      <xs:element minOccurs="0" name="valor" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorObjeto" type="xs:anyType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="columna">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alias" type="xs:string"/>
+      <xs:element minOccurs="0" name="cadenaNumerica" type="xs:int"/>
+      <xs:element minOccurs="0" name="codigoPk" type="xs:int"/>
+      <xs:element minOccurs="0" name="definicion" type="xs:int"/>
+      <xs:element minOccurs="0" name="esPk" type="xs:int"/>
+      <xs:element minOccurs="0" name="fechaBaja" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="fechaIngreso" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="fechaModificacion" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="fila" type="xs:int"/>
+      <xs:element minOccurs="0" name="longitudMaxima" type="xs:int"/>
+      <xs:element minOccurs="0" name="longitudMinima" type="xs:int"/>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroDecimales" type="xs:int"/>
+      <xs:element minOccurs="0" name="obligatorio" type="xs:int"/>
+      <xs:element minOccurs="0" name="orden" type="xs:int"/>
+      <xs:element minOccurs="0" name="ordenImpresion" type="xs:int"/>
+      <xs:element minOccurs="0" name="proyecto" type="xs:int"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:int"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:int"/>
+      <xs:element minOccurs="0" name="tipoControl" type="xs:int"/>
+      <xs:element minOccurs="0" name="usuarioBaja" type="xs:int"/>
+      <xs:element minOccurs="0" name="usuarioCrea" type="xs:int"/>
+      <xs:element minOccurs="0" name="usuarioModificacion" type="xs:int"/>
+      <xs:element minOccurs="0" name="valorMaximo" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorMinimo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaValorResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dataTabla"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINECExtPol">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element name="longitud_minima" type="xs:double"/>
+      <xs:element name="longitud_maxima" type="xs:double"/>
+      <xs:element name="latitud_minima" type="xs:double"/>
+      <xs:element name="latitud_maxima" type="xs:double"/>
+      <xs:element name="buffer" type="xs:double"/>
+      <xs:element name="wkid" type="xs:int"/>
+      <xs:element name="zoom" type="xs:int"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINECExtPolResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="importarTxt">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="archivoExcel" type="xs:string"/>
+      <xs:element name="nombrePrimeraFila" type="xs:boolean"/>
+      <xs:element name="numeroFilasRecuperar" type="xs:int"/>
+      <xs:element minOccurs="0" name="caracterSeparacion" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="importarTxtResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dataTabla"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONINFOCAPT">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONINFOCAPTResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListGEOJSONCarga">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element name="carga" type="xs:int"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListGEOJSONCargaResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINECExt">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element name="longitud" type="xs:double"/>
+      <xs:element name="latitud" type="xs:double"/>
+      <xs:element name="buffer" type="xs:double"/>
+      <xs:element name="wkid" type="xs:int"/>
+      <xs:element name="zoom" type="xs:int"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINECExtResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINEC">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="cobertura" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListJSONGEOINECResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaSql">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="sql" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaSqlResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dataTabla"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element minOccurs="0" name="wheremw" type="tns:mapWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mapWrapper">
+    <xs:sequence>
+      <xs:element name="mapcol">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="tns:columna"/>
+                  <xs:element minOccurs="0" name="value" type="xs:anyType"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="mapcolhs">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="tns:columna"/>
+                  <xs:element minOccurs="0" name="value" type="xs:anyType"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ejecutaSqlCopy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="sqlstr" type="xs:string"/>
+      <xs:element minOccurs="0" name="datosList" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ejecutaSqlCopyResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="actualizarbd">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element minOccurs="0" name="camposactualizarwr" type="tns:mapWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="actualizarbdResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="eliminarbd">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element minOccurs="0" name="camposactualizarwr" type="tns:mapWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="eliminarbdResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListSQL">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="sql" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListSQLResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="wheremw" type="tns:columnaValor"/>
+      <xs:element name="limite" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListValorResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="descargaMapaTiles">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element name="carga" type="xs:int"/>
+      <xs:element name="usuario" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="descargaMapaTilesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ejecutaSql">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="sqlstr" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ejecutaSqlResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="wheremw" type="tns:columnaValor"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionListResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns1:anyTypeArray"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaValorJSON">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre_conexion" type="xs:string"/>
+      <xs:element minOccurs="0" name="tabla" type="xs:string"/>
+      <xs:element name="usuario" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="wheremw" type="tns:columnaValor"/>
+      <xs:element name="limite" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="recuperaInformacionDataTablaValorJSONResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dataTabla"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="composedGeom">
+    <xs:complexContent>
+      <xs:extension base="tns:geometry">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="geometry">
+    <xs:sequence>
+      <xs:element name="dimension" type="xs:int"/>
+      <xs:element name="haveMeasure" type="xs:boolean"/>
+      <xs:element name="type" type="xs:int"/>
+      <xs:element name="srid" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="lineString">
+    <xs:complexContent>
+      <xs:extension base="tns:pointComposedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType abstract="true" name="pointComposedGeom">
+    <xs:complexContent>
+      <xs:extension base="tns:composedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="multiPolygon">
+    <xs:complexContent>
+      <xs:extension base="tns:composedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="polygon">
+    <xs:complexContent>
+      <xs:extension base="tns:composedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pGgeometry">
+    <xs:complexContent>
+      <xs:extension base="tns:pGobject">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="geometry" type="tns:geometry"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pGobject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="multiLineString">
+    <xs:complexContent>
+      <xs:extension base="tns:composedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="linearRing">
+    <xs:complexContent>
+      <xs:extension base="tns:pointComposedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="multiPoint">
+    <xs:complexContent>
+      <xs:extension base="tns:pointComposedGeom">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="point">
+    <xs:complexContent>
+      <xs:extension base="tns:geometry">
+        <xs:sequence>
+          <xs:element name="m" type="xs:double"/>
+          <xs:element name="x" type="xs:double"/>
+          <xs:element name="y" type="xs:double"/>
+          <xs:element name="z" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jaxb.dev.java.net/array" version="1.0">
+
+  <xs:complexType final="#all" name="anyTypeArray">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:anyType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="recuperaInformacionListSQLResponse">
+    <wsdl:part element="tns:recuperaInformacionListSQLResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONINFOCAPT">
+    <wsdl:part element="tns:recuperaInformacionListJSONINFOCAPT" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListGEOJSONCarga">
+    <wsdl:part element="tns:recuperaInformacionListGEOJSONCarga" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINECExt">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINECExt" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINECExtPolResponse">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINECExtPolResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListGEOJSONCargaResponse">
+    <wsdl:part element="tns:recuperaInformacionListGEOJSONCargaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINEC">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINEC" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacion">
+    <wsdl:part element="tns:recuperaInformacion" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="descargaMapaTilesResponse">
+    <wsdl:part element="tns:descargaMapaTilesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="actualizarbd">
+    <wsdl:part element="tns:actualizarbd" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListResponse">
+    <wsdl:part element="tns:recuperaInformacionListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONINFOCAPTResponse">
+    <wsdl:part element="tns:recuperaInformacionListJSONINFOCAPTResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ejecutaSqlResponse">
+    <wsdl:part element="tns:ejecutaSqlResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListValor">
+    <wsdl:part element="tns:recuperaInformacionListValor" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="importarExcelResponse">
+    <wsdl:part element="tns:importarExcelResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINECResponse">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINECResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaSqlResponse">
+    <wsdl:part element="tns:recuperaInformacionDataTablaSqlResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ejecutaSql">
+    <wsdl:part element="tns:ejecutaSql" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionList">
+    <wsdl:part element="tns:recuperaInformacionList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="importarExcel">
+    <wsdl:part element="tns:importarExcel" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaValor">
+    <wsdl:part element="tns:recuperaInformacionDataTablaValor" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINECExtPol">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINECExtPol" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListJSONGEOINECExtResponse">
+    <wsdl:part element="tns:recuperaInformacionListJSONGEOINECExtResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="importarTxt">
+    <wsdl:part element="tns:importarTxt" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="actualizarbdResponse">
+    <wsdl:part element="tns:actualizarbdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaValorResponse">
+    <wsdl:part element="tns:recuperaInformacionDataTablaValorResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionResponse">
+    <wsdl:part element="tns:recuperaInformacionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaSql">
+    <wsdl:part element="tns:recuperaInformacionDataTablaSql" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaValorJSONResponse">
+    <wsdl:part element="tns:recuperaInformacionDataTablaValorJSONResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ejecutaSqlCopy">
+    <wsdl:part element="tns:ejecutaSqlCopy" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eliminarbd">
+    <wsdl:part element="tns:eliminarbd" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ejecutaSqlCopyResponse">
+    <wsdl:part element="tns:ejecutaSqlCopyResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListSQL">
+    <wsdl:part element="tns:recuperaInformacionListSQL" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="importarTxtResponse">
+    <wsdl:part element="tns:importarTxtResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="eliminarbdResponse">
+    <wsdl:part element="tns:eliminarbdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionListValorResponse">
+    <wsdl:part element="tns:recuperaInformacionListValorResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="descargaMapaTiles">
+    <wsdl:part element="tns:descargaMapaTiles" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recuperaInformacionDataTablaValorJSON">
+    <wsdl:part element="tns:recuperaInformacionDataTablaValorJSON" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ActualizaBDWebService">
+    <wsdl:operation name="importarExcel">
+      <wsdl:input message="tns:importarExcel" name="importarExcel">
+    </wsdl:input>
+      <wsdl:output message="tns:importarExcelResponse" name="importarExcelResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaValor">
+      <wsdl:input message="tns:recuperaInformacionDataTablaValor" name="recuperaInformacionDataTablaValor">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionDataTablaValorResponse" name="recuperaInformacionDataTablaValorResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINECExtPol">
+      <wsdl:input message="tns:recuperaInformacionListJSONGEOINECExtPol" name="recuperaInformacionListJSONGEOINECExtPol">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListJSONGEOINECExtPolResponse" name="recuperaInformacionListJSONGEOINECExtPolResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importarTxt">
+      <wsdl:input message="tns:importarTxt" name="importarTxt">
+    </wsdl:input>
+      <wsdl:output message="tns:importarTxtResponse" name="importarTxtResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONINFOCAPT">
+      <wsdl:input message="tns:recuperaInformacionListJSONINFOCAPT" name="recuperaInformacionListJSONINFOCAPT">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListJSONINFOCAPTResponse" name="recuperaInformacionListJSONINFOCAPTResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListGEOJSONCarga">
+      <wsdl:input message="tns:recuperaInformacionListGEOJSONCarga" name="recuperaInformacionListGEOJSONCarga">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListGEOJSONCargaResponse" name="recuperaInformacionListGEOJSONCargaResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINECExt">
+      <wsdl:input message="tns:recuperaInformacionListJSONGEOINECExt" name="recuperaInformacionListJSONGEOINECExt">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListJSONGEOINECExtResponse" name="recuperaInformacionListJSONGEOINECExtResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINEC">
+      <wsdl:input message="tns:recuperaInformacionListJSONGEOINEC" name="recuperaInformacionListJSONGEOINEC">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListJSONGEOINECResponse" name="recuperaInformacionListJSONGEOINECResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaSql">
+      <wsdl:input message="tns:recuperaInformacionDataTablaSql" name="recuperaInformacionDataTablaSql">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionDataTablaSqlResponse" name="recuperaInformacionDataTablaSqlResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacion">
+      <wsdl:input message="tns:recuperaInformacion" name="recuperaInformacion">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionResponse" name="recuperaInformacionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ejecutaSqlCopy">
+      <wsdl:input message="tns:ejecutaSqlCopy" name="ejecutaSqlCopy">
+    </wsdl:input>
+      <wsdl:output message="tns:ejecutaSqlCopyResponse" name="ejecutaSqlCopyResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="actualizarbd">
+      <wsdl:input message="tns:actualizarbd" name="actualizarbd">
+    </wsdl:input>
+      <wsdl:output message="tns:actualizarbdResponse" name="actualizarbdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eliminarbd">
+      <wsdl:input message="tns:eliminarbd" name="eliminarbd">
+    </wsdl:input>
+      <wsdl:output message="tns:eliminarbdResponse" name="eliminarbdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListSQL">
+      <wsdl:input message="tns:recuperaInformacionListSQL" name="recuperaInformacionListSQL">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListSQLResponse" name="recuperaInformacionListSQLResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListValor">
+      <wsdl:input message="tns:recuperaInformacionListValor" name="recuperaInformacionListValor">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListValorResponse" name="recuperaInformacionListValorResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="descargaMapaTiles">
+      <wsdl:input message="tns:descargaMapaTiles" name="descargaMapaTiles">
+    </wsdl:input>
+      <wsdl:output message="tns:descargaMapaTilesResponse" name="descargaMapaTilesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ejecutaSql">
+      <wsdl:input message="tns:ejecutaSql" name="ejecutaSql">
+    </wsdl:input>
+      <wsdl:output message="tns:ejecutaSqlResponse" name="ejecutaSqlResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionList">
+      <wsdl:input message="tns:recuperaInformacionList" name="recuperaInformacionList">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionListResponse" name="recuperaInformacionListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaValorJSON">
+      <wsdl:input message="tns:recuperaInformacionDataTablaValorJSON" name="recuperaInformacionDataTablaValorJSON">
+    </wsdl:input>
+      <wsdl:output message="tns:recuperaInformacionDataTablaValorJSONResponse" name="recuperaInformacionDataTablaValorJSONResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ActualizaBDWebServiceSoapBinding" type="tns:ActualizaBDWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="importarExcel">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="importarExcel">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="importarExcelResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaValor">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionDataTablaValor">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionDataTablaValorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINECExtPol">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListJSONGEOINECExtPol">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListJSONGEOINECExtPolResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="importarTxt">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="importarTxt">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="importarTxtResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONINFOCAPT">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListJSONINFOCAPT">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListJSONINFOCAPTResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListGEOJSONCarga">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListGEOJSONCarga">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListGEOJSONCargaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINECExt">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListJSONGEOINECExt">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListJSONGEOINECExtResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListJSONGEOINEC">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListJSONGEOINEC">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListJSONGEOINECResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaSql">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionDataTablaSql">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionDataTablaSqlResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacion">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacion">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ejecutaSqlCopy">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ejecutaSqlCopy">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ejecutaSqlCopyResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="actualizarbd">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="actualizarbd">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="actualizarbdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="eliminarbd">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="eliminarbd">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="eliminarbdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListSQL">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListSQL">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListSQLResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionListValor">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionListValor">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListValorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="descargaMapaTiles">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="descargaMapaTiles">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="descargaMapaTilesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ejecutaSql">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ejecutaSql">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ejecutaSqlResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionList">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaInformacionDataTablaValorJSON">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaInformacionDataTablaValorJSON">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaInformacionDataTablaValorJSONResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ActualizaBDWebService">
+    <wsdl:port binding="tns:ActualizaBDWebServiceSoapBinding" name="ActualizaBDWebServicePort">
+      <soap:address location="http://172.16.2.242:8080/INEC_EJB/ActualizaBDWebService/ActualizaBDWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

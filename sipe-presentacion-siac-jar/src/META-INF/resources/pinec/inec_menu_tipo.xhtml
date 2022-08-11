@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+http://xmlns.jcp.org/jsf/composite
+http://xmlns.jcp.org/jsp/jstl/core
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:pinec="http://java.sun.com/jsf/composite/pinec"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!--COMPONENTE PARA LA VISUALIZACION DE WIZARD DINAMICOS-->
+    <cc:interface>
+        <cc:attribute name="beanControlador"  required="true"/>
+        <cc:attribute name="datos" required="true"/>
+    </cc:interface>
+    <cc:implementation>
+        <c:if test="#{cc.attrs.datos.tipoMenu==1}"  >
+            <p:breadCrumb id="breadCrumb#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==1}" homeDisplay="icon">
+                <p:menuitem actionListener="#{cc.attrs.beanControlador[cc.attrs.datos.accion]}" value="home" update="#{cc.attrs.datos.update}" />
+                <cc:insertChildren/>
+            </p:breadCrumb>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==2}" >
+            <p:dock id="dock#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==2}" position="#{cc.attrs.datos.posicion}">
+                <cc:insertChildren/>
+            </p:dock>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==3}" >
+            <p:menu id="menu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==3}">
+                <cc:insertChildren/>
+            </p:menu>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==4}" >
+            <p:menuButton id="menuButton#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==4}" value="#{cc.attrs.datos.texto}">
+                <cc:insertChildren/>
+            </p:menuButton>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==5}" >
+            <p:slideMenu id="slideMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==5}">
+                <cc:insertChildren/>
+            </p:slideMenu>
+        </c:if>
+
+
+        <c:if test="#{cc.attrs.datos.tipoMenu==6}" >
+            <p:steps id="steps#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==6}">
+                <cc:insertChildren/>
+            </p:steps>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==7}" >
+            <p:tieredMenu id="tieredMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==7}">
+                <cc:insertChildren/>
+            </p:tieredMenu>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==8}" >
+            <p:contextMenu id="contextMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==8}">
+                <cc:insertChildren/>
+            </p:contextMenu>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==9}" >
+            <p:megaMenu id="megaMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==9}" orientation="#{cc.attrs.datos.orientacion}">
+                <cc:insertChildren/>
+            </p:megaMenu>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==10}" >
+            <p:menubar id="menubar#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==10}">
+                <cc:insertChildren/>
+            </p:menubar>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==11}" >
+            <p:panelMenu id="panelMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==11}">
+                <cc:insertChildren/>
+            </p:panelMenu>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==12}" >
+            <p:stack id="stack#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==12}" icon="#{cc.attrs.datos.orientacion}" expanded="true">
+                <cc:insertChildren/>
+            </p:stack>
+        </c:if>
+        <c:if test="#{cc.attrs.datos.tipoMenu==13}" >
+            <p:tabMenu id="tabMenu#{cc.id}" rendered="#{cc.attrs.datos.tipoMenu==13}">
+                <cc:insertChildren/>
+            </p:tabMenu>
+        </c:if>
+    </cc:implementation>
+</html>

@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"      
+      xmlns:pinec="http://java.sun.com/jsf/composite/pinec"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">            
+            <h:form id="frm" styleClass="estilo-pagina">
+                <p:growl id="msgs" showDetail="true" escape="false"/>
+                <p:spacer width="100" height="10"/> 
+                <center>
+                    <p:toolbar style="width: 960px !important; font-size: 12px !important;">
+                        <f:facet name="left" >
+                            <h:panelGrid id="idPnlgRecup" columns="#{fn:length(reporteControlador.mapSisSchema)}" styleClass="estiloTextoCandaraMed"> 
+                                <c:forEach items="#{reporteControlador.mapSisSchema}" var="sistema">
+                                    <c:set var="alias" value="#{fn:split(sistema.key,'.')[0]}"/>
+                                    <c:set var="nombre" value="#{fn:split(sistema.key,'.')[1]}"/>
+                                    <p:splitButton id="idSplitButton_#{alias}" value="#{nombre}"
+                                                   action="#{reporteControlador.recuperaConn(alias)}" 
+                                                   update=":frm:msgs" 
+                                                   icon="ui-icon-folder-collapsed"
+                                                   >
+                                        <c:forEach items="#{sistema.value}" var="esquema" >
+                                            <p:menuitem value="#{esquema[1]}" 
+                                                        action="#{reporteControlador.recuperaSistema(alias,esquema[1])}" 
+                                                        update="frm" 
+                                                        icon="ui-icon-triangle-1-ne" 
+                                                        />
+                                        </c:forEach>
+                                    </p:splitButton>                                    
+                                </c:forEach>
+                                <c:forEach items="#{reporteControlador.mapSisSchema}" var="sistema">
+                                    <c:set var="alias" value="#{fn:split(sistema.key,'.')[0]}"/>
+                                    <script>
+                                        var buttonSplit = document.getElementById("frm:idSplitButton_#{alias}_button");
+                                        var buttonMenuSplit = document.getElementById("frm:idSplitButton_#{alias}_menuButton");
+                                        if (#{reporteControlador.activarquery} === false) {
+                                            buttonMenuSplit.classList.add("ui-state-disabled");
+                                            buttonMenuSplit.setAttribute("disabled", "disabled");
+                                        } else {
+                                            buttonMenuSplit.classList.remove("ui-state-disabled");
+                                            buttonMenuSplit.removeAttribute('disabled');
+                                        }
+                                        if (#{reporteControlador.activarseleccion} === false) {
+                                            buttonSplit.classList.add("ui-state-disabled");
+                                        } else {
+                                            buttonSplit.classList.remove("ui-state-disabled");
+                                        }
+                                    </script>
+                                </c:forEach>
+                            </h:panelGrid>
+                        </f:facet>  
+
+                        <f:facet name="right" >
+                            <h:panelGrid id="pnlGridOpciones" columns="3" styleClass="estiloTextoCandaraMed">
+                                <p:commandButton value="Añadir Página" icon="ui-icon-document" 
+                                                 action="#{reporteControlador.resetPagina()}"                                                 
+                                                 process="@this" 
+                                                 update="frm:idAccordionReportes:idTree, frm:idAccordionReportes:idManyLst, 
+                                                 frm:idAccordionReportes:idOneLst, frm, frm:idAccordionReportes"
+                                                 global="false"
+                                                 async="true"
+                                                 ajax="false">
+                                </p:commandButton> 
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <p:accordionPanel dynamic="true" id="idAccordionReportes" activeIndex="#{reporteControlador.activarAccordion}" 
+                                      style="width: 1100px !important; font-size: 12px !important;"  styleClass="ui-responsive"
+                                      >
+                        <p:ajax event="tabChange" listener="#{reporteControlador.onTabChange}" process="@this" update="frm:idPnlgRecup, idAccordionReportes"/>                        
+                        <p:ajax event="tabClose" listener="#{reporteControlador.onTabClose}" process="@this" update="frm:idPnlgRecup, idAccordionReportes"/>
+
+                        <p:tab  title="INGRESAR QUERY" id="tab0" rendered="#{!reporteControlador.activarquery}" >                                                  
+                            <center>  
+                                <h:panelGrid columns="5">   
+                                    <p:outputLabel value="Query2: "/>
+                                    <p:inputTextarea id="idIptTextSqlReporte" 
+                                                     value="#{reporteControlador.query}"
+                                                     style=" width: 500px; height: 175px; color: #000000; " 
+                                                     autoResize="false" onselect="seleccionarCol();" 
+                                                     >   
+                                    </p:inputTextarea> 
+                                    <p:spacer width="60" height="20"/>
+                                    <p:commandButton 
+                                        value="Ingresar Función"
+                                        icon="ui-icon-refresh"                                                  
+                                        oncomplete="PF('widgDialogFunc').show();"
+                                        style="width: 110px; height: 60px"
+                                        update="frm:idAccordionReportes:dlgFuncReportetab0"
+                                        >
+                                    </p:commandButton> 
+
+                                    <p:dialog  id="dlgFuncReportetab0"   
+                                               header="Función o Procedimiento" 
+                                               widgetVar="widgDialogFunc" 
+                                               height="450px" width="700px" showEffect="fade" 
+                                               hideEffect="fade"
+                                               closable="true"
+                                               position="center" > 
+
+                                        <center>
+                                            <h:panelGrid  id="pnlGridFuncReportetab0" columns="2"> 
+                                                <p:outputLabel value="Función a ingresar: "/>
+                                                <p:inputTextarea id="idIptTextFuncReportetab0" 
+                                                                 value="#{reporteControlador.funcion}"
+                                                                 style=" width: 500px; height: 300px; color: #000000;" 
+                                                                 autoResize="false"  
+                                                                 >   
+                                                </p:inputTextarea> 
+                                                <p:outputLabel value="Nombre de la función: "/>
+                                                <p:inputText id="idIptTextNomFuncReportetab0" 
+                                                             value="#{reporteControlador.nomFuncion}"
+                                                             style=" width: 400px"                                                                    
+                                                             >   
+                                                </p:inputText> 
+                                                <p:spacer width="60" height="20"/>
+                                                <p:panel>
+                                                    <p:commandButton value="Guardar" 
+                                                                     icon="ui-icon-disk"                                                 
+                                                                     process="@this, frm:idAccordionReportes:pnlGridFuncReportetab0" 
+                                                                     style="width: 100px; height: 30px"
+                                                                     actionListener="#{reporteControlador.guardarFuncion()}"
+                                                                     >
+                                                    </p:commandButton>                                                        
+                                                </p:panel> 
+                                            </h:panelGrid >
+                                        </center> 
+                                    </p:dialog> 
+                                </h:panelGrid >  
+                                <p:remoteCommand name="enviar" action="#{reporteControlador.seleccionarColumnas}" 
+                                                 process="@this, frm:idAccordionReportes:idIptTextSqlReporte" 
+                                                 update="frm:msgs, frm:idAccordionReportes:idIptTextSqlReporte" /> 
+                                <script type="text/javascript">
+                                    function seleccionarCol() {
+                                        var seleccion = window.getSelection().toString();
+                                        enviar([{name: 'texto', value: seleccion}]);
+                                    }
+                                </script>
+                                <p:spacer width="50" height="10"/> 
+                                <h:panelGrid columns="5">
+                                    <p:commandButton value="Ingresar Query" 
+                                                     icon="ui-icon-plus"                              
+                                                     process="@this, frm:idAccordionReportes:idIptTextSqlReporte"
+                                                     action="#{reporteControlador.implementarSql()}"
+                                                     update=":frm:msgs, frm:idAccordionReportes:idIptTextSqlReporteMensaje"
+                                                     style="width: 100px; height: 35px"
+                                                     >
+                                        <f:setPropertyActionListener target="#{reporteControlador.creatualizaQuery}" value="crear"/>
+                                    </p:commandButton>  
+                                </h:panelGrid> 
+                                <p:spacer width="50" height="10"/>   
+                                <h:panelGrid>
+                                    <p:outputLabel value="Test: " rendered="false"/> 
+                                    <p:inputTextarea id="idIptTextSqlReporteMensaje" 
+                                                     value="#{reporteControlador.sqlReporteMensaje}"
+                                                     style=" width: 500px; height: 80px; color: #000000; " 
+                                                     autoResize="false" 
+                                                     rendered="false">                                  
+                                    </p:inputTextarea> 
+                                </h:panelGrid > 
+                            </center>  
+                        </p:tab>
+
+                        <p:tab  title="SELECCIONAR ENTIDADES" id="tab1" rendered="#{!reporteControlador.activarseleccion}">
+                            <h:panelGrid columns="4" id="pnlGridAccordionTab">                               
+                                <h:outputText value="Tablas: " />
+                                <h:outputText />
+                                <h:outputText value="Columnas: "/>
+                                <h:outputText />                        
+
+                                <p:selectOneListbox id="idOneLst" scrollHeight="300"
+                                                    style="width: 200px; height: 300px;"
+                                                    value="#{reporteControlador.nomTabla}"
+                                                    rendered="#{reporteControlador.renderSlcTabla}" >
+                                    <f:selectItems value="#{reporteControlador.lstNomTablas}" 
+                                                   var="tabla" 
+                                                   itemLabel="#{tabla}" 
+                                                   itemValue="#{tabla}" />
+                                    <p:ajax process="@this" update="frm, frm:idAccordionReportes:idTree, frm:idAccordionReportes:idManyLst" listener="#{reporteControlador.seleccionarTabla()}" />
+                                </p:selectOneListbox> 
+
+                                <p:tree id="idTree" value="#{reporteControlador.treeNode}" var="tree"
+                                        selectionMode="single"
+                                        selection="#{reporteControlador.selectedNode}"
+                                        style="width: 250px; height: 300px; overflow: auto; display: inline-table;" 
+                                        rendered="#{!reporteControlador.renderSlcTabla}"
+                                        >
+
+                                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                        <h:outputText value="#{tree}" />
+                                    </p:treeNode>                               
+
+                                    <p:ajax event="select" listener="#{reporteControlador.expandirTabla()}" process="@this" update="frm:idAccordionReportes:idTree, frm:idAccordionReportes:idManyLst, frm:idAccordionReportes:idOneLst, frm"/>
+                                </p:tree> 
+
+                                <p:spacer width="50" height="10"/> 
+
+                                <p:selectManyMenu id="idManyLst"  scrollHeight="300" widgetVar="wvarManyMenu"
+                                                  style="width: 250px; height: 300px; display: inline-table;"
+                                                  value="#{reporteControlador.lstNomColumnasSeleccionadas}" >
+                                    <f:selectItems value="#{reporteControlador.lstNomColumnas}" 
+                                                   var="column" 
+                                                   itemLabel="#{column}" 
+                                                   itemValue="#{column}" />
+                                </p:selectManyMenu>  
+                            </h:panelGrid>                            
+
+                            <p:spacer width="100" height="20"/>
+
+                            <h:panelGrid >
+                                <p:commandButton value="Construir" 
+                                                 process="frm:idAccordionReportes:idManyLst" 
+                                                 icon="ui-icon-wrench"         
+                                                 onclick="remoteBotonConstruir()"                                     
+                                                 oncomplete="PF('widgDialogSQL').show();"
+                                                 style="width: 100px; height: 35px"
+                                                 >
+                                </p:commandButton> 
+
+                                <p:remoteCommand name="remoteBotonConstruir"
+                                                 action="#{reporteControlador.construirSql()}"
+                                                 update="frm, frm:idAccordionReportes:idIptText"/>  
+
+                                <p:dialog  header="Sql" 
+                                           widgetVar="widgDialogSQL" 
+                                           height="350" showEffect="fade" 
+                                           hideEffect="fade"
+                                           closable="true"
+                                           >                                 
+                                    <center>
+                                        <h:panelGrid  >                                                
+                                            <p:inputTextarea id="idIptText" 
+                                                             value="#{reporteControlador.query}"
+                                                             style=" width: 350px; height: 350px; color: #000000; " 
+                                                             autoResize="false" >                                  
+                                            </p:inputTextarea>                                                
+                                        </h:panelGrid>
+                                    </center>
+                                </p:dialog> 
+                            </h:panelGrid>
+                        </p:tab>
+
+                        <p:tab title="INGRESAR FILTROS" id="tab2" disabled="#{reporteControlador.addNuevoReporte}">
+                            <p:tabView  id="tabViewFitros" >
+                                <p:tab title="FILTRO POR CATALOGO" id="idTabViewFCtlgo">
+                                    <h:panelGrid columns="3">
+                                        <h:panelGrid id="pnlGridFiltros" columns="2">
+                                            <p:outputLabel value="Nombre Filtro:"/> 
+                                            <p:inputText id="iptTextNombreFiltroCatalogo" 
+                                                         value="#{reporteControlador.nombreFiltro}"  
+                                                         style="width:200px"                                                                 
+                                                         >                                            
+                                            </p:inputText>
+                                            <p:outputLabel value="#{etq.lbl_parametro}:"/> 
+                                            <p:inputText id="iptTextArgumentoCatalogo" 
+                                                         value="#{reporteControlador.nombreFiltroParametro}"  
+                                                         style="width:200px"                                                                 
+                                                         >
+                                                <p:ajax event="keyup"  
+                                                        listener="#{reporteControlador.actualizarTipoCatalogo}"                                                     
+                                                        update="pnlGridLstTipoCatalogo"/>
+                                            </p:inputText>
+
+                                            <p:spacer width="60" height="20"/>
+                                            <p:spacer width="60" height="20"/>
+
+                                            <p:outputLabel value="#{etq.lbl_tipo} de Filtro:"/>
+                                            <h:panelGrid id="pnlGridLstTipoCatalogo">  
+                                                <p:selectOneListbox id="idOneLstTipoCatalogo1"   
+                                                                    style="width: 200px; height: 200px;"
+                                                                    value="#{reporteControlador.seleccionLstTipoCatalogo}"
+                                                                    rendered="#{reporteControlador.renderTipoCtl}"
+                                                                    converter="tipoCatalogoConverter">
+                                                    <f:selectItems value="#{reporteControlador.lstTipoCatalogo}" 
+                                                                   var="_tipoCatalogo" 
+                                                                   itemLabel="#{_tipoCatalogo.nombre}" 
+                                                                   itemValue="#{_tipoCatalogo}" />
+                                                </p:selectOneListbox>   
+                                                <p:selectOneListbox id="idOneLstTipoCatalogo2"   
+                                                                    style="width: 200px; height: 200px;"
+                                                                    value="#{reporteControlador.seleccionLstTipoCatalogo}"
+                                                                    rendered="#{!reporteControlador.renderTipoCtl}"
+                                                                    converter="tipoCatalogoConverter" >
+                                                    <f:selectItems value="#{reporteControlador.lstContieneTipoCatalogo}" 
+                                                                   var="_tipoCatalogo" 
+                                                                   itemLabel="#{_tipoCatalogo.nombre}" 
+                                                                   itemValue="#{_tipoCatalogo}" />
+
+                                                    <p:ajax event="change" process="@this" listener="#{reporteControlador.onFocusMetadato()}" 
+                                                            update="idDtaTableLstFocus"/>  
+
+                                                </p:selectOneListbox>
+                                                <p:tooltip id="t2" for="idOneLstTipoCatalogo2" >
+                                                    <p:panelGrid columns="3" >
+                                                        <p:dataTable id="idDtaTableLstFocus" var="focus" 
+                                                                     value="#{reporteControlador.lstMetadatoFocus}"
+                                                                     rowKey="#{focus.idCatalogo}"
+                                                                     style="width:500px; color: #000000;"
+                                                                     emptyMessage="#{etq.msg_seg_sinRegistros}" 
+                                                                     >                                            
+                                                            <p:column headerText="idCatalogo" style="width: 30px">
+                                                                <h:outputText value="#{focus.idCatalogo}" />
+                                                            </p:column>
+                                                            <p:column headerText="codTipoCatalogo" style="width: 30px">
+                                                                <h:outputText value="#{focus.codTipoCatalogo.idTipoCatalogo}" />
+                                                            </p:column>
+                                                            <p:column headerText="#{etq.lbl_nombre}" style="width: 50px">
+                                                                <h:outputText value="#{focus.nombre}" />
+                                                            </p:column>                                                            
+                                                            <p:column headerText="#{etq.lbl_descripcion}" style="width: 70px">
+                                                                <h:outputText value="#{focus.descripcion}" />
+                                                            </p:column>
+                                                            <p:column headerText="alias" style="width: 50px">
+                                                                <h:outputText value="#{focus.alias}" />
+                                                            </p:column>
+                                                            <p:column headerText="valor" style="width: 30px">
+                                                                <h:outputText value="#{focus.valor}" />
+                                                            </p:column>
+                                                        </p:dataTable> 
+                                                    </p:panelGrid>
+                                                </p:tooltip>
+                                            </h:panelGrid>
+                                            <p:outputLabel value="Filtrar por:"/>
+                                            <p:selectOneMenu id="sltAsgMenuFltCat" 
+                                                             style="width:90px;" 
+                                                             value="#{reporteControlador.tipoFiltro}">
+                                                <f:selectItem itemValue="ninguno" itemLabel="Ninguno" />
+                                                <f:selectItem itemValue="idCatalogo" itemLabel="Id Catalogo" />                                                                                   
+                                                <f:selectItem itemValue="codTipoCatalogo" itemLabel="Cod Tipo Catalogo" />                                                                                   
+                                                <f:selectItem itemValue="nombre" itemLabel="Nombre" />                                                                                   
+                                                <f:selectItem itemValue="alias" itemLabel="Alias" />                                                                                   
+                                                <f:selectItem itemValue="valor" itemLabel="Valor" />
+                                            </p:selectOneMenu> 
+                                        </h:panelGrid>
+                                        <p:spacer width="60" height="20"/>
+                                        <p:commandButton icon="ui-icon-plus" 
+                                                         style=" width: 50px; height: 30px;"
+                                                         process="@this, frm:idAccordionReportes:tabViewFitros:pnlGridFiltros"
+                                                         action="#{reporteControlador.addFiltrosListCatalogo()}"
+                                                         update="frm:idAccordionReportes:tabViewFitros:pnlGridFiltros, frm:idAccordionReportes:tabViewFitros:idDtaTableLstFiltros" >
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                    <p:spacer width="100" height="20"/> 
+                                    <p:remoteCommand name="onCellEdit" update="idDtaTableLstFiltros"/>
+                                    <p:dataTable id="idDtaTableLstFiltros" var="_filtro" 
+                                                 value="#{reporteControlador.lstFiltrosIngresados}"
+                                                 style="width:740px;"
+                                                 emptyMessage="#{etq.msg_seg_sinRegistros}" 
+                                                 scrollable="true" editable="true">  
+
+                                        <p:ajax event="rowEdit" oncomplete="onCellEdit()" listener="#{reporteControlador.onRowEdit}" update=":frm:msgs"/>
+                                        <p:ajax event="rowEditCancel" />
+
+                                        <p:column headerText="Nombre Filtro" style="width: 100px">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><h:outputText value="#{_filtro.value[0]}" /></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{_filtro.value[0]}" style="width:100%" label="Nombre Filtro"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>                                                        
+                                        <p:column headerText="#{etq.lbl_parametro}" style="width: 50px">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><h:outputText value="#{_filtro.value[1]}" /></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{_filtro.value[1]}" style="width:100%" label="#{etq.lbl_parametro}"/></f:facet>
+                                            </p:cellEditor>
+                                        </p:column>                                                        
+                                        <p:column headerText="Tipo de Filtro" style="width: 100px">
+                                            <h:outputText value="#{_filtro.value[2]}" />
+                                        </p:column> 
+                                        <p:column headerText="Filtro Catalogo" style="width: 50px">
+                                            <p:cellEditor>
+                                                <f:facet name="output"><h:outputText value="#{_filtro.value[4]}" /></f:facet>
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu style="width:90px;" 
+                                                                     value="#{_filtro.value[4]}"
+                                                                     label="Filtro Catalogo">
+                                                        <f:selectItem itemValue="ninguno" itemLabel="Ninguno" />
+                                                        <f:selectItem itemValue="idCatalogo" itemLabel="Id Catalogo" />                                                                                   
+                                                        <f:selectItem itemValue="codTipoCatalogo" itemLabel="Cod Tipo Catalogo" />                                                                                   
+                                                        <f:selectItem itemValue="nombre" itemLabel="Nombre" />                                                                                   
+                                                        <f:selectItem itemValue="alias" itemLabel="Alias" />                                                                                   
+                                                        <f:selectItem itemValue="valor" itemLabel="Valor" />
+                                                    </p:selectOneMenu> </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="#{etq.btn_borrar}" width="40">                                                
+                                            <p:commandButton id="btnBorrarFiltro" 
+                                                             icon="ui-icon-trash" 
+                                                             title="Borrar" 
+                                                             process="@this"
+                                                             action="#{reporteControlador.removerFiltros(_filtro.key)}"
+                                                             update="idDtaTableLstFiltros">
+                                            </p:commandButton>                                                
+                                        </p:column>
+                                        <p:column headerText="Editar" style="width:35px" >
+                                            <p:rowEditor />
+                                        </p:column>
+                                    </p:dataTable> 
+                                </p:tab>
+                                <p:tab title="FILTRO POR QUERY" id="idTabViewFQuery">
+                                    <center>
+                                        <h:panelGrid id="pnlGridFiltrosSQL" columns="2">
+                                            <p:outputLabel value="Nombre Filtro:"/> 
+                                            <p:inputText id="iptTextNombreFiltroSQL" 
+                                                         value="#{reporteControlador.nombreFiltro}"  
+                                                         style="width:200px"                                                                 
+                                                         >                                            
+                                            </p:inputText>
+                                            <p:outputLabel value="#{etq.lbl_parametro}:"/> 
+                                            <p:inputText id="iptTextArgumentoSQL" 
+                                                         value="#{reporteControlador.nombreFiltroParametro}"  
+                                                         style="width:200px"                                                                 
+                                                         >
+                                            </p:inputText>
+                                            <p:outputLabel value="Consulta:"/> 
+                                            <p:inputTextarea id="idIptTextQueryFiltro" 
+                                                             value="#{reporteControlador.queryFiltro}"
+                                                             style=" width: 350px; height: 110px; color: #000000; " 
+                                                             autoResize="false" >                                  
+                                            </p:inputTextarea>
+                                        </h:panelGrid>
+                                        <p:messages id="messages" showDetail="true" closable="true"/>
+                                        <p:spacer width="50" height="10"/>                                              
+                                        <h:panelGrid>
+                                            <p:commandButton 
+                                                icon="ui-icon-plus"                                                                                              
+                                                styleClass="ui-priority-primary"
+                                                actionListener="#{reporteControlador.addFiltrosListSQL()}"   
+                                                process="@this, frm:idAccordionReportes:tabViewFitros:pnlGridFiltrosSQL"
+                                                update="frm:idAccordionReportes:tabViewFitros:messages, frm:idAccordionReportes:tabViewFitros:idDtaTableFiltrosSQLTabla, frm:idAccordionReportes:tabViewFitros:pnlGridFiltrosSQL" 
+                                                style=" width: 50px; height: 30px;"
+                                                >             
+                                            </p:commandButton>                                             
+                                        </h:panelGrid>
+                                        <p:spacer width="50" height="10"/> 
+
+                                        <p:remoteCommand name="onCellEdit" update="idDtaTableFiltrosSQLTabla" />                                    
+                                        <p:dataTable id="idDtaTableFiltrosSQLTabla" var="parFiltroSQL" 
+                                                     value="#{reporteControlador.lstFiltrosSQLTabla}"
+                                                     style="width:800px;"
+                                                     emptyMessage="#{etq.msg_seg_sinRegistros}" 
+                                                     editable="true" >   
+
+                                            <p:ajax event="rowEdit" listener="#{reporteControlador.onRowEdit}" update=":frm:msgs"  oncomplete="onCellEdit()"/>
+                                            <p:ajax event="rowEditCancel" />
+
+                                            <p:column headerText="#{etq.lbl_nombre}" style="width: 100px">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{parFiltroSQL.value[0]}" /></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{parFiltroSQL.value[0]}" style="width:100%" label="#{etq.lbl_nombre}"/></f:facet>
+                                                </p:cellEditor>    
+                                            </p:column>
+                                            <p:column headerText="#{etq.lbl_parametro}" style="width: 50px">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{parFiltroSQL.value[1]}" /></f:facet>
+                                                    <f:facet name="input"><p:inputText value="#{parFiltroSQL.value[1]}" style="width:100%" label="#{etq.lbl_parametro}"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Consulta" style="width: 150px">
+                                                <h:outputText value="#{parFiltroSQL.value[2]}" />                                                
+                                            </p:column>
+                                            <p:column headerText="#{etq.btn_borrar}" width="40">                                                
+                                                <p:commandButton id="btnBorrarFiltro" 
+                                                                 icon="ui-icon-trash" 
+                                                                 title="Borrar" 
+                                                                 process="@this"
+                                                                 action="#{reporteControlador.removerFiltrosLstQuery(parFiltroSQL.key)}"
+                                                                 update="idDtaTableFiltrosSQLTabla">
+                                                </p:commandButton>                                                
+                                            </p:column>
+                                            <p:column headerText="Editar" style="width:35px" >
+                                                <p:rowEditor />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </center>                                        
+                                </p:tab>
+                            </p:tabView>
+                        </p:tab>
+
+                        <p:tab title="ASIGNAR FILTROS" id="tab3">
+                            <p:tabView  id="tabViewAsgFitros" dynamic="true" >
+                                <p:tab title="ASIGNAR FILTROS POR ENTIDAD" rendered="#{!reporteControlador.activarseleccion}">
+                                    <h:panelGrid id="pnlGridAsgFiltrosGrupo" columns="4">
+                                        <h:panelGrid id="pnlGridAsgFiltros" columns="4">  
+                                            <p:outputLabel for="sltAsgMenuOpReLogico" value="#{etq.lbl_operador_logico}"/>                         
+                                            <p:outputLabel for="sltAsgMenuColumna" value="#{etq.lbl_columna}"/>                            
+                                            <p:outputLabel for="sltAsgMenuOpRelacional" value="#{etq.lbl_operador}"/>                            
+                                            <p:outputLabel for="sltAsgMenuParametro" value="#{etq.lbl_parametro}"/> 
+
+                                            <p:selectOneMenu id="sltAsgMenuOpReLogico" 
+                                                             style="width:90px;" 
+                                                             value="#{reporteControlador.opLogicoSeleccionado}"
+                                                             converter="catalogoConverter"
+                                                             disabled="#{reporteControlador.renderOpLogico}"
+                                                             required="#{!reporteControlador.renderOpLogico}">
+                                                <f:selectItem itemLabel="#{etq.lbl_seleccione}.."/>
+                                                <f:selectItems value="#{reporteControlador.lstOperadoresLogicos}" 
+                                                               var="_asgOplogico" 
+                                                               itemLabel="#{_asgOplogico.alias}" 
+                                                               itemValue="#{_asgOplogico}"
+                                                               />                                    
+                                            </p:selectOneMenu>                                        
+                                            <p:selectOneMenu id="sltAsgMenuColumna" 
+                                                             style="width:150px;" 
+                                                             value="#{reporteControlador.columnaAsignada}"
+                                                             required="#{reporteControlador.required}">
+                                                <f:selectItem itemLabel="#{etq.lbl_seleccione}.."/>
+                                                <f:selectItems value="#{reporteControlador.lstNomColumnas}" 
+                                                               var="_asgColumna" 
+                                                               itemLabel="#{_asgColumna}" 
+                                                               itemValue="#{_asgColumna}"
+                                                               />                                    
+                                            </p:selectOneMenu>                                        
+                                            <p:selectOneMenu id="sltAsgMenuOpRelacional" 
+                                                             style="width:90px;" 
+                                                             value="#{reporteControlador.opRelacionalSeleccionado}"
+                                                             converter="catalogoConverter"
+                                                             required="#{reporteControlador.required}">
+                                                <f:selectItem itemLabel="#{etq.lbl_seleccione}.."/>
+                                                <f:selectItems value="#{reporteControlador.lstOperadoresRelacionales}" 
+                                                               var="_asgOpRelacional" 
+                                                               itemLabel="#{_asgOpRelacional.alias}" 
+                                                               itemValue="#{_asgOpRelacional}"
+                                                               />                                    
+                                            </p:selectOneMenu>                                         
+                                            <p:selectOneMenu id="sltAsgMenuParametro" 
+                                                             style="width:100px;" 
+                                                             value="#{reporteControlador.parametroFiltroSeleccionado}"
+                                                             required="#{reporteControlador.required}">
+                                                <f:selectItem itemLabel="#{etq.lbl_seleccione}.."/>
+                                                <f:selectItems value="#{reporteControlador.lstFiltrosParaAsignar}" 
+                                                               var="_asgParametro" 
+                                                               itemLabel="#{_asgParametro}" 
+                                                               itemValue="#{_asgParametro}"
+                                                               />                                    
+                                            </p:selectOneMenu>
+                                            <p:message for="sltAsgMenuOpReLogico" display="text"/>
+                                            <p:message for="sltAsgMenuColumna" display="text"/>
+                                            <p:message for="sltAsgMenuOpRelacional" display="text"/>
+                                            <p:message for="sltAsgMenuParametro" display="text"/>                                               
+                                        </h:panelGrid>                                    
+                                        <p:spacer width="60" height="20"/>
+                                        <h:panelGrid id="pnlGridAsgBotonesFiltros" >
+                                            <p:commandButton value="Asignar" 
+                                                             icon="ui-icon-plus"                                                 
+                                                             process="@this, pnlGridAsgFiltros"  
+                                                             style="width: 100px; height: 30px"
+                                                             onclick="remoteAsgBotonesFiltros()"
+                                                             oncomplete="PF('widgDialogSQLTab3').show();">
+                                            </p:commandButton>
+
+                                            <p:remoteCommand name="remoteAsgBotonesFiltros"
+                                                             action="#{reporteControlador.actualizarSql()}" 
+                                                             update="messagesAsg1, idIptTextTab3, pnlGridAsgFiltros"/>  
+
+                                            <p:dialog  header="Sql" 
+                                                       widgetVar="widgDialogSQLTab3" 
+                                                       height="350" showEffect="fade" 
+                                                       hideEffect="fade"
+                                                       closable="true"
+                                                       >                                 
+                                                <center>
+                                                    <h:panelGrid  >                                                
+                                                        <p:inputTextarea id="idIptTextTab3" 
+                                                                         value="#{reporteControlador.query}" 
+
+                                                                         style=" width: 350px; height: 350px; color: #000000; " 
+                                                                         autoResize="false" >                                  
+                                                        </p:inputTextarea>                                                
+                                                    </h:panelGrid>
+                                                </center>
+                                            </p:dialog>
+                                        </h:panelGrid>
+                                        <p:messages id="messagesAsg1" closable="true" showDetail="true"/>
+                                    </h:panelGrid>
+                                </p:tab>
+                                <p:tab title="ASIGNAR FILTROS POR QUERY" rendered="#{!reporteControlador.activarquery}">
+                                    <h:panelGrid columns="3"> 
+                                        <h:panelGrid >  
+                                            <p:outputLabel value="Query: "/>
+                                            <p:inputTextarea id="idIptTextSqlReporteFiltro" 
+                                                             value="#{reporteControlador.query}"
+                                                             style=" width: 500px; height: 175px; color: #000000; " 
+                                                             autoResize="false" 
+                                                             >   
+                                            </p:inputTextarea>                                            
+                                        </h:panelGrid > 
+                                        <p:spacer width="80" height="10"/>
+                                        <h:panelGrid > 
+                                            <p:outputLabel for="idOneLstFiltroQuery" value="Filtros para asignar:" />
+                                            <p:selectOneListbox id="idOneLstFiltroQuery" scrollHeight="300"
+                                                                style="width: 200px; height: 150px;"
+                                                                value="#{reporteControlador.parametroFiltroSeleccionado}"
+                                                                >
+                                                <f:selectItems value="#{reporteControlador.lstFiltrosParaAsignar}" 
+                                                               var="filtro" 
+                                                               itemLabel="#{filtro}" 
+                                                               itemValue="#{filtro}" />
+                                                <p:ajax process="idIptTextSqlReporteFiltro, idOneLstFiltroQuery" update="idIptTextSqlReporteFiltro" 
+                                                        listener="#{reporteControlador.addFiltroQuery()}" />                                
+                                            </p:selectOneListbox> 
+                                        </h:panelGrid > 
+                                    </h:panelGrid >  
+                                    <p:spacer width="50" height="10"/> 
+                                    <h:panelGrid columns="5">
+                                        <p:commandButton value="Actualizar Query" 
+                                                         icon="ui-icon-plus"                              
+                                                         process="@this, idIptTextSqlReporteFiltro"
+                                                         action="#{reporteControlador.implementarSql()}"
+                                                         update=":frm:msgs"
+                                                         style="width: 100px; height: 35px"
+                                                         >
+                                            <f:setPropertyActionListener target="#{reporteControlador.creatualizaQuery}" value="actualizar"/>
+                                        </p:commandButton>  
+                                    </h:panelGrid> 
+                                </p:tab>
+                            </p:tabView>
+                        </p:tab>
+
+
+                        <p:tab title="INGRESAR CABECERA" id="tab4" rendered="false">
+
+                        </p:tab >
+
+
+                        <p:tab title="INGRESO INFORMACIÓN REPORTES"  id="tab5">
+                            <p:panel id="pnlInfoReporte">
+                                <h:panelGrid id="pnlGridGuardarInfoReporteGrupo" columns="3">
+                                    <h:panelGrid id="pnlGridGuardarInfoReporte" columns="2">
+                                        <p:outputLabel value="Nombre Reporte: "/>     
+                                        <p:inputText id="iptReporteNombre" 
+                                                     value="#{reporteControlador.repoReporteNuevo.nombre}" 
+                                                     style="width:150px" 
+                                                     disabled="#{reporteControlador.addNuevoReporte}"/>
+
+                                        <p:outputLabel value="Filtro: " rendered="false"/>                 
+
+                                        <p:selectOneMenu id="sltAsgMenuFiltroNombre" 
+                                                         style="width:150px;" 
+                                                         value="#{reporteControlador.repoFiltroNuevo}"
+                                                         converter="#{filtroConverter}"
+                                                         rendered="false">
+                                            <f:selectItem itemLabel="#{etq.lbl_seleccione}.."/>
+                                            <f:selectItems value="#{reporteControlador.lstRepoFiltros}" 
+                                                           var="_repoFiltro" 
+                                                           itemLabel="#{_repoFiltro.nombre}" 
+                                                           itemValue="#{_repoFiltro}"
+                                                           />                                    
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel value="Nombre Página Reporte: "/>     
+                                        <p:inputText id="iptSubreporteNombre" value="#{reporteControlador.repoSubreporteNuevo.nombre}" style="width:150px" />
+
+                                        <!--<p:outputLabel value="Añadir Subtitulos: "/>     
+                                        <p:inputText id="iptSubtitulos" 
+                                                     title="Ingrese "
+                                                     value="#{reporteControlador.repoSubreporteNuevo.subtitulo}" style="width:150px" />
+                                        <p:tooltip id="toolTipFocus" for="focus" showEvent="focus" hideEvent="blur" />-->
+
+                                    </h:panelGrid>
+                                    <p:spacer width="60" height="20"/>
+                                    <h:panelGrid id="pnlGridBotonGuardarInfoReporte" >
+                                        <p:commandButton 
+                                            value="Editar Columnas"
+                                            icon="ui-icon-refresh"                                                  
+                                            oncomplete="PF('widgDialogEditarColumnas').show();"
+                                            style="width: 100px; height: 35px"
+                                            update="frm:idAccordionReportes:dlgEdiCol"
+                                            >
+                                        </p:commandButton> 
+
+                                        <p:dialog  id="dlgEdiCol"   
+                                                   header="Edición Información Columnas" 
+                                                   widgetVar="widgDialogEditarColumnas" 
+                                                   height="500px" width="800px" showEffect="fade" 
+                                                   hideEffect="fade"
+                                                   closable="true"
+                                                   position="center" > 
+
+                                            <center>
+                                                <h:panelGrid  id="pnlGridEdicionColumna"> 
+                                                    <p:panel> 
+                                                        <p:dataTable id="idDtaTableLstEdicionCol" var="columnT" 
+                                                                     value="#{reporteControlador.lstObjColumnas}" 
+                                                                     editable="true" 
+                                                                     editMode="cell" 
+                                                                     widgetVar="cellCars"
+                                                                     style="height: 400px; overflow: auto;">
+
+                                                            <p:column headerText="Nombre Columna" width="150">
+                                                                <h:inputText value="#{columnT[0]}" style="width:96%"/>
+                                                            </p:column>
+
+                                                            <p:column id="spnOrden" width="55">
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Orden de la Columna" />
+                                                                    <p:tooltip for="spnOrden" value="Número del orden de presentación de la columna en la tabla" />
+                                                                </f:facet>
+                                                                <p:spinner  value="#{columnT[1]}" style="width: 65px; display: block; " />
+                                                            </p:column>
+
+                                                            <p:column headerText="Ancho de la Columna" width="135">
+                                                                <h:outputText id="outputAnchoColumna" value="%#{columnT[2]}" />
+                                                                <h:inputHidden id="iptHiddenAnchoColumna" value="#{columnT[2]}"/>
+                                                                <p:slider for="iptHiddenAnchoColumna" display="outputAnchoColumna" style="width: 130px" displayTemplate="%{value}" maxValue="300" step="10"/>
+                                                            </p:column>
+
+                                                            <!--<p:column width="200" id="oneBtnAliText">
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Alineación del texto" />
+                                                                    <p:tooltip for="oneBtnAliText" value="Alineación del texto en la columna" />
+                                                                </f:facet>
+                                                                <p:selectOneButton  value="#{columnT[3]}">
+                                                                    <f:selectItem itemLabel="Izquierda" itemValue="leftColumn" />
+                                                                    <f:selectItem itemLabel="Centro" itemValue="centeredColumn" />
+                                                                    <f:selectItem itemLabel="Derecha" itemValue="rightColumn" />
+                                                                </p:selectOneButton>                                                                                                                                
+                                                            </p:column>-->
+                                                            <p:column width="27" id="checkboxFiltrar">
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Filtrar" />
+                                                                    <p:tooltip for="checkboxFiltrar" value="Mostrar filtro en la columna" /> 
+                                                                </f:facet>
+                                                                <p:selectBooleanCheckbox  value="#{columnT[4]}" />                                                                   
+                                                            </p:column>
+
+                                                            <p:column width="27" id="checkboxOrdenarTabla" >  
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Ordenar" />
+                                                                    <p:tooltip for="checkboxOrdenarTabla" value="Ordenar Tabla por Columna" /> 
+                                                                </f:facet>
+                                                                <p:selectBooleanCheckbox  value="#{columnT[5]}" />                                                                                                                               
+                                                            </p:column>
+
+                                                            <p:column width="100" id="selectOneMenuTipoDato" >  
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Tipo de dato" /><p:tooltip for="selectOneMenuTipoDato" value="Tipo de dato de la columna en la BDD" /> 
+                                                                </f:facet>
+                                                                <p:selectOneMenu 
+                                                                    style="width:80px;"
+                                                                    value="#{columnT[6]}" required="true" >
+                                                                    <f:selectItem itemLabel="#{etq.lbl_seleccione}.." 
+                                                                                  itemValue="" />
+                                                                    <f:selectItems value="#{reporteControlador.lstTipoDatos}" 
+                                                                                   var="_catalog"
+                                                                                   itemLabel="#{_catalog.nombre}" 
+                                                                                   itemValue="#{_catalog.alias}"/>
+                                                                </p:selectOneMenu>  
+                                                            </p:column>
+
+                                                            <p:column width="100" id="selectOneMenuStyleHeader" >  
+                                                                <f:facet name="header">
+                                                                    <h:outputText value="Estilo" /><p:tooltip for="selectOneMenuStyleHeader" value="Aplíca estilo CSS al título de la columna" /> 
+                                                                </f:facet>
+                                                                <p:selectOneMenu 
+                                                                    style="width:80px;"
+                                                                    value="#{columnT[7]}">
+                                                                    <f:selectItem itemLabel="#{etq.lbl_seleccione}.." 
+                                                                                  itemValue="" />
+                                                                    <f:selectItems value="#{reporteControlador.lstEstilosCSSColumna}" 
+                                                                                   var="_catalog"
+                                                                                   itemLabel="#{_catalog.nombre}" 
+                                                                                   itemValue="#{_catalog.alias}"/>
+                                                                </p:selectOneMenu>  
+                                                            </p:column> 
+                                                        </p:dataTable>
+                                                    </p:panel>
+                                                    <!--autoUpdate="true"-->
+                                                    <p:messages id="messagesActualizarCol" showDetail="true" closable="true"  globalOnly="true"/>
+                                                    <p:panel>
+                                                        <p:commandButton value="Actualizar" 
+                                                                         icon="ui-icon-disk"                                                 
+                                                                         process="@this, frm:idAccordionReportes:idDtaTableLstEdicionCol"  
+                                                                         style="width: 100px; height: 30px"
+                                                                         actionListener="#{reporteControlador.ingresarInfoColumna()}"
+                                                                         >
+                                                        </p:commandButton>                                                        
+                                                    </p:panel>                                                    
+                                                </h:panelGrid>  
+                                            </center> 
+                                        </p:dialog>
+
+                                        <p:commandButton 
+                                            value="Agrupar Columnas"
+                                            icon="ui-icon-refresh"                                                  
+                                            oncomplete="PF('widgDialogEncabezadosColumnas').show();"
+                                            style="width: 110px; height: 60px"
+                                            update="frm:idAccordionReportes:dlgAgrupaCol"
+                                            >
+                                        </p:commandButton> 
+
+                                        <p:dialog  id="dlgAgrupaCol"   
+                                                   header="Agrupar Cabecera" 
+                                                   widgetVar="widgDialogEncabezadosColumnas" 
+                                                   height="500px" width="900px" showEffect="fade" 
+                                                   hideEffect="fade"
+                                                   closable="true"
+                                                   position="center" > 
+
+                                            <center>
+                                                <h:panelGrid  id="pnlGridAgrupaColumna" columns="2"> 
+                                                    <h:outputText value="Seleccione Columnas: " />
+                                                    <p:selectManyMenu id="idManyLstAgrupCol"  scrollHeight="250"
+                                                                      style="width: 250px; height: 250px; "
+                                                                      value="#{reporteControlador.lstAgrupaColumnasSeleccionadas}" 
+                                                                      >
+                                                        <f:selectItems value="#{reporteControlador.lstObjColumnas}" 
+                                                                       var="columna" 
+                                                                       itemLabel="#{columna[0]}" 
+                                                                       itemValue="#{columna[0]}" />
+                                                    </p:selectManyMenu>
+                                                    <p:spacer width="60" height="20"/>
+                                                    <p:spacer width="60" height="20"/>
+
+                                                    <h:outputText value="Nombre Agrupación: " />
+                                                    <p:inputText id="idIptNomAgrupaCol" value="#{reporteControlador.nomAgrupaCol}" style="width:96%"/>
+                                                    <h:outputText value="" />
+                                                    <h:outputText value="" />
+
+                                                    <h:outputText value="Ancho de Columnas Agrupadas: " />
+                                                    <h:outputText id="outputAgrupAnchoColumna" value="%#{reporteControlador.anchoAgrupaCol}" />
+                                                    <h:inputHidden id="iptHiddenAgrupAnchoColumna" value="#{reporteControlador.anchoAgrupaCol}"/>
+                                                    <p:slider id="idSlideAgripCol" for="iptHiddenAgrupAnchoColumna" display="outputAgrupAnchoColumna" style="width: 200px" displayTemplate="%{value}" maxValue="3000" step="10"/>
+
+                                                    <p:spacer width="10" height="60"/>
+                                                    <p:commandButton value="Ingresar" 
+                                                                     icon="ui-icon-disk"                                                 
+                                                                     process="@this, idIptNomAgrupaCol, iptHiddenAgrupAnchoColumna, outputAgrupAnchoColumna,idManyLstAgrupCol"  
+                                                                     update="idDtaTableLstAgrupCol, idIptNomAgrupaCol, iptHiddenAgrupAnchoColumna, outputAgrupAnchoColumna, idManyLstAgrupCol, idSlideAgripCol"  
+                                                                     style="width: 100px; height: 30px"
+                                                                     actionListener="#{reporteControlador.ingresarAgrupaColumna()}"
+                                                                     >
+                                                    </p:commandButton>
+                                                    <h:outputText value="" />                                                  
+                                                </h:panelGrid>                                                
+                                                <p:panel>
+                                                    <p:dataTable id="idDtaTableLstAgrupCol" var="columnA" 
+                                                                 value="#{reporteControlador.lstAgrupObjColumnas}" 
+                                                                 editable="true" 
+                                                                 editMode="cell" 
+                                                                 style="height: 120px; overflow: auto;">
+
+                                                        <p:column headerText="Nombre Columna" width="150">
+                                                            <h:inputText value="#{columnA[0]}" style="width:96%"/>
+                                                        </p:column>
+
+                                                        <p:column id="spnAgrupOrden" width="55">
+                                                            <f:facet name="header">
+                                                                <h:outputText value="Número de Columnas Agrupar" />
+                                                            </f:facet>
+                                                            <h:inputText value="#{columnA[1]}" style="width:65px"/>
+                                                        </p:column>
+
+                                                        <p:column headerText="Ancho de la Columna" width="135">
+                                                            <h:outputText id="outputAnchoColumna" value="%#{columnA[2]}" />
+                                                            <h:inputHidden id="iptHiddenAnchoColumna" value="#{columnA[2]}"/>
+                                                            <p:slider for="iptHiddenAnchoColumna" display="outputAnchoColumna" style="width: 200px" displayTemplate="%{value}" maxValue="3000" step="10"/>
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                    <p:panel>
+                                                        <p:commandButton value="Guardar" 
+                                                                         icon="ui-icon-disk"                                                 
+                                                                         process="@this, frm:idAccordionReportes:idDtaTableLstAgrupCol" 
+                                                                         style="width: 100px; height: 30px"
+                                                                         actionListener="#{reporteControlador.guardarAgrupaColumna()}"
+                                                                         >
+                                                        </p:commandButton>                                                        
+                                                    </p:panel>
+                                                </p:panel>   
+                                            </center> 
+                                        </p:dialog> 
+
+                                        <p:commandButton value="Guardar" 
+                                                         icon="ui-icon-disk"                                                 
+                                                         process="@this, frm:idAccordionReportes:pnlGridGuardarInfoReporte"  
+                                                         style="width: 100px; height: 30px"
+                                                         action="#{reporteControlador.grabarInfoReporte()}"
+                                                         update="frm"
+                                                         >
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </h:panelGrid>                            
+                            </p:panel>
+                        </p:tab>
+                    </p:accordionPanel>                   
+                </center>
+                <!--<p:spacer width="100" height="10"/>                 
+                <pinec:visualizar_reporte_general id="idReportePanel" frm1="frm:idReportePanel" ></pinec:visualizar_reporte_general>-->
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

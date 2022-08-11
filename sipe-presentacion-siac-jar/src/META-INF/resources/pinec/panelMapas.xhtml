@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <composite:attribute name="titulo"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:panel  style="width:1000px;height:700px" id="panelMapa"> 
+            <style>
+                .infoWindowMapa {
+                    padding: 6px 8px;
+                    font: 14px/16px Arial, Helvetica, sans-serif;
+                    background: white;
+                    background: rgba(255,255,255,0.8);
+                    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                    border-radius: 5px;
+                }              
+            </style> 
+
+            <link href="#{baseControlador.getProfundidad()}css/geo/leaflet.css" rel="stylesheet" type="text/css" />
+            <link href="#{baseControlador.getProfundidad()}css/geo/leaflet.pm.css" rel="stylesheet" type="text/css" />
+
+            <body>              
+                <script name="jquery/jquery.js" library="primefaces"></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/1.3.1/leaflet.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/turf.min.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/d3.v3.min.js" ></script>
+                <!--<script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/jquery19.js" ></script>-->
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/utilitario.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/edicioninec.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/capageojson.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/mapainec.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/martinez.umd.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/leaflet.pm.min.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/leaflet-freedraw.web.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/L.LabelTextCollision.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/ctxtextpath.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/Leaflet.streetlabels.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/leaflet/pather.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/poligono.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/sipe_primeface.js" ></script>
+                <script type="text/javascript" src="#{baseControlador.getProfundidad()}js/geo/sipe_geo.js" ></script>
+                <canvas id="canvas1" width="20" height="20"></canvas>
+                <div id="map"></div>
+                <p:panel>
+                    <h:panelGrid columns="2">
+                        <h:column>
+                            <h3>Modificar - Transparencia (Mapa de Fondo) :</h3>
+                        </h:column>
+                        <h:column>
+                            <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                <p:inputText id="decimal" disabled="true" value="#{0}" widgetVar="txtNivelOpacidad"  />
+                            </h:panelGrid>  
+                        </h:column>                                                                   
+                    </h:panelGrid>  
+                </p:panel>
+                <h:form id="formgeo">
+                    <p:remoteCommand id="sipeGeoRemote" name="sipeGeoRemote" actionListener="#{geoControlador.actualizacionGeneral()}" process="@this" partialSubmit="true" oncomplete="actualizaGEO(xhr, status, args);" update="@none"/>
+                </h:form>
+            </body> 
+        </p:panel>
+    </cc:implementation>
+</html>

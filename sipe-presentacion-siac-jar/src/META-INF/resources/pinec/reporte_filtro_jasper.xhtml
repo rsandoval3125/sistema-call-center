@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <cc:interface>
+        <cc:attribute name="frm2" required="true"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:panel id="repCarga">         
+            <center>
+                <h:outputText value="#{consultarReporteControlador.idReporte.nombre}" styleClass="estiloTextoCandaraGran"/>
+            </center>         
+            <br/>
+            <br/> 
+            <h:panelGrid columns="3" id="idPnlGripFiltrosRepo" >
+                <c:forEach items="#{consultarReporteControlador.mapFiltroReporte}" var="lstFiltro" >
+                    <c:forEach items="#{consultarReporteControlador.mapNombreFiltroReporte}" var="nombreFiltro" >
+                        <c:if test="#{lstFiltro.key eq nombreFiltro.key}">                            
+                            <p:outputLabel value="#{nombreFiltro.value}: " styleClass="estiloTextoCandaraMed"></p:outputLabel >
+                        </c:if>
+                    </c:forEach>
+                    <p:selectOneMenu id="idSelOneMCatalog_#{fn:substringAfter(lstFiltro.key, ':')}"
+                                     maxlength="100" 
+                                     style="width:250px;"
+                                     value="#{consultarReporteControlador.mapSeleccionFiltroReporte[lstFiltro.key]}"
+                                     converter="catalogoConverter" >
+                        <f:selectItem itemLabel="#{etq.lbl_seleccione}.." 
+                                      itemValue="" />
+                        <f:selectItems value="#{lstFiltro.value}" 
+                                       var="_catalog"
+                                       itemLabel="#{_catalog.valor}-#{_catalog.nombre}" 
+                                       itemValue="#{_catalog}"/>
+                        <p:ajax event="change" listener="#{consultarReporteControlador.actualizarFiltrosTodos}" 
+                                process="idSelOneMCatalog_#{fn:substringAfter(lstFiltro.key, ':')}, repCarga"
+                                global="false"
+                                async="true" />
+                    </p:selectOneMenu>
+                    <h:panelGrid columns="3" id="idPnlGripFiltrosRepoCheck" >
+                        <c:forEach items="#{consultarReporteControlador.mapDisabledCheck}" var="objCheck" >
+                            <c:if test="#{objCheck.key eq lstFiltro.key}">  
+                                <p:selectBooleanCheckbox id="idCheck_#{fn:substringAfter(objCheck.key, ':')}"                                                  
+                                                         value="#{consultarReporteControlador.mapCheckParam[objCheck.key]}" 
+                                                         disabled="#{objCheck.value}"/>
+                            </c:if>
+                        </c:forEach>
+                    </h:panelGrid>
+                </c:forEach>                    
+                <c:forEach items="#{consultarReporteControlador.mapFiltroReporteObj}" var="lstFiltro1">
+                    <c:forEach items="#{consultarReporteControlador.mapNombreFiltroReporte}" var="nombreFiltro1" >
+                        <c:if test="#{lstFiltro1.key eq nombreFiltro1.key}">                            
+                            <p:outputLabel value="#{nombreFiltro1.value}: " styleClass="estiloTextoCandaraMed"></p:outputLabel >
+                        </c:if>
+                    </c:forEach>
+                    <c:if test = "#{!fn:contains(lstFiltro1.key, 'fecha')}"> 
+                        <p:selectOneMenu id="idSelOneMObj_#{fn:substringAfter(lstFiltro1.key, ':')}"
+                                         maxlength="100" 
+                                         style="width:250px;"
+                                         value="#{consultarReporteControlador.mapSeleccionFiltroReporteObj[lstFiltro1.key]}"
+                                         >
+                            <f:selectItem itemLabel="#{etq.lbl_seleccione}.." 
+                                          itemValue="" />
+                            <f:selectItems value="#{lstFiltro1.value.entrySet()}" 
+                                           var="_select"
+                                           itemLabel="#{_select.value}" 
+                                           itemValue="#{_select.key}"/>
+                            <p:ajax event="change" listener="#{consultarReporteControlador.actualizarFiltrosTodos}" 
+                                    process="idSelOneMObj_#{fn:substringAfter(lstFiltro1.key, ':')}, repCarga" 
+                                    global="false"
+                                    async="true" />
+                        </p:selectOneMenu>
+                    </c:if>
+                    <c:if test = "#{fn:contains(lstFiltro1.key, 'fecha')}">                                                        
+                        <p:calendar id="datetime" value="#{consultarReporteControlador.mapSeleccionFiltroReporteObj[lstFiltro1.key]}" pattern="dd/MM/yyyy HH:mm:ss" />
+                    </c:if>
+                    <c:forEach items="#{consultarReporteControlador.mapDisabledCheck}" var="objCheck" >
+                        <c:if test="#{objCheck.key eq lstFiltro1.key}">  
+                            <p:selectBooleanCheckbox id="idCheck_#{fn:substringAfter(objCheck.key, ':')}"                                                  
+                                                     value="#{consultarReporteControlador.mapCheckParam[objCheck.key]}"  
+                                                     disabled="#{objCheck.value}"
+                                                     >    
+                            </p:selectBooleanCheckbox>
+                        </c:if>
+                    </c:forEach>
+                </c:forEach>           
+            </h:panelGrid>
+        </p:panel>
+    </cc:implementation>
+</html>

@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionAplicacion">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneAplicacion" width="1000" columns="1" >
+                        <p:panel header="Seguridad - Aplicaciones">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="aplNom" value="#{gestionAplicacionControlador.objAplActual.nombre}"  
+                                               size="40" maxlength="255" required="true" requiredMessage="Nombre no puede estar vacío" />
+                                <p:message for="aplNom" display="icon"/>
+
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="aplAlias"  value="#{gestionAplicacionControlador.objAplActual.alias}" onkeyup="this.value = this.value.toUpperCase();"
+                                               readonly="#{gestionAplicacionControlador.habilitaEdicion}"      maxlength="125" size="40" required="true" requiredMessage="Alias no puede estar vacío"/>
+                                <p:message for="aplAlias" display="icon"/>
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="aplTipLog"  value="#{gestionAplicacionControlador.objAplActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false"  required="true" requiredMessage="Descripción no puede estar vacío"/>
+                                <p:message for="aplTipLog" display="icon"/>    
+
+                                <p:outputLabel value="Tipo Aplicación"/>  
+                                <p:selectOneMenu id="tipoAplicacion" value="#{gestionAplicacionControlador.objAplActual.codTipoApl}" converter="catalogoConverter"
+                                                filter="true" filterMatchMode="contains"  required="true" requiredMessage="Tipo aplicación necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionAplicacionControlador.tipoAplicaciones}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>
+                                <p:message for="tipoAplicacion" display="icon"/>
+
+                                <p:outputLabel value="Url"/>
+                                <p:inputText    id="urlPagIni"  value="#{gestionAplicacionControlador.objAplActual.url}" 
+                                                size="40" maxlength="125"/>
+                                <p:message for="urlPagIni" display="icon"/>
+
+                                <p:outputLabel value="Configuraciones"/>                                
+                                <p:inputTextarea  id="config"  value="#{gestionAplicacionControlador.objAplActual.configuraciones}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false"  />
+                                <p:message for="config" display="icon"/>   
+
+                                <p:outputLabel value="Estado"/>                                                                    
+                                <p:selectOneMenu id="estado" value="#{gestionAplicacionControlador.objAplActual.codEstadoApl}" converter="catalogoConverter" filter="true" filterMatchMode="contains" required="true" requiredMessage="Estado necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionAplicacionControlador.estadoAplicaciones}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>   
+                                <p:message for="estado" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                            
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionAplicacionControlador.guardarAplicacion()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneAplicacion" 
+                                                         update=":frmGestionAplicacion:panelConieneListas,panelContieneAplicacion,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionAplicacionControlador.permisosBoton['PAG_INSRT'] || gestionAplicacionControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('wVarTablaListAplicacion').filter();" />
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionAplicacionControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionAplicacion:panelConieneListas,panelContieneAplicacion,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionAplicacionControlador.permisosBoton['PAG_INSRT']}" >
+                                            <p:resetInput target=":frmGestionAplicacion:panelContieneAplicacion"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListAplicacion" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListAplicacion" value="#{gestionAplicacionControlador.listarAplicaciones}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idApl}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTablaListAplicacion"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Aplicaciones" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idApl}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="250" style="font-size:12px;"  filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Alias" width="150" style="font-size:12px;"  filterBy="#{aplColumna.alias}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Estado" width="100" style="font-size:12px;">                                   
+                                    <h:outputText value="#{aplColumna.codEstadoApl.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Url" width="250" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.url}" style="font-size:12px;" />
+                                </p:column>                                 
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionAplicacionControlador.recuperarAplicacionCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionAplicacion:panelContieneAplicacion,:frmGestionAplicacion:panelConieneListas,:frmGestionAplicacion:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionAplicacionControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionAplicacion:panelContieneAplicacion"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionAplicacionControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionAplicacion,:frmGestionAplicacion:message" 
+                                                     async="true" global="false" disabled="#{!gestionAplicacionControlador.permisosBoton['PAG_ELIM']}">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionAplicacion:panelContieneAplicacion"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

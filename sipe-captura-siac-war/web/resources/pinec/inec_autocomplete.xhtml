@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <composite:attribute name="valor" required="true"/>
+        <composite:attribute name="metodoCompletar" method-signature="java.util.List complete(java.lang.String)"/> 
+        <composite:attribute name="converter" required="true"/>        
+        <cc:clientBehavior name="itemSelect" event="itemSelect" targets="#{cc.attrs.id}" />
+        <composite:attribute name="ancho"/>
+        <composite:attribute name="placeholder"/>
+        <cc:clientBehavior name="change" event="change" targets="#{cc.attrs.id}" />
+        <composite:attribute name="disabled"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2">
+            <p:autoComplete id="#{cc.attrs.id}" value="#{cc.attrs.valor}"
+                            completeMethod="#{cc.attrs.metodoCompletar}"
+                            var="var" itemLabel="#{var.nombre}" itemValue="#{var}" 
+                            forceSelection="true" effect="fold" 
+                            scrollHeight="300" inputStyle="background:#e1f8ec"
+                            size="#{cc.attrs.ancho}" placeholder="#{cc.attrs.placeholder}"
+                            disabled="#{cc.attrs.disabled}"
+                            queryDelay="1000">
+                <p:column>
+                    <h:outputText value="#{var.valor}"/>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{var.nombre}"/>
+                </p:column>
+                <f:converter converterId="#{cc.attrs.converter}"/>
+            </p:autoComplete>
+            <p:message for="#{cc.attrs.id}"/>
+        </h:panelGrid>
+    </cc:implementation>
+</html>

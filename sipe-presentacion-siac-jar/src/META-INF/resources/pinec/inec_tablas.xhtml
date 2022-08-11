@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <cc:interface>
+        <cc:attribute name="tabview" required="true"/>
+        <cc:attribute name="bean" required="false"/>
+        <cc:attribute name="bean2" required="false"/>
+        <cc:attribute name="lstFor2" required="false"/>
+        <cc:attribute name="frm2" required="true"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:tabView id="tv_filtro">
+            <c:forEach items="#{cc.attrs.tabview}" var="tab">
+                <p:tab title="#{tab.nombreTab}">
+
+                    <p:panel id="pn_#{tab.idTab}">
+                        <center>
+                            <p:panel id="pnl_#{tab.idTab}" rendered="#{tab.numeroResumen>0}">
+                                <c:forEach items="#{tab.resumenesTabla}" var="restabgen">
+                                    <h:panelGrid columns="#{fn:length(restabgen) * 4}" styleClass="estiloTextoCandaraMed">
+                                        <c:forEach items="#{restabgen}" var="restab2">
+                                            <p:graphicImage   height="35" width="35" value="#{baseControlador.getProfundidad()}imagenes/#{restab2[0]}"/> 
+                                            <p:outputLabel value="#{restab2[1]}:"/>
+                                            <p:outputLabel value="#{restab2[2]}"/>
+                                            <p:spacer width="60" height="10"/>
+                                        </c:forEach>
+                                    </h:panelGrid> 
+                                </c:forEach>
+                            </p:panel>
+                            <p:spacer width="60" height="10"/>
+                             <!--<c:forEach items="#{cc.attrs.lstFor2}" var="lstCheck">-->
+
+                            <p:panel id="pnFor2_#{tab.idTab}" style="width: max-content;" rendered="#{not empty cc.attrs.lstFor2}">
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value="Peligrosidad"/>
+                                    <p:outputLabel />
+                                    <p:outputLabel value="Acceso"/>
+                                    <h:panelGrid columns="2" >
+                                        <h:panelGrid  >
+                                            <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck1" begin="0" end="2">
+                                                <p:outputLabel value="#{objCheck1[0]}"/>
+                                            </c:forEach>  
+                                        </h:panelGrid> 
+                                        <h:panelGrid> 
+                                            <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck1" begin="0" end="2">
+                                                <p:selectBooleanCheckbox value="#{objCheck1[1]}" disabled="true"/> 
+                                            </c:forEach> 
+                                        </h:panelGrid>  
+                                    </h:panelGrid>  
+                                    <p:spacer width="1" height="85px" styleClass="separator"/>
+                                    <h:panelGrid columns="2">
+                                        <h:panelGrid columns="2">
+                                            <h:panelGrid> 
+                                                <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck2" begin="3" end="6">
+                                                    <p:outputLabel value="#{objCheck2[0]}"/>
+                                                </c:forEach> 
+                                            </h:panelGrid> 
+                                            <h:panelGrid> 
+                                                <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck2" begin="3" end="6">
+                                                    <p:selectBooleanCheckbox value="#{objCheck2[1]}" disabled="true"/>
+                                                </c:forEach> 
+                                            </h:panelGrid> 
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2">
+                                            <h:panelGrid>
+                                                <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck3" begin="7" end="9">
+                                                    <p:outputLabel value="#{objCheck3[0]}"/>
+                                                </c:forEach>
+                                            </h:panelGrid> 
+                                            <h:panelGrid>  
+                                                <c:forEach items="#{cc.attrs.lstFor2}" var="objCheck3" begin="7" end="9">
+                                                    <p:selectBooleanCheckbox value="#{objCheck3[1]}" disabled="true"/>
+                                                </c:forEach> 
+                                            </h:panelGrid>  
+                                        </h:panelGrid> 
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:panel>
+                            <p:spacer width="60" height="10" rendered="#{not empty cc.attrs.lstFor2}"/>
+                            <p:dataTable id="dt_#{tab.idTab}" 
+                                         value="#{tab.filas}" 
+                                         var="fila" 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="10,15,25" 
+                                         paginator="#{tab.paginador==1}" 
+                                         rows="25" 
+                                         styleClass="estiloListaCalibriPeq"
+                                         emptyMessage="#{etq.msg_seg_sinRegistros}"
+                                         style="width:#{tab.anchoTabla};"
+                                         scrollable="#{tab.scroll==1}"
+                                         scrollWidth="#{tab.scrollWidth}%"
+                                         scrollHeight="400"
+                                         rowStyleClass="#{fila[tab.filaEstilo] eq tab.textoEstilo ? tab.estiloFila : null}"
+                                         rendered="#{tab.tieneTabla==1}">
+                                <p:columnGroup type="header" >                                    
+                                    <p:row rendered="#{tab.tieneColumnasGrupo==1}">
+                                        <c:forEach items="#{tab.nombreColumnasGroup}" var="columnaG1" varStatus="varCG1">
+                                            <p:column headerText="#{columnaG1[0]}" styleClass="#{columnaG1[1]}"  colspan="#{columnaG1[3]}" visible="#{columnaG1[4]==1}" width="#{columnaG1[2]}"/>
+                                        </c:forEach>
+                                    </p:row>  
+                                    <p:row >
+                                        <c:forEach items="#{tab.accionesTabla}" var="accionGT" varStatus="accGT" class="#{columnaG2[9]}">
+                                            <p:column colspan="1" headerText="#{accionGT[0]}" style="width: #{accionGT[1]}px" visible="#{accionGT[8]==1}"/>
+                                        </c:forEach>
+                                        <c:forEach items="#{tab.nombresColumnas}" var="columnaG2" varStatus="varCG2" class="#{columnaG2[3]}">
+                                            <c:set var="countg2" value="#{columnaG2[3]}"/>
+                                            <p:column colspan="1" headerText="#{columnaG2[0]}" styleClass="#{columnaG2[1]} #{columnaG2[7]} #{columnaG2[9]}" filterMatchMode="contains" 
+                                                      style="width: #{columnaG2[2]}px" filterBy="#{fila[countg2]}" filterable="#{columnaG2[4]==1?true:false}" 
+                                                      sortable="#{columnaG2[5]==1?true:false}" sortBy="#{fila[countg2]}" visible="#{columnaG2[6]==1}" 
+                                                      class="#{columnaG2[7]} #{columnaG2[9]}" />
+                                        </c:forEach>
+                                    </p:row> 
+                                </p:columnGroup>
+                                <c:forEach items="#{tab.accionesTabla}" var="accionT" varStatus="accT" >
+                                    <p:column  headerText="#{accionT[0]}" width="#{accionT[1]}" visible="#{accionT[8]==1}" class="#{accionT[9]}">
+                                        <c:if test="#{accionT[2] eq ejecutarAccionControlador.name}" >
+                                            <p:commandButton 
+                                                icon="#{accionT[6]}" 
+                                                title="#{accionT[0]}" 
+                                                process="dt_#{tab.idTab}"
+                                                action="#{cc.attrs.bean[accionT[3]]}"
+                                                update="dt_#{tab.idTab}"
+                                                ajax="false"                                                
+                                                disabled="#{fila[accionT[7]] ne ejecutarAccionControlador.condicion}">
+                                                <f:setPropertyActionListener target="#{cc.attrs.bean[accionT[4]]}" value="#{fila[accionT[5]]}"/>
+
+                                            </p:commandButton> 
+                                        </c:if>
+                                        <c:if test="#{accionT[2] eq frmIppIpiControlador.name}">
+                                            <p:commandButton 
+                                                icon="#{accionT[6]}" 
+                                                title="#{accionT[0]}" 
+                                                process="dt_#{tab.idTab}"
+                                                action="#{cc.attrs.bean2[accionT[3]]}"
+                                                update="dt_#{tab.idTab}"
+                                                ajax="false" 
+                                                disabled="#{fila[accionT[7]] ne frmIppIpiControlador.condicion}"
+                                                > 
+                                                <f:setPropertyActionListener target="#{cc.attrs.bean2[accionT[4]]}" value="#{fila[accionT[5]]}"/>
+                                            </p:commandButton> 
+                                        </c:if>
+                                    </p:column>
+                                </c:forEach> 
+                                <c:forEach items="#{tab.nombresColumnas}" var="columnaT" varStatus="varC">
+                                    <c:set var="count2" value="#{columnaT[3]}"/>
+                                    <p:column headerText="#{columnaT[0]}" styleClass="#{columnaT[1]} #{columnaT[7]} #{columnaT[9]}"  filterMatchMode="contains" 
+                                              filterBy="#{fila[count2]}" filterable="#{columnaT[4]==1?true:false}" sortable="#{columnaT[5]==1?true:false}" 
+                                              sortBy="#{fila[count2]}" visible="#{columnaT[6]==1}"  style="width: #{columnaT[2]}px" class="#{columnaT[7]} #{columnaT[9]}">
+                                        <h:outputText value="#{fila[columnaT[3]]}" />
+                                    </p:column>
+                                </c:forEach>
+                                <p:columnGroup type="footer" rendered="#{tab.tieneFooter==1}">
+                                    <c:forEach items="#{tab.nombreColumnasFooter}" var="columnaF" varStatus="varF">
+                                        <p:row rendered="#{columnaF[1]==1}">
+                                            <p:column colspan="#{columnaF[2]}" style="text-align:#{columnaF[3]}" footerText="#{columnaF[0]}" />
+                                            <c:forEach items="#{columnaF[4]}" var="columnaFF" varStatus="varFF">
+                                                <p:column footerText="#{columnaFF}" />   
+                                            </c:forEach>                                               
+                                        </p:row>
+                                    </c:forEach>
+                                </p:columnGroup> 
+                            </p:dataTable>                            
+
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                function start() {
+                                    PF('statusDialog').show();
+                                }
+
+                                function stop() {
+                                    PF('statusDialog').hide();
+                                }
+                                //]]>
+                            </script> 
+                            <p:dialog modal="true" appendTo="@(body)" widgetVar="#{baseControlador.datosGenerales.dialogwidgetVar}" header="#{baseControlador.datosGenerales.dialogheader}" resizable="false"
+                                      draggable="false" closable="false">  
+                                <p:graphicImage value="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.dialogimagen}" />  
+                            </p:dialog> 
+
+                            <p:panel rendered="#{tab.tieneTabla==1 and tab.exportar==1}">
+                                <h:panelGrid columns="7"> 
+                                    <p:commandLink id="idExpBtn_#{tab.idTab}" actionListener="#{consultarReporteControlador.exportar}"
+                                                   onclick="PrimeFaces.monitorDownload(start, stop);"                                                   
+                                                   update="#{cc.attrs.frm2}"
+                                                   ajax="false"
+                                                   >    
+                                        <p:graphicImage id="idImgExcel_#{tab.idTab}" value="#{baseControlador.getProfundidad()}imagenes/iconEXCEL.png" width="35" />  
+                                        <p:tooltip id="tipi1_#{tab.idTab}" for="idImgExcel_#{tab.idTab}" value="Excel" styleClass="estiloTextoCandaraMed"/>
+                                    </p:commandLink>
+                                    <p:commandLink id="idExpBtn2_#{tab.idTab}" actionListener="#{consultarReporteControlador.exportarSPSS(tab.idTab, '.sav')}"
+                                                   onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                   update="#{cc.attrs.frm2}"
+                                                   ajax="false" rendered="false"
+                                                   >    
+                                        <p:graphicImage id="idImgSpss_#{tab.idTab}" value="#{baseControlador.getProfundidad()}imagenes/iconSPSS.png" width="35" />  
+                                        <p:tooltip id="tipi2_#{tab.idTab}" for="idImgSpss_#{tab.idTab}" value="Spss" styleClass="estiloTextoCandaraMed"/>
+                                    </p:commandLink>
+                                    <p:commandLink id="idExpBtn3_#{tab.idTab}" actionListener="#{consultarReporteControlador.exportarSPSS(tab.idTab, '.json')}"
+                                                   onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                   update="#{cc.attrs.frm2}"
+                                                   ajax="false" rendered="false"                                                   
+                                                   >    
+                                        <p:graphicImage id="idImgJson_#{tab.idTab}" value="#{baseControlador.getProfundidad()}imagenes/iconJSON2.png" width="35" />  
+                                        <p:tooltip id="tipi3_#{tab.idTab}" for="idImgJson_#{tab.idTab}" value="Json" styleClass="estiloTextoCandaraMed"/>
+                                    </p:commandLink>
+                                    <p:commandLink id="idExpBtn4_#{tab.idTab}" actionListener="#{consultarReporteControlador.exportarSPSS(tab.idTab, '.xml')}"
+                                                   onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                   update="#{cc.attrs.frm2}"
+                                                   ajax="false" rendered="false"
+                                                   >
+                                        <p:graphicImage id="idImgXml_#{tab.idTab}" value="#{baseControlador.getProfundidad()}imagenes/iconXML.png" width="35" />  
+                                        <p:tooltip id="tipi4_#{tab.idTab}" for="idImgXml_#{tab.idTab}" value="Xml" styleClass="estiloTextoCandaraMed"/>
+                                    </p:commandLink>
+                                    <p:commandLink id="idExpBtn5_#{tab.idTab}" actionListener="#{consultarReporteControlador.setBuscarComponente}" action="#{consultarReporteControlador.exportarSPSS(tab.idTab, '.pdf')}"
+                                                   onclick="PrimeFaces.monitorDownload(start, stop);" 
+                                                   update="#{cc.attrs.frm2}"
+                                                   ajax="false" 
+                                                   >       
+                                        <p:graphicImage id="idImgPdf_#{tab.idTab}" value="#{baseControlador.getProfundidad()}imagenes/iconPDF.png" width="35" />  
+                                        <p:tooltip id="tipi5_#{tab.idTab}" for="idImgPdf_#{tab.idTab}" value="Pdf" styleClass="estiloTextoCandaraMed" />
+                                    </p:commandLink>
+
+                                </h:panelGrid>
+                            </p:panel>
+                            <p:chart type="line" model="#{tab.lineChartModel}" rendered="#{tab.tieneGrafico==1}"/>
+                        </center>
+                    </p:panel>
+
+                </p:tab>
+            </c:forEach>
+        </p:tabView>
+    </cc:implementation>
+</html>

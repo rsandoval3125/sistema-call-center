@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition> 
+        <h:head>             
+            <header>  
+                <!--NO EXISTE CODIGO SIN EMBARGO ES NECESARIO PARA QUE ADOPTE EL TEMA DE CAPTURA-->
+            <!--<p:commandButton type="button" onclick="PF('dlgLogin').show()" value="Login"/>-->
+                       <section class="wrap">
+                    <div class="logo">                        
+                        <nav >
+                            <a ><p:spacer width="40" height="10"/></a>
+                            <a class="estiloTextoCandaraGran">#{baseControlador.datosGenerales.titulo}</a>
+                            <p:spacer width="15" height="10" />
+                            <a ><img src="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.imagenproyecto}" style="width: 50px; height: 50px;"/></a>
+                            <p:spacer width="15" height="10" />
+                            <a class="estiloTextoCandaraMed">#{baseControlador.datosGenerales.detalleSistema}</a>
+                            <p:spacer width="15" height="10" />
+                        </nav>  
+
+                        <nav style="float: right" >   
+                            <ul class="main-nav">
+                                <li class="menu-item-1"><span class="icon-star"></span><a id="themes" onclick="myFunction()" href="#" class="dropbtn estiloTextoCandaraMed" >Temas</a></li>
+                                <div id="myDropdown" class="dropdown-content estiloTextoCandaraMed">
+
+                                </div>
+                                <li class="menu-item-3" style="width:125px!important;"><span class="icon-key"></span><a href="#" onclick="PF('cambiarClaveDlg').show()" class="estiloTextoCandaraMed">Cambiar Clave</a></li>
+                                <li class="menu-item-2"><span class="icon-login"></span><a id="abrir" href="#" class="estiloTextoCandaraMed" >Log In</a></li>     
+                                <li class="menu-item-3"><span class="icon-logout"></span><a href="#" onclick="rcLogOut()" class="estiloTextoCandaraMed">Log Out</a></li>
+
+                            </ul>                            
+                        </nav>                        
+                        <script type="text/javascript">
+                            var us = "#{usuarioControlador.usuarioActual.nombre}";
+                            if (us) {
+                                $(".menu-item-2").addClass("is-hidden");
+                                $(".menu-item-3").addClass("is-visible");
+                            }
+                        </script>                          
+                    </div> 
+                    <div class="hidden_space">
+                        <nav >
+                            <a ><p:spacer width="40" height="10"/></a> 
+                        </nav>                               
+                    </div> 
+                    <div class="hidden_user">
+                        <nav >
+                            <p:spacer width="1" height="40" styleClass="separator"/>
+                            <span class="icon-user"></span>
+                            <a class="estiloTextoCandaraMed">#{usuarioControlador.usuarioActual.codPersonal.primerNombre} #{usuarioControlador.usuarioActual.codPersonal.primerApellido}</a>                                               
+                            <p:spacer width="1" height="40" styleClass="separator"/>
+                        </nav>                               
+                    </div> 
+                    <div class="menu_bar">
+                        <a class="bt-menu" href="#"><span class="icon-list2"></span></a>
+                    </div>
+                </section>     
+            </header>
+        </h:head>
+        <h:body>
+            <h:form>
+                <p:remoteCommand name="rcLogOut" process="@this" async="true" global="false"
+                                 action="#{usuarioControlador.cerrarSesion()}"/>
+            </h:form>
+            
+           <!-- <h:form id="frmLogin">
+            <p:dialog id="dlgLogin" widgetVar="dlgLogin"
+                      modal="true">
+                <h:panelGrid width="300">
+                    <h:panelGrid columns="3">
+                        <p:outputLabel value="Usuario:"/>
+                        <p:inputText id="logUsu" value="#{usuarioControlador.usuario}"/>
+                        <p:message for="logUsu"/>
+                        <p:outputLabel value="Clave:"/>
+                        <p:password id="logClave" value="#{usuarioControlador.contrasena}"/>
+                        <p:message for="logClave"/>
+                        <f:verbatim/>
+                        <p:commandButton id="btnLogin" action="#{usuarioControlador.inicioSesion()}"
+                                         async="true" global="false"
+                                         process="@this,logUsu,logClave"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:dialog>
+            </h:form>-->
+            
+                   
+        </h:body>
+    </ui:composition>
+</html>
+

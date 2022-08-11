@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">  
+            <style>
+                .color_h1{
+                    background: #444E83;
+                    /*padding-left: 20px;
+                    padding-top: 6px;*/
+                    min-height: 40px;
+                    padding-bottom: 10px;
+                    border-bottom: 5px solid #FFFFFF;
+                }
+                .color{
+                    background: #108FCF;
+                    padding-left: 20px;
+                    /*padding-top: 6px;*/
+                    min-height: 40px;
+                    padding-bottom: 10px;
+                }
+                .titulo{
+                    display: inline-block; color: #FFF; font-size: 18px; padding-top: 5px; width: 75%; float: left; text-rendering: optimizeLegibility;
+                    margin-bottom: 0.5em;   line-height: 1.2125em; font-weight: bold;  font-style: normal; 
+                    margin: 0;
+                    padding: 0;
+                    margin-block-start: 1em;
+                    margin-block-end: 1em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    width: 100%;
+                }
+                .subtitulo{
+                    display: inline-block; color: #FFF; font-size: 18px; padding-top: 5px; width: 75%; float: left; text-rendering: optimizeLegibility;
+                    margin-bottom: 0.5em;   line-height: 1.2125em; font-weight: bold;  font-style: normal; 
+                    margin: 0;
+                    padding: 0;
+                    margin-block-start: 1em;
+                    margin-block-end: 1em;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                }
+                .texto {
+                    font-size: 18px;
+                }
+                .anio{
+                    font-weight: bold;
+                    font-size: 20px;
+                    background-color: lightgray;
+                }
+                @media only screen and (max-width: 600px) {
+                    .titulo {
+                        font-size: 14px;
+                    }
+                    .subtitulo {
+                        font-size: 14px;
+                        white-space: nowrap;
+                    }
+                    .texto {
+                        font-size: 13px;
+                    }
+                }
+            </style>
+            <center>
+                <div>
+                    <p:panel style="height: 90%; width: 90%; background-repeat: no-repeat; background-position: center">
+                        <center>
+                            <h:panelGrid columns="1" >
+                                <!--<h:graphicImage value="/imagenes/tarea.png"/>-->
+                                <center>
+                                    <h:panelGrid columns="1" width="100%">
+                                        <div align="center" class="color_h1">
+                                            <label class="titulo">SIPE Sistema integrado de producción estadística</label>
+                                        </div>
+                                        <div align="left" class="color">
+                                            <label class="subtitulo">Encuesta Nacional de Empleo, Desempleo y Subempleo</label>
+                                        </div>
+                                        <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6,ui-g-12 ui-md-6">
+                                            <h:panelGrid class="texto">
+                                                <div align="justify">Entre la información que maneja el Instituto Nacional de Estadística y Censos (INEC) existe información confidencial, amparada bajo leyes y regulaciones, que estamos en la obligatoriedad de protegerla en cualquier medio en la que se encuentre.</div>
+                                                <br/>
+                                                <div align="justify">Al ingresar con un usuario y contraseña, usted hace un compromiso ineludible de responsabilidad para proteger la información confidencial y para utilizar los recursos estrictamente con fines propios del negocio</div>
+                                            </h:panelGrid>
+                                            <h:panelGrid>
+                                                <img src='#{baseControlador.getProfundidad()}imagenes/Banner-ENEMDU-02.png' width="100%"/>
+                                                <br/>
+                                                <div align="center" class="anio">IPC - 2020</div>
+                                            </h:panelGrid>
+                                        </p:panelGrid>
+                                    </h:panelGrid>
+                                </center>
+                            </h:panelGrid>
+
+                        </center>
+                    </p:panel>
+                </div>
+            </center>
+        </ui:define>
+    </ui:composition> 
+
+</html>

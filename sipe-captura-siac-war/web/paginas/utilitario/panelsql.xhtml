@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/plantillas/inec_plantilla_sinlogin.xhtml">
+        <ui:define name="contenido">
+            <center>
+
+                <h:form id="frm">
+                    <h:panelGrid style="height: 40px;"></h:panelGrid>
+                    <p:growl id="msgs" showDetail="true"/>
+                    <h:panelGrid id="pnlParam" columns="1">
+                        <h:outputText value="Tipo:"/>
+                        <h:selectOneMenu id="tipo" value="#{panelSqlControlador.tipoAccion}">
+                            <f:selectItem itemLabel="Consulta" itemValue="S"/>
+                            <f:selectItem itemLabel="Ejecución" itemValue="E"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="SQL:"/>
+                        <p:inputTextarea value="#{panelSqlControlador.sqlAEjecutar}" cols="150" rows="15"/>
+                        <h:outputText value="Num Cols:"/>
+                        <p:inputText value="#{panelSqlControlador.numCols}" size="2"/>
+                    </h:panelGrid>
+
+                    <p:commandButton id="btn" async="true" global="false"
+                                     process="@this,pnlParam"
+                                     action="#{panelSqlControlador.runSQL()}"
+                                     update="pnlResultado,msgs"
+                                     value="SQL"
+                                     icon="fa fa-table"
+                                     onstart="PF('dlgValidando').show();PF('pbAjax').start();"
+                                     oncomplete="PF('dlgValidando').hide();"/>
+
+                    <h:panelGrid id="pnlResultado">
+                        <a href="/INFOCAPT-war/archivos/#{panelSqlControlador.nombreArchivoResultado}.txt"
+                           download="#{panelSqlControlador.nombreArchivoResultado}.txt" style="font-size: 14px;"
+                           >Exportar Base en Texto delimitado por Tabulaciones (Click para descargar)</a> 
+                        <p:dataTable id="lstResult" value="#{panelSqlControlador.resultadoConsulta}" var="item"
+                                     paginator="true" rows="100" emptyMessage=""
+                                     scrollWidth="1150" scrollable="true" style="font-size: 10px;width: 1200px;" 
+                                     rendered="#{panelSqlControlador.resultadoConsulta.size() gt 0}">
+                            <p:columns value="#{panelSqlControlador.columns}" var="column" width="#{column.ancho}" style="text-align: center; " >
+                                <f:facet name="header">
+                                    <h:outputText value="#{column.valor}" />
+                                </f:facet>
+                                <h:outputText value="#{item[column.indice]}" />
+                            </p:columns>
+                        </p:dataTable>
+                    </h:panelGrid>
+                    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{panelSqlControlador.progresoConstruccion}" labelTemplate="{value}%" styleClass="animated" global="false"
+
+                                   style="font-size:16px;">
+
+                    </p:progressBar>
+                </h:form>
+            </center>
+        </ui:define>
+    </ui:composition>
+
+</html>

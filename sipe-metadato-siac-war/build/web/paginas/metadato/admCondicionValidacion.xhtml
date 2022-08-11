@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:panelGrid id="pnlCondicionesVal" columns="1" >      
+        <h:panelGrid id="pnlCondicion" columns="9" style="width: 100%" >
+            <p:outputLabel value="Pregunta:"/>
+            <p:selectOneMenu id="codPregunta1"  value="#{gestionValidacionControlador.objVariable1}" converter="variableConverter"  panelStyle="width:280px"
+                             var="v1" 
+                             style="width:100px; font-size:10px;" filter="true" filterMatchMode="startsWith" >
+                <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                <f:selectItems  value="#{gestionValidacionControlador.listarVariable}" var="listaVariable1" itemLabel="#{listaVariable1.identificador}" itemValue="#{listaVariable1}"/>
+                <p:column>
+                    <h:outputText value="#{v1.identificador}" style="font-size: 10px" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{v1.pregunta}" style="font-size: 10px" escape="false" />
+                </p:column>
+
+            </p:selectOneMenu>                                                                                 
+
+            <p:outputLabel value="Condición:"/>
+            <p:selectOneMenu id="condicion" value="#{gestionValidacionControlador.objCondicionalActual.operador}"
+                             style="width:100px; align-content: center">
+                <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                <f:selectItem  itemLabel="==" itemValue="==" />
+                <f:selectItem  itemLabel=">" itemValue=">"/>
+                <f:selectItem  itemLabel="&lt;" itemValue="&lt;"/>
+                <f:selectItem  itemLabel="!==" itemValue="!=="/>
+                <f:selectItem  itemLabel="includes" itemValue="includes"/>
+            </p:selectOneMenu>                            
+
+            <p:selectBooleanButton id="valPregunta"  value="#{gestionValidacionControlador.habilitaValor}" onLabel="Pregunta:"  offLabel="Valor:" style="width:70px">
+                <p:ajax event="change" process="@this" update=":frmGestionValidacion:panelValPregunta,codPregunta2,valor"  />
+            </p:selectBooleanButton>
+
+            <h:panelGrid id="panelValPregunta" columns="1"  >
+
+                <p:inputText id="valor"  value="#{gestionValidacionControlador.objCondicionalActual.valorPregunta}" size="10" rendered="#{gestionValidacionControlador.habilitaValor==false}"  />
+
+                <p:selectOneMenu id="codPregunta2" value="#{gestionValidacionControlador.objVariable2}" converter="variableConverter"  panelStyle="width:280px"
+                                 var="v2"
+                                 style="width:150px; font-size:10px;" filter="true" filterMatchMode="startsWith"
+                                 rendered="#{gestionValidacionControlador.habilitaValor==true}" >
+                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                    <f:selectItems  value="#{gestionValidacionControlador.listarVariable}" var="listaVariable2" itemLabel="#{listaVariable2.identificador}" itemValue="#{listaVariable2}"/>
+                    <p:column>
+                        <h:outputText value="#{v2.identificador}" style="font-size: 10px" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{v2.pregunta}" escape="false" style="font-size: 10px" />
+                    </p:column>
+
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+            <p:outputLabel value="Conector"/>
+            <p:selectOneMenu id="conector" value="#{gestionValidacionControlador.objCondicionalActual.conector}"
+                             style="width:80px; align-content: center"  >
+                <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                <f:selectItem  itemLabel="AND" itemValue="&amp;&amp;" />
+                <f:selectItem  itemLabel="OR" itemValue="||"/>
+
+            </p:selectOneMenu>   
+            <p:commandButton value="Añadir" 
+                             id="btnAddExp"
+                             icon="ui-icon-plus" 
+                             actionListener="#{gestionValidacionControlador.aniadirCondicion()}"
+                             process="@this, pnlCondicion" 
+                             update="frmGestionValidacion:txtCondicion,:frmGestionValidacion:pnlCondicion, :frmGestionValidacion:panelValPregunta,msgs"
+                             async="true"
+                             global="false"
+                             /> 
+        </h:panelGrid>
+        <h:panelGrid columns="2" >
+            <p:outputLabel value="Texto condición:"/>
+            <p:inputText id="txtCondicion" value="#{gestionValidacionControlador.cadenaValidacion}" style="min-height: 80%" size="80" /> 
+        </h:panelGrid>
+
+        <f:facet name="footer">                                                                                                                   
+            <center>
+                <h:panelGrid columns="3">
+                    <p:commandButton value="Aceptar" 
+                                     id="btnAddCond"
+                                     icon="ui-icon-disk" 
+                                     actionListener="#{gestionValidacionControlador.aniadirValidacion()}"
+                                     process="@this,pnlCondicionesVal"
+                                     update=":frmGestionValidacion:condiciones,:frmGestionValidacion:pnlCondicionesVal,panelValPregunta,msgs" 
+                                     onclick="PF('mdlCondicionalForm').hide();"
+                                     async="true"
+                                     global="false" 
+                                     >
+                        <p:resetInput target=":frmGestionValidacion:condiciones,:frmGestionValidacion:pnlCondicionesVal,panelValPregunta"/>
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar"                                                         
+                                     id="btnCancelarCond"                                     
+                                     icon="ui-icon-document" actionListener="#{gestionValidacionControlador.refrescaModal()}" process="@this,txtCondicion" 
+                                     update=":frmGestionValidacion:txtCondicion,:frmGestionValidacion:pnlCondicion, :frmGestionValidacion:panelValPregunta"
+                                     async="true"
+                                     global="false"
+                                     >
+                        <p:resetInput target=":frmGestionValidacion:txtCondicion,:frmGestionValidacion:pnlCondicionesVal,panelValPregunta"/>
+                    </p:commandButton>
+                </h:panelGrid>
+            </center>
+        </f:facet>
+
+    </h:panelGrid>
+</html>

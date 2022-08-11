@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    
+        <h:head>
+            <title>Login|SIAC</title>
+            <h:outputStylesheet library="css" name="estilos.css" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </h:head>
+        <h:body class="body">          
+            <div id="wrapper">
+                <div id="header-wrapper">
+                     <ui:insert name="top">
+                         <div id="header">
+                             <div id="logo">
+                                 <div id="cabecera" class="cabecera">
+                                        <div id="logoizquierda" class="logoizquierda">
+                                            <img src='#{baseControlador.getProfundidad()}imagenes/siac/LogoInec150.png' width="100%"/>
+                                        </div>
+                                        <div id="logoderecha" class="logoderecha">
+                                            <img src='#{baseControlador.getProfundidad()}imagenes/siac/LogoCenso150.png' width="100%"/>
+                                        </div>
+                                    </div>
+                             </div>
+                         </div>
+                         
+                    </ui:insert>
+                </div>
+                <div id="page">
+                    <ui:insert name="content">Contenido</ui:insert>
+                </div>
+                <div id="footer" style="margin-top:100px;">
+                    <ui:insert name="botoom">
+                        
+                        <p>Derechos reservados © 2022 | INSTITUTO NACIONAL DE ESTADÍSTICA Y CENSOS</p>
+                        <p>GIAPE - DIRECCIÓN DE REGISTROS ADMINISTRATIVOS </p>
+                    </ui:insert>
+                </div>
+            </div>
+
+        </h:body>
+
+</html>

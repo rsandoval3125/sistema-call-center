@@ -1,0 +1,298 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionVariable">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContieneVariable" width="1000" columns="1" >
+                        <p:panel header="Metadato - Variables">
+                            <h:panelGrid columns="6">
+                                <p:outputLabel value="Identificador"/>
+                                <p:inputText id="varIdentificador" value="#{gestionVariableControlador.objVariableActual.identificador}"  
+                                             size="40" maxlength="20"/>
+                                <p:message for="varIdentificador" display="icon"/>    
+
+                                <h:outputText/> <h:outputText/> <h:outputText/> 
+
+                                <p:outputLabel value="Concepto"/>                                  
+                                <p:selectOneMenu id="varConcepto" value="#{gestionVariableControlador.objVariableActual.codConcepto}" converter="conceptoConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionVariableControlador.conceptos}" var="concepto" itemLabel="#{concepto.nombre}" itemValue="#{concepto}" />
+
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idConcepto}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="varConcepto" display="icon"/>
+
+                                <p:outputLabel value="Sección"/>                                  
+                                <p:selectOneMenu id="varSeccion" value="#{gestionVariableControlador.objVariableActual.codSeccion}" converter="seccionesConverter" panelStyle="width:280px"
+                                                 effect="fade" var="t" style="width:315px" filter="true" filterMatchMode="startsWith"
+                                                 valueChangeListener="#{gestionVariableControlador.listarVariablePorSeccion}">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionVariableControlador.secciones}" var="seccion" itemLabel="#{seccion.nombre}" itemValue="#{seccion}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{t.idSeccion}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{t.nombre}" />
+                                    </p:column>
+                                    <p:ajax event="change" process="@this" update=":frmGestionVariable:tvListas:panelConieneListas"/>
+                                </p:selectOneMenu>
+                                <p:message for="varSeccion" display="icon"/>
+
+                                <p:outputLabel value="Pregunta"/>
+                                <p:textEditor id="varPregunta" value="#{gestionVariableControlador.objVariableActual.pregunta}" 
+                                                 />
+                                <p:message for="varPregunta" display="icon"/>   
+
+                                <p:outputLabel value="Tooltip"/>
+                                <p:inputTextarea id="varTooltip" value="#{gestionVariableControlador.objVariableActual.tooltip}" 
+                                                 cols="38" rows="4" maxlength="2147483647" autoResize="false" />
+                                <p:message for="varTooltip" display="icon"/>  
+
+                                <p:outputLabel value="Muestra descripción"/>
+                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                    <p:selectBooleanCheckbox id="varMuestra" value="#{gestionVariableControlador.objVariableActual.muestraDescripcion}" >
+                                    </p:selectBooleanCheckbox>                                    
+                                </h:panelGrid>
+                                <p:message for="varMuestra" display="icon"/>    
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea id="varDescripcion" value="#{gestionVariableControlador.objVariableActual.descripcion}" 
+                                                 cols="38" rows="4" maxlength="2147483647" autoResize="false" />
+                                <p:message for="varDescripcion" display="icon"/>                                                            
+
+                                <p:outputLabel value="Fila"/>
+                                <p:inputNumber id="varFila" value="#{gestionVariableControlador.objVariableActual.fila}" 
+                                               size="40" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varFila" display="icon"/>
+
+                                <p:outputLabel value="Columna"/>
+                                <p:inputNumber id="varColumna" value="#{gestionVariableControlador.objVariableActual.columna}" 
+                                               size="40" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varColumna" display="icon"/>
+
+                                <p:outputLabel value="Rowspan"/>
+                                <p:inputNumber id="varRowspan" value="#{gestionVariableControlador.objVariableActual.rowspan}" 
+                                               size="40" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varRowspan"  display="icon" />
+
+                                <p:outputLabel value="Colspan"/>
+                                <p:inputNumber id="varColspan" value="#{gestionVariableControlador.objVariableActual.colspan}" 
+                                               size="40" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varColspan" display="icon"/>                                      
+
+                                <p:outputLabel value="Estilo componente"/>
+                                <p:inputTextarea  id="varSalto1"  value="#{gestionVariableControlador.objVariableActual.styleComp}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false" />
+                                <p:message for="varSalto1" display="icon"/>  
+
+                                <p:outputLabel value="Estilo etiqueta"/>
+                                <p:inputTextarea id="varSalto2" value="#{gestionVariableControlador.objVariableActual.styleLabel}" 
+                                                 cols="38" rows="4" maxlength="2147483647" autoResize="false" />
+                                <p:message for="varSalto2" display="icon"/>  
+
+                                <p:outputLabel value="Clase de componente"/>
+                                <p:inputTextarea id="varSalto3" value="#{gestionVariableControlador.objVariableActual.styleclassComp}" 
+                                                 cols="38" rows="4" maxlength="2147483647" autoResize="false" />
+                                <p:message for="varSalto3" display="icon"/>  
+
+                                <p:outputLabel value="Clase de etiqueta"/>
+                                <p:inputTextarea id="varSalto4" value="#{gestionVariableControlador.objVariableActual.styleclassLabel}" 
+                                                 cols="38" rows="4" maxlength="2147483647" autoResize="false" />
+                                <p:message for="varSalto4" display="icon"/> 
+
+                                <p:outputLabel value="Estático"/>
+                                <p:inputNumber id="varEstatico" value="#{gestionVariableControlador.objVariableActual.estatico}" 
+                                               size="40" maxValue="32767" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varEstatico" display="icon"/>
+
+                                <p:outputLabel value="Orden"/>
+                                <p:inputNumber id="varOrden" value="#{gestionVariableControlador.objVariableActual.orden}" 
+                                               size="40" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+                                <p:message for="varOrden" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                 
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionVariableControlador.guardarVariable()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneVariable" 
+                                                         update=":frmGestionVariable:tvListas:panelConieneListas,panelContieneVariable,msgs"
+                                                         async="true" global="false"/>
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionVariableControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionVariable:tvListas:panelConieneListas,panelContieneVariable,msgs"
+                                                         async="true" global="false">
+                                            <p:resetInput target=":frmGestionVariable:panelContieneVariable"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <p:tabView id="tvListas">
+                        <p:ajax event="tabChange" listener="#{gestionVariableControlador.listarDicVariablesCorp()}" update=":frmGestionVariable:tvListas:pnlDicVarCorporativo"/>
+                        <p:tab title="Variables">
+                            <h:panelGrid id="panelConieneListas">
+                                <h:panelGrid id="panelListVariable" columns="1" width="800" styleClass="hpanelGrid_font">
+                                    <p:dataTable id="tablaListVariable" value="#{gestionVariableControlador.listarVariablees}" 
+                                                 paginator="true" rows="10" var="varColumna"   
+                                                 selectionMode="single" rowKey="#{varColumna.idVar}"
+                                                 styleClass="pdataTable_font"
+                                                 currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                        <f:facet name="header">
+                                            <p:outputLabel value="Variables" style="font-size:15px;"/>
+                                        </f:facet>
+                                        <p:column   headerText="ID" width="50" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.idVar}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column   headerText="Identificador" width="75" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.identificador }" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column   headerText="Concepto" width="150" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.codConcepto.nombre}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Sección" width="100" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.codSeccion.nombre}" style="font-size:12px;" />
+                                        </p:column>  
+                                        <p:column headerText="Pregunta" width="150" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.pregunta}" style="font-size:12px;" escape="false"/>
+                                        </p:column>                                 
+                                        <p:column headerText="Muestra" width="50" style="font-size:12px;">
+                                            <p:selectBooleanCheckbox disabled="true"  value="#{varColumna.muestraDescripcion}" >
+                                            </p:selectBooleanCheckbox>
+                                        </p:column>                               
+                                        <p:column headerText="Fila" width="50" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.fila}" style="font-size:12px;" />
+                                        </p:column>  
+                                        <p:column headerText="Columna" width="50" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.columna}" style="font-size:12px;" />
+                                        </p:column>                              
+                                        <p:column headerText="Estilo componente" width="75" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.styleComp}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Orden" width="50" style="font-size:12px;">
+                                            <h:outputText value="#{varColumna.orden}" style="font-size:12px;" />
+                                        </p:column>               
+
+                                        <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                            <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionVariableControlador.recuperarVariableCampos(varColumna)}" 
+                                                               process="@this" update=":frmGestionVariable:panelContieneVariable,:frmGestionVariable:tvListas:panelConieneListas,:frmGestionVariable:msgs" async="true" global="false">
+                                                <p:resetInput target=":frmGestionVariable:panelContieneVariable"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                            <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                             actionListener="#{gestionVariableControlador.confirmaEliminar(varColumna)}" 
+                                                             process="@this" update=":frmGestionVariable:tvListas:panelConieneListas,:frmGestionVariable:tvListas:message" async="true" global="false">
+                                                <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>                      
+                                </h:panelGrid>
+                                <p:growl id="message" showDetail="true" />
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Diccionario Corporativo">
+                            <h:panelGrid id="pnlDicVarCorporativo">
+                                <h:panelGrid columns="1" width="100%" styleClass="hpanelGrid_font">                                    
+                                    <h:commandLink>
+                                        <p:graphicImage value="#{baseControlador.getProfundidad()}imagenes/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="dtDicCorporativo" fileName="Diccionario_Variables_Corporativo"/>
+                                    </h:commandLink>
+                                    <p:dataTable id="dtDicCorporativo" paginator="true" rows="10" 
+                                                 value="#{gestionVariableControlador.listaVariablesCorp}" var="varColumna"   
+                                                 styleClass="pdataTable_font" currentPageReportTemplate="{currentPage} de {totalPages}">
+                                        <f:facet name="header">
+                                            <p:outputLabel value="Diccionario Corporativo de Variables" style="font-size:15px;"/>                                            
+                                        </f:facet>
+                                        <p:column headerText="Código de la Variable"
+                                                  filterBy="#{varColumna[0]}" 
+                                                  filterMatchMode="contains">
+                                            <h:outputText value="#{varColumna[0]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Nombre de la Variable"
+                                                  filterBy="#{varColumna[1]}" 
+                                                  filterMatchMode="contains">
+                                            <h:outputText value="#{varColumna[1]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Pregunta">
+                                            <h:outputText value="#{varColumna[2]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Definición de la Variable">
+                                            <h:outputText value="#{varColumna[3]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Instancia Rectora de la Variable">
+                                            <h:outputText value="#{varColumna[4]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Tipo de Variable">
+                                            <h:outputText value="#{varColumna[5]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Tipo de Dato">
+                                            <h:outputText value="#{varColumna[6]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Formato del Dato">
+                                            <h:outputText value="#{varColumna[7]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Longitud Minima">
+                                            <h:outputText value="#{varColumna[8]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Longitud Maxima">
+                                            <h:outputText value="#{varColumna[9]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Valor Minimo">
+                                            <h:outputText value="#{varColumna[10]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Valor Maximo">
+                                            <h:outputText value="#{varColumna[11]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Categorias de la Variable">
+                                            <h:outputText value="#{varColumna[12]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Validación">
+                                            <h:outputText value="#{varColumna[13]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Gestión Encargada de la Producción Estadistica">
+                                            <h:outputText value="#{varColumna[14]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Nombre de la Operación Estadística o Registro Administrativo">
+                                            <h:outputText value="#{varColumna[15]}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Registrado Por">
+                                            <h:outputText value="#{varColumna[16]}" style="font-size:12px;" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>                            
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

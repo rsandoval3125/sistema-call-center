@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionPagina">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid id="panelContienePagina" width="1000" columns="1" >
+                        <p:panel header="Seguridad - Páginas">
+                            <h:panelGrid columns="5">
+                                <p:outputLabel value="Aplicación"/>  
+                                <p:selectOneMenu id="pagAplicacion" value="#{gestionPaginaControlador.objPaginaActual.codApl}" converter="aplicacionConverter" filter="true" filterMatchMode="contains" required="true" requiredMessage="Aplicación necesita ser seleccionado">
+                                    <p:ajax listener="#{gestionPaginaControlador.listaPaginasPadres}" update="pagPadre" />
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionPaginaControlador.aplicaciones}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>
+                                <p:message for="pagAplicacion" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Tipo página"/>  
+                                <p:selectOneMenu id="pagTipo" value="#{gestionPaginaControlador.objPaginaActual.codTipo}" converter="catalogoConverter" filter="true" filterMatchMode="contains" required="true" requiredMessage="Tipo página necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionPaginaControlador.tiposPaginas}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>
+                                <p:message for="pagTipo" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Nombre"/>
+                                <p:inputText   id="aplNom" value="#{gestionPaginaControlador.objPaginaActual.nombre}"  
+                                               size="40" maxlength="255" required="true" requiredMessage="Nombre no puede estar vacío" />
+                                <p:message for="aplNom" display="icon"/> 
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Alias"/>
+                                <p:inputText   id="pagAlias"  value="#{gestionPaginaControlador.objPaginaActual.alias}" onkeyup="this.value = this.value.toUpperCase();"
+                                               readonly="#{gestionPaginaControlador.habilitaEdicion}"      maxlength="125" size="40" required="true" requiredMessage="Alias no puede estar vacío"/>
+                                <p:message for="pagAlias" display="icon"/>
+                                <p:commandButton id="idBtnReportes" value="RepoAlias" icon="ui-icon-suitcase" style="cursor:pointer" />           
+                                <p:overlayPanel id="moviePanel" for="idBtnReportes" showEffect="fade" hideEffect="fade" style="width:600px" 
+                                                showEvent="mouseover" hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                    <p:dataTable id="idDtaTableLstConexion"
+                                                 value="#{gestionPaginaControlador.lstVerReportesTodos}" 
+                                                 var="ver" 
+                                                 paginator="true" 
+                                                 rows="5"  
+                                                 sortOrder="descending"                              
+                                                 scrollWidth="100%"
+                                                 styleClass="estiloListaCalibriPeq"
+                                                 emptyMessage="#{etq.msg_seg_sinRegistros}"
+                                                 rowsPerPageTemplate="10,15,25" 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 scrollHeight="350">
+
+                                        <p:column headerText="Id Reporte"  style="width: 20px">
+                                            <h:outputText value="#{ver.idReporte}" />
+                                        </p:column>                    
+                                        <p:column headerText="Cod Filtro"  style="width: 20px">
+                                            <h:outputText value="#{ver.codFiltro.idFiltro}" />
+                                        </p:column>                                                  
+                                        <p:column headerText="Alias"  style="width: 100px">
+                                            <h:outputText value="#{ver.campo}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre"  style="width: 100px">
+                                            <h:outputText value="#{ver.nombre}" />
+                                        </p:column>      
+                                    </p:dataTable>
+                                </p:overlayPanel>
+
+                                <p:outputLabel value="Descripción"/>
+                                <p:inputTextarea  id="aplTipLog"  value="#{gestionPaginaControlador.objPaginaActual.descripcion}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false" required="true" requiredMessage="Descripción no puede estar vacío" />
+                                <p:message for="aplTipLog" display="icon"/> 
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Url"/>
+                                <p:inputText    id="urlPagIni"  value="#{gestionPaginaControlador.objPaginaActual.url}" 
+                                                size="40" maxlength="125"/>
+                                <p:message for="urlPagIni" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Nivel"/>
+                                <p:inputNumber   id="pagNivel"  value="#{gestionPaginaControlador.objPaginaActual.nivel}" 
+                                                 size="40"   maxlength="10" maxValue="2147483647" minValue="0" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Nivel no puede estar vacío"/>
+                                <p:message for="pagNivel" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Página padre"/>                                                                    
+                                <p:selectOneMenu id="pagPadre" value="#{gestionPaginaControlador.objPaginaActual.codPadre}" converter="paginaConverter" filter="true" filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionPaginaControlador.listarPaginasPadre}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>   
+                                <p:message for="pagPadre" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Estado"/>                                                                    
+                                <p:selectOneMenu id="estado" value="#{gestionPaginaControlador.objPaginaActual.codEstadoPagina}"  converter="catalogoConverter" filter="true" filterMatchMode="contains" required="true" requiredMessage="Estado necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionPaginaControlador.estadoPaginas}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>   
+                                <p:message for="estado" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Orden impresión"/>
+                                <p:inputNumber   id="pagOrdenImprime"  value="#{gestionPaginaControlador.objPaginaActual.ordnImprime}" 
+                                                 size="40"   maxlength="10" maxValue="2147483647" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Orden impresión no puede estar vacío"/>
+                                <p:message for="pagOrdenImprime" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+
+                                <p:outputLabel value="Atributo"/>                                
+                                <p:inputTextarea  id="pagAtributo"  value="#{gestionPaginaControlador.objPaginaActual.atributo}" 
+                                                  cols="38" rows="4"   maxlength="2147483647" autoResize="false"  />
+                                <p:message for="pagAtributo" display="icon"/>
+                                <h:outputLabel />
+                                <h:outputLabel />
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                            
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionPaginaControlador.guardarPagina()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContienePagina" 
+                                                         update=":frmGestionPagina:panelConieneListas,panelContienePagina,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionPaginaControlador.permisosBoton['PAG_INSRT'] || gestionPaginaControlador.habilitaEdicion)}"
+                                                         oncomplete="PF('tblPaginas').filter();" />
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionPaginaControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionPagina:panelConieneListas,panelContienePagina,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionPaginaControlador.permisosBoton['PAG_INSRT']}">
+                                            <p:resetInput target=":frmGestionPagina:panelContienePagina"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListPagina" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable widgetVar="tblPaginas" paginator="true" rows="10" id="tablaListPagina" value="#{gestionPaginaControlador.listarPaginas}"  var="aplColumna"   
+                                         selectionMode="single" rowKey="#{aplColumna.idPag}"
+                                         styleClass="pdataTable_font"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Páginas" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.idPag}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Nombre" width="200" style="font-size:12px;" filterBy="#{aplColumna.nombre}" filterMatchMode="contains">
+                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />                                    
+                                </p:column>
+                                <p:column   headerText="Aplicación" width="175" style="font-size:12px;" filterBy="#{aplColumna.codApl.nombre}" filterMatchMode="contains">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tblPaginas').filter()" styleClass="custom-filter">
+                                            <f:selectItem itemLabel="Seleccione uno" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{gestionPaginaControlador.aplicaciones}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta.nombre}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{aplColumna.codApl.nombre}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Alias" width="150" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                </p:column>  
+                                <p:column headerText="Estado" width="100" style="font-size:12px;">                                   
+                                    <h:outputText value="#{aplColumna.codEstadoPagina.nombre}" style="font-size:12px;" />                                        
+                                </p:column>
+                                <p:column headerText="Url" width="250" style="font-size:12px;">
+                                    <h:outputText value="#{aplColumna.url}" style="font-size:12px;" />
+                                </p:column>                                 
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionPaginaControlador.recuperarPaginaCampos(aplColumna)}" 
+                                                       process="@this" update=":frmGestionPagina:panelContienePagina,:frmGestionPagina:panelConieneListas,:frmGestionPagina:msgs" 
+                                                       async="true" global="false" disabled="#{!gestionPaginaControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionPagina:panelContienePagina"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionPaginaControlador.confirmaEliminar(aplColumna)}" 
+                                                     process="@this" update=":frmGestionPagina,:frmGestionPagina:message" 
+                                                     async="true" global="false" disabled="#{!gestionPaginaControlador.permisosBoton['PAG_ELIM']}">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionPagina:panelContienePagina"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

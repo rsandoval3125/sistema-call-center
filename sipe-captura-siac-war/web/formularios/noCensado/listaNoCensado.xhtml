@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <!--<ui:composition template="/plantillas/inec_plantilla.xhtml">-->
+    <ui:composition template="../../META-INF.resources.plantillas/plantillaboot.xhtml">
+    <!--http://localhost:8080/sipe-captura-siac-war/formularios/noCensado/listaNoCensado.xhtml-->
+    <h:outputStylesheet library="webjars" name="primeflex/3.0.1/primeflex.min.css" />
+        <ui:define name="contenido">
+         
+            <h:form id="form">
+                  <style>
+                   .abierto label, .abierto {
+                            background-color: #fef9e7  !important;
+                    }
+                    
+                    .cerrado label, .cerrado {
+                            /*background-color: #fadbd8!important;*/  
+                          background-color: #def9e2!important;/*  verde       */
+                    }
+                    
+                    .vencidos label, .vencidos {
+                            /*background-color: #fadbd8!important;*/  
+                          background-color: #fadbd8!important;/*  verde       */
+                    }
+                    
+                    
+                    .asignado label, .proceso {
+                            background-color: #fef9e7 !important;
+                            
+                    }
+                    
+                     /* reset on the showcase style*/
+                    body .ui-panelgrid .ui-panelgrid-cell {
+                        background-color: transparent;
+                    }
+
+                    /* example use of styles for your form */
+                    .my-heading-row {
+                        background-color: var(--surface-c);
+                        font-weight: bold;
+                    }          
+                   
+                </style>
+               
+<!--                <style type="text/css">
+                    .cheap {
+                        background-color: #d4efdf  !important;
+                        background-image: none !important;
+                        color: #145a32   !important;
+                    }
+                    .cheap1 {
+                        background-color: #fadbd8 !important;
+                        background-image: none !important;
+                        color: #922b21 !important;
+                    }
+                    .cheap2 {
+                        background-color: #ebedef   !important;
+                        background-image: none !important;
+                        color: #2c3e50  !important;
+                    }
+                </style>-->
+                
+                
+                <div class="card">
+                    
+                    <ui:include src="formularioNoCensado.xhtml"/>
+                    <br/>
+                    <p:dataTable paginator="true" 
+                                   rows="10" 
+                                   reflow="true" 
+                                   id="dt-no-censado" 
+                                   value="#{registroNoCensadoControlador.listarNoCensado}"  
+                                   var="entidad"   
+                                   selectionMode="single" 
+                                   rowKey="#{entidad.idDeth}" 
+                                   currentPageReportTemplate="{currentPage} de {totalPages}"
+                                   rowStyleClass="#{incidenciasBuscarControlador.validaTickes(entidad.val28, entidad.val20)}">    
+
+                        <f:facet name="header">
+                           <!--<p:outputLabel value="LISTA DE INQUIETUDES" style="font-size:15px;"/>-->
+                           <span style="font-weight: bold">LISTA DE REGISTRO NO CENSADO</span>
+                        </f:facet>
+                        
+                         <p:column   headerText="ID" filterBy="#{entidad.idDeth}" style="width: 40px;">
+                            <h:outputText value="#{entidad.idDeth}"/>
+                        </p:column>
+
+                        <p:column headerText="Cédula" filterBy="#{entidad.val07}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val07}"/>
+                        </p:column> 
+
+                        <p:column headerText="Apellidos y Nombres" filterBy="#{entidad.val08} #{entidad.val09}" filterMatchMode="contains" style="width: 200px;">
+                            <h:outputText value="#{entidad.val08} #{entidad.val09}" />
+                        </p:column> 
+
+                        <p:column headerText="Correo" filterBy="#{entidad.val10}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val10}"/>
+                        </p:column>                       <p:column headerText="Plataforma" filterBy="#{entidad.val16}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val16}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" filterBy="#{entidad.val20}" filterMatchMode="contains">
+                             <div class="ui-inputgroup"  jsf:rendered="#{incidenciasBuscarControlador.validaTickes(entidad.val28, entidad.val20) eq 'abierto'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-yellow-500 font-bold text-white border-round m-2" styleClass="ui-button-warning"><i class="pi pi-lock-open" style="font-size: 2rem;"></i>&nbsp;#{entidad.val20}</div>
+                            </div>
+                            <div class="ui-inputgroup"  jsf:rendered="#{incidenciasBuscarControlador.validaTickes(entidad.val28, entidad.val20)  eq 'vencidos'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-orange-600 font-bold text-white border-round m-2" styleClass="ui-button-warning" ><i class="pi pi-lock-open" style="font-size: 2rem;"></i>&nbsp;VENCIDOS</div>
+                            </div>
+                            <div class="ui-inputgroup"  jsf:rendered="#{entidad.val20 eq 'CERRADO'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-green-500 font-bold text-white border-round m-2" styleClass="ui-button-warning" ><i class="pi pi-lock" style="font-size: 2rem;"></i>&nbsp;#{entidad.val20}</div>
+                            </div>
+                        </p:column>
+                        
+                        <p:column exportable="false">
+                            <p:commandButton   icon="pi pi-pencil" 
+                                               update=":form:manage-no-censado-content"
+                                               action="#{registroNoCensadoControlador.recuperarDatosNoCensado(entidad)}" 
+                                               process="@this"
+                                               styleClass="edit-button rounded-button ui-button-success">
+                                <p:resetInput target=":form:manage-no-censado-content"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    
+<!--                    
+                    <p:dataTable paginator="true" 
+                             rows="10" 
+                             reflow="true" 
+                             id="dt-asignacionesSaved" 
+                             value="#{registroNoCensadoControlador.checkOperador}"  
+                             var="entidad"   
+                             selectionMode="single"  
+                             rowKey="#{entidad.idDeth}"
+                             rowStyleClass="#{entidad.val20 eq 'CERRADO' ? 'cheap1' : entidad.val20 eq 'PROCESO' ? 'cheap2' : 'cheap'}" 
+                             currentPageReportTemplate="{currentPage} de {totalPages}">  
+
+                    <f:facet name="header">
+                        <span style="font-weight: bold">LISTA TICKETS ASIGNADOS</span>
+                    </f:facet>
+
+                    <p:column   headerText="ID" style="width: 5%;">
+                        <h:outputText value="#{entidad.idDeth}"/>
+                    </p:column>
+                    <p:column headerText="Cédula" style="width: 15%" filterBy="#{entidad.clave}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.clave}"/>
+                    </p:column>
+                    <p:column headerText="Apellidos y Nombres" style="width: 25%" filterBy="#{entidad.val08} #{entidad.val09}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val08} #{entidad.val09}" />
+                    </p:column>
+                    <p:column headerText="Correo" style="width: 15%" filterBy="#{entidad.val10}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val10}"/>
+                    </p:column>
+                    <p:column headerText="Plataforma" style="width: 15%" filterBy="#{entidad.val16}" filterMatchMode="contains">
+                            <h:outputText value="#{entidad.val16}"/>
+                    </p:column> 
+                        
+                    <p:column headerText="Estado" style="width: 15%" filterBy="#{entidad.val20}" filterMatchMode="contains">
+                            <div class="ui-inputgroup"  jsf:rendered="#{entidad.val20 eq 'ABIERTO'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-green-500 font-bold text-white border-round m-2" styleClass="ui-button-warning"><i class="pi pi-lock-open" style="font-size: 2rem;"></i>#{entidad.val20}</div>
+                            </div>
+                            <div class="ui-inputgroup"  jsf:rendered="#{entidad.val20 eq 'PROCESO'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-yellow-500 font-bold text-white border-round m-2" style="width: 100%" styleClass="ui-button-warning" ><i class="pi pi-clock" style="font-size: 2rem;"></i>#{entidad.val20}</div>
+                            </div>
+                             <div class="ui-inputgroup"  jsf:rendered="#{entidad.val20 eq 'CERRADO'}">
+                                <div class="flex align-items-center justify-content-center w-8rem h-3rem bg-orange-600 font-bold text-white border-round m-2" style="width: 100%" styleClass="ui-button-warning" ><i class="pi pi-lock" style="font-size: 2rem;"></i>#{entidad.val20}</div>
+                            </div>
+                    </p:column>     
+                    <p:column headerText="Tipo Incidencia" style="width: 15%" filterBy="#{entidad.val29}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val29}"/>
+                    </p:column> 
+                    <p:column headerText="Operador" style="width: 25%" filterBy="#{entidad.val26}" filterMatchMode="contains">
+                        <h:outputText value="#{entidad.val26}"/>
+                    </p:column>
+                </p:dataTable>      -->
+
+
+                 </div>
+             </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

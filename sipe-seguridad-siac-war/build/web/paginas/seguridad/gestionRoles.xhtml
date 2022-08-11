@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionRol">   
+                <p:growl id="msgs" showDetail="true"/>
+                <center>
+                    <h:panelGrid width="1000" columns="1" >
+                        <p:tabView id="tabsRolesPermisos">
+                            <p:tab title="Seguridad - Roles">
+                                <h:panelGrid id="panelContieneRol" width="1000" columns="1" >
+                                    <p:panel header="Rol">
+                                        <h:panelGrid columns="3">
+                                            <p:outputLabel value="Nombre"/>
+                                            <p:inputText   id="rolNombre" value="#{gestionRolControlador.objRolActual.nombre}"  
+                                                           maxlength="128"   size="40"  required="true" requiredMessage="Nombre no puede estar vacío" />
+                                            <p:message for="rolNombre" display="icon"/>                                                       
+
+                                            <p:outputLabel value="Descripción"/>
+                                            <p:inputTextarea  id="rolDescripcion"  value="#{gestionRolControlador.objRolActual.descripcion}" 
+                                                              cols="38" rows="4"   maxlength="2147483647" autoResize="false"  required="true" requiredMessage="Descripción no puede estar vacío"/>
+                                            <p:message for="rolDescripcion" display="icon"/>                                
+
+                                            <p:outputLabel value="Alias"/>
+                                            <p:inputText    id="rolNemonico"  value="#{gestionRolControlador.objRolActual.alias}" 
+                                                            readonly="#{gestionRolControlador.habilitaEdicion}"    maxlength="250" size="40" required="true" requiredMessage="Alias no puede estar vacío"/>
+                                            <p:message for="rolNemonico" display="icon"/>
+                                            <f:facet name="footer">
+                                                <center>
+                                                    <h:panelGrid columns="2">
+                                                        <p:commandButton value="Guardar" 
+                                                                         id="btnGuardar" 
+                                                                         action="#{gestionRolControlador.guardarRol()}" 
+                                                                         icon="ui-icon-disk"  
+                                                                         process="@this,:frmGestionRol:tabsRolesPermisos:panelContieneRol" 
+                                                                         update=":frmGestionRol:tabsRolesPermisos:panelConieneListas,:frmGestionRol:tabsRolesPermisos:panelContieneRol,:frmGestionRol:msgs"
+                                                                         async="true"
+                                                                         global="false"
+                                                                         disabled="#{!(gestionRolControlador.permisosBoton['PAG_INSRT'] || gestionRolControlador.habilitaEdicion)}"
+                                                                         onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" 
+                                                                         oncomplete="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide(); PF('wVarTablaListRol').filter();"
+                                                                         />
+                                                        <p:commandButton value="Nuevo"                                                          
+                                                                         id="btnNuevo" 
+                                                                         action="#{gestionRolControlador.refrescaNuevo()}" 
+                                                                         icon="ui-icon-document"  
+                                                                         process="@this" 
+                                                                         update=":frmGestionRol:tabsRolesPermisos:panelConieneListas,:frmGestionRol:tabsRolesPermisos:panelContieneRol,:frmGestionRol:msgs"
+                                                                         async="true"
+                                                                         global="false"
+                                                                         disabled="#{!gestionRolControlador.permisosBoton['PAG_INSRT']}"
+                                                                         onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" 
+                                                                         oncomplete="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide();">
+                                                            <p:resetInput target=":frmGestionRol:tabsRolesPermisos:panelContieneRol"/>
+                                                        </p:commandButton>
+                                                    </h:panelGrid>
+                                                </center>
+                                            </f:facet>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel id="panel2" header="Asignación de permisos a rol de usuario">
+                                        <center>   
+
+                                            <h:panelGrid id="panelContieneComboApl" columns="2">
+                                                <p:outputLabel value="Aplicación"/>
+                                                <h:panelGrid id="panAplicaciones"> 
+                                                    <p:selectOneMenu   required="false" id="cmbAplicaciones" disabled="#{!gestionRolControlador.habilitaEdicion}"
+                                                                       value="#{gestionRolControlador.aplicacionSelected}" style="width:250px"
+                                                                       converter="aplicacionConverter" var="t" filter="true" filterMatchMode="contains">
+                                                        <p:ajax listener="#{gestionRolControlador.listarPermisosGuardados}"  update="panelContienePickList" />
+                                                        <f:selectItem  itemLabel="Seleccione.." itemValue="" /> 
+                                                        <f:selectItems var="tipApl"  
+                                                                       value="#{gestionRolControlador.aplicaciones}" 
+                                                                       itemLabel="#{tipApl.nombre}" 
+                                                                       itemValue="#{tipApl}"/>                                            
+                                                        <p:column width="200" style="white-space: normal">  
+                                                            <h:outputText escape="false" value="#{t.nombre}" style="font-size: 10px"/> 
+                                                        </p:column> 
+
+                                                    </p:selectOneMenu>
+                                                    <p:message  for="cmbAplicaciones" display="icon"/> 
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                            <h:panelGrid id="panelContienePickList" style="margin-left: 12%; width: 950px;"  >                                              
+                                                <h:outputLabel value="Seleccionar permiso(s):"/>                                               
+                                                <p:pickList  id="pickList"  style="font-size:12px;" widgetVar="pickList"  value="#{gestionRolControlador.permisos}" var="columRol"   
+                                                             itemLabel="#{columRol.alias}" itemValue="#{columRol}" 
+                                                             converter="segPermisoConverter" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true">
+                                                </p:pickList>                                    
+                                            </h:panelGrid>
+
+                                        </center>
+                                        <f:facet name="footer">                                                                                                                      
+                                            <center> 
+                                                <h:panelGrid columns="1">
+                                                    <p:commandButton value="Guardar" 
+                                                                     id="btnGuardarUsuRol" disabled="#{!gestionRolControlador.habilitaEdicion}"
+                                                                     action="#{gestionRolControlador.guardarPermisosAsignadosDeRol()}" 
+                                                                     icon="ui-icon-disk"  
+                                                                     process="@this,:frmGestionRol:tabsRolesPermisos:panelContieneRol" 
+                                                                     update="panelConieneListas,:frmGestionRol:tabsRolesPermisos:panelContieneRol,:frmGestionRol:msgs"
+                                                                     async="true"
+                                                                     global="false"
+                                                                     onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" 
+                                                                     oncomplete="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide();"
+                                                                     />
+                                                </h:panelGrid>
+                                            </center>   
+                                        </f:facet>
+                                    </p:panel>
+                                    <h:panelGrid id="panelConieneListas">
+                                        <h:panelGrid id="panelListRol" columns="1" width="800" styleClass="hpanelGrid_font">
+                                            <p:dataTable paginator="true" rows="10" id="tablaListRol" value="#{gestionRolControlador.listarRoles}"  var="aplColumna"   
+                                                         selectionMode="single" rowKey="#{aplColumna.idRol}"
+                                                         styleClass="pdataTable_font" widgetVar="wVarTablaListRol"
+                                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                                <f:facet name="header">
+                                                    <p:outputLabel value="Roles" style="font-size:15px;"/>
+                                                </f:facet>
+                                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                                    <h:outputText value="#{aplColumna.idRol}" style="font-size:12px;" />
+                                                </p:column>
+                                                <p:column   headerText="Nombre" width="200" style="font-size:12px;"   filterBy="#{aplColumna.nombre}" filterMatchMode="contains"    >
+                                                    <h:outputText value="#{aplColumna.nombre}" style="font-size:12px;" />
+                                                </p:column>
+                                                <p:column headerText="Descripción" width="300" style="font-size:12px;" filterBy="#{aplColumna.descripcion}" filterMatchMode="contains" >
+                                                    <h:outputText value="#{aplColumna.descripcion}" style="font-size:12px;" />
+                                                </p:column>  
+
+                                                <p:column headerText="Alias" width="150" style="font-size:12px;">
+                                                    <h:outputText value="#{aplColumna.alias}" style="font-size:12px;" />
+                                                </p:column>                                 
+                                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionRolControlador.recuperarRolCampos(aplColumna)}" 
+                                                                       process="@this" update=":frmGestionRol:tabsRolesPermisos:panelContieneRol,frmGestionRol:tabsRolesPermisos:panelConieneListas,:frmGestionRol:msgs" 
+                                                                       disabled="#{!gestionRolControlador.permisosBoton['PAG_MODIF']}">
+                                                        <p:resetInput target=":frmGestionRol:tabsRolesPermisos:panelContieneRol"/>
+                                                    </p:commandButton>
+                                                </p:column>
+                                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                                     actionListener="#{gestionRolControlador.confirmaEliminar(aplColumna)}" 
+                                                                     process="@this" update="frmGestionRol:tabsRolesPermisos:panelConieneListas,:frmGestionRol:message" 
+                                                                     async="true" global="false" disabled="#{!gestionRolControlador.permisosBoton['PAG_ELIM']}"
+                                                                     oncomplete="PF('wVarTablaListRol').filter();">
+                                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                                    </p:commandButton>
+                                                </p:column>
+                                            </p:dataTable>                      
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Seguridad - Permisos">
+                                <h:panelGrid id="panelContieneCombo" columns="2">
+                                    <p:outputLabel value="Aplicación"/>
+                                    <h:panelGrid id="comboAplicaciones"> 
+                                        <p:selectOneMenu   required="false" id="cmbApl" 
+                                                           value="#{gestionRolControlador.aplicacionActual}" style="width:250px"
+                                                           converter="aplicacionConverter" var="t" filter="true" filterMatchMode="contains">
+                                            <p:ajax listener="#{gestionRolControlador.cargarPaginasPermisos}"  update="panelContienePaginas" />
+                                            <f:selectItem  itemLabel="Seleccione.." itemValue="" /> 
+                                            <f:selectItems var="tipApl"  
+                                                           value="#{gestionRolControlador.aplicaciones}" 
+                                                           itemLabel="#{tipApl.nombre}" 
+                                                           itemValue="#{tipApl}"/>                                            
+                                            <p:column width="200" style="white-space: normal">  
+                                                <h:outputText escape="false" value="#{t.nombre}" style="font-size: 10px"/> 
+                                            </p:column> 
+
+                                        </p:selectOneMenu>
+                                        <p:message  for="cmbApl" display="icon"/> 
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <h:panelGrid id="panelContienePaginas" columns="2"  columnClasses="topAligned, topAligned"  >                          
+                                    <p:dataTable paginator="true" rows="10" id="tablaListPagina" value="#{gestionRolControlador.listarPaginas}"  var="pagColumna"   
+                                                 selectionMode="single" rowKey="#{pagColumna.idPag}"
+                                                 styleClass="pdataTable_font"
+                                                 currentPageReportTemplate="{currentPage} de {totalPages}"   editable="true" >  
+                                        <f:facet name="header">
+                                            <p:outputLabel value="Páginas" style="font-size:15px;"/>
+                                        </f:facet>                                       
+                                        <p:column   headerText="ID" width="25" style="font-size:12px;">
+                                            <h:outputText value="#{pagColumna.idPag}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column   headerText="Página" width="150" style="font-size:12px;"   filterBy="#{pagColumna.nombre}" filterMatchMode="contains">
+                                            <h:outputText value="#{pagColumna.nombre}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="URL" width="200" style="font-size:12px;">
+                                            <h:outputText value="#{pagColumna.url}" style="font-size:12px;" />
+                                        </p:column>
+                                        <p:column headerText="Acción" width="280" style="font-size:12px;">
+                                            <p:repeat value="#{gestionRolControlador.mapaPermisos[pagColumna.idPag]}" var="perm">
+                                                <h:panelGroup rendered="#{perm.estadoLogico eq true}">   
+                                                    <h:outputText class="fa fa-check"/>
+                                                    <h:outputText value="#{perm.codAccion.nombre}" style="font-size:12px;"/> <p:spacer width="10px"/>
+                                                </h:panelGroup>
+                                            </p:repeat>                                                                                        
+                                        </p:column>
+                                        <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                            <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionRolControlador.recuperarPaginaPermisosCampos(pagColumna)}" oncomplete="PF('accionesSistemaDlg').show();"
+                                                               process="@this,frmGestionRol:accionesDialogoContainer" update="frmGestionRol:accionesDialogoContainer"
+                                                               disabled="#{!gestionRolControlador.permisosBoton['PAG_MODIF']}">
+
+                                            </p:commandButton>
+                                        </p:column>
+                                        <!--p:column  headerText="Editar"  style="width:55px;text-align: center;">
+                                            <p:rowEditor class="tool_bar_edit"  />
+                                        </p:column-->
+                                        <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                            <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                             actionListener="#{gestionRolControlador.confirmaEliminarPaginaPermisos(pagColumna)}" 
+                                                             process="@this" update=":frmGestionRol:tabsRolesPermisos:panelContienePaginas,:frmGestionRol:tabsRolesPermisos:pickList,:frmGestionRol:message" 
+                                                              disabled="#{!gestionRolControlador.permisosBoton['PAG_ELIM']}">
+                                                <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </p:column>                                       
+                                    </p:dataTable>                                   
+                                    <f:facet name="footer">  
+
+                                    </f:facet>
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+
+                    </h:panelGrid>
+                    <p:growl id="message" showDetail="true" />
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                    <p:dialog header="Acciones del sistema" id="accionesSistemaDlg" widgetVar="accionesSistemaDlg">
+                        <h:panelGroup id="accionesDialogoContainer">
+                            <h:panelGrid columns="1"> 
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="Aplicación:"/>
+                                    <p:outputLabel value="#{gestionRolControlador.objPaginaActual.codApl.nombre}" />
+                                    <p:outputLabel value="Página:"/>
+                                    <p:outputLabel value="#{gestionRolControlador.objPaginaActual.nombre}" />
+                                </h:panelGrid>                              
+                                <p:dataTable id="tablaListAcciones" widgetVar="tablaListAcciones" value="#{gestionRolControlador.acciones}"  var="pagColumna"   
+                                             rowKey="#{pagColumna.idCatalogo}" selection="#{gestionRolControlador.selectedAccs}"
+                                             styleClass="pdataTable_font" style="width:450px;">  
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Listado de Acciones" style="font-size:15px;"/>
+                                    </f:facet>     
+                                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>                                   
+                                    <p:column   headerText="Acción" width="70" style="font-size:12px;">
+                                        <h:outputText value="#{pagColumna.nombre}" style="font-size:12px;" />
+                                    </p:column>
+                                    <p:column headerText="Alias" width="300" style="font-size:12px;">
+                                        <h:outputText value="#{pagColumna.descripcion}" style="font-size:12px;" />
+                                    </p:column>
+                                </p:dataTable>
+                                <f:facet name="footer">                                                                                                                      
+                                    <center> 
+                                        <h:panelGrid columns="2">
+                                            <p:commandButton value="Guardar"  id="btnGuardarPermisoRol" 
+                                                             action="#{gestionRolControlador.guardarPagina()}" 
+                                                             icon="ui-icon-disk"  oncomplete="PF('accionesSistemaDlg').hide();"                                                    
+                                                             update=":frmGestionRol:tabsRolesPermisos:panelConieneListas,:frmGestionRol:tabsRolesPermisos:panelContienePaginas,:frmGestionRol:tabsRolesPermisos:pickList,:frmGestionRol:msgs"
+                                                             partialSubmit="true" process="accionesDialogoContainer" />
+                                            <p:commandButton value="Cancelar" icon="ui-icon-close" onclick="PF('accionesSistemaDlg').hide();"/>
+                                        </h:panelGrid>
+                                    </center>   
+                                </f:facet>    
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </p:dialog> 
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

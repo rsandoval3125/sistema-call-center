@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <ui:composition>
+
+        <div></div>
+        <div id="footer" class="clearfix" >
+            <center>
+                <h:panelGrid styleClass="estiloPiePagina" columns="2">
+                    <a ><img class="logo_left" src="#{baseControlador.getProfundidad()}#{baseControlador.datosGenerales.imageninec}"/></a>
+                    <h:panelGrid>
+                        <h:outputText value="#{baseControlador.datosGenerales.derechosreservados}"/>
+                        <h:outputText value="#{baseControlador.datosGenerales.direccionresponsable}"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </center>            
+        </div>
+    </ui:composition>
+</html>

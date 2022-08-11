@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+http://xmlns.jcp.org/jsf/composite
+http://xmlns.jcp.org/jsp/jstl/core
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:pinec="http://java.sun.com/jsf/composite/pinec"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <!--COMPONENTE PARA LA VISUALIZACION DE WIZARD DINAMICOS-->
+    <cc:interface>
+        <cc:attribute name="modelo"/>
+        <cc:attribute name="beanControlador"  required="true"/>
+        <cc:attribute name="tipo" required="true"/>
+        <cc:attribute name="proceso_wizard" required="true"/>
+        <cc:attribute name="wizard_submit" required="true"/>
+        <cc:attribute name="numerotab" required="true"/>
+    </cc:interface>
+    <cc:implementation>
+        <p:panel id="#{cc.id}">
+            <p:growl id="growl_20" sticky="true" showDetail="true"/>
+            <p:wizard id="w#{cc.id}" nextLabel="Siguiente" backLabel="Anterior" flowListener="#{cc.attrs.beanControlador[cc.attrs.proceso_wizard]}" widgetVar="wiz">
+                <c:set var="count" value="0" scope="view" />
+                <c:forEach items="#{cc.attrs.beanControlador[cc.attrs.modelo]}" var="tabWizard">
+                    <c:set var="count" value="#{count + 1}" scope="view" />
+                    <p:tab id="#{tabWizard.nombreTab}" title="#{tabWizard.tituloTab}">
+                        <p:panel header="#{tabWizard.nombreTab}">
+                            <pinec:inec_dinamicform id="df#{tabWizard.nombreTab}" modelo="#{tabWizard.dynaFormModel}" beanControlador="#{cc.attrs.beanControlador}" tipo="false"/>
+                        </p:panel>
+                    </p:tab>
+                </c:forEach>
+
+            </p:wizard>
+            <p:commandButton value="Weiter" onclick="PF('wiz').next()" update="dfTabla"/>
+            <p:commandButton value="Back" onclick="PF('wiz').back()" update="dfTabla"/>
+        </p:panel>
+    </cc:implementation>
+</html>

@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <ui:composition>
+        <p:dialog header="#{baseControlador.datosGenerales.usuarionologueadoheader}" widgetVar="#{baseControlador.datosGenerales.sesioncaducadawidgetVar}"
+                  modal="true"  closable="false" styleClass="dialogalerta" visible="#{baseControlador.datosGenerales.existeusuario}" 
+                  rendered="#{baseControlador.datosGenerales.existeusuario}">
+            <h:form>
+                <p:panelGrid columns="1" >
+                    <h:outputText value="#{baseControlador.datosGenerales.usuarionologueadotexto}" />
+
+                    <p:commandButton id="commandButtonRegresarHome_3" 
+                                     value="#{baseControlador.datosGenerales.sesioncaducadaboton}"
+                                     action="#{baseControlador.cerrarSesion()}" />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+http://xmlns.jcp.org/jsf/composite
+http://xmlns.jcp.org/jsp/jstl/core
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:pinec="http://xmlns.jcp.org/jsf/composite/pinec"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
+    <cc:interface>
+        <cc:attribute name="beanControlador"  required="true"/>
+        <cc:attribute name="datos" required="true"/>
+    </cc:interface>
+    <cc:implementation>
+        <pinec:inec_menu_tipo beanControlador="#{cc.attrs.beanControlador}" datos="#{cc.attrs.datos}" id="mt_#{cc.id}">
+            <c:forEach items="#{cc.attrs.datos.subMenuList}" var="submenuinec">
+                <p:submenu label="#{submenuinec.textovisualizar}" id="sub_#{cc.id}_#{submenuinec.identificador}" 
+                           rendered="#{submenuinec.visualizar}"
+                           icon="#{submenuinec.icon}">
+                    <c:set var="count" value="0" scope="view" />
+                    <c:forEach items="#{submenuinec.subMenuColumnaList}" var="columnaitem">
+                        <p:column>
+                            <c:set var="count" value="#{count + 1}" scope="view" />
+                            <c:forEach items="#{columnaitem.subMenuList}" var="submenucol">
+                                <c:set var="count" value="#{count + 1}" scope="view"/>
+
+                                <p:submenu label="#{submenucol.textovisualizar}" id="sub_col_#{cc.id}_#{submenuinec.identificador}_#{submenucol.identificador}_#{count}" 
+                                           rendered="#{submenucol.visualizar}"
+                                           icon="#{submenucol.icon}">
+                                    <c:forEach items="#{submenucol.menuItemList}" var="menuiteminec">
+                                        <p:menuitem id="miurl_sub_col_#{cc.id}_#{submenuinec.identificador}_#{submenucol.identificador}_#{menuiteminec.identificador}_#{count}" value="#{menuiteminec.textovisualizar}" 
+                                                    rendered="#{menuiteminec.visualizar and menuiteminec.url!=null and cc.attrs.datos.tipoMenu!=13}"
+                                                    url="#{menuiteminec.url}" 
+                                                    icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                                        <p:menuitem id="miact_sub_col#{cc.id}_#{submenuinec.identificador}_#{submenucol.identificador}_#{menuiteminec.identificador}_#{count}" value="#{menuiteminec.textovisualizar}" 
+                                                    rendered="#{menuiteminec.visualizar and menuiteminec.url==null  and cc.attrs.datos.tipoMenu!=13}"
+                                                    actionListener="#{cc.attrs.beanControlador[menuiteminec.accion]}"
+                                                    process="#{menuiteminec.process==null ? '@this' : menuiteminec.process}"
+                                                    update="#{menuiteminec.update==null ? '@none' : menuiteminec.update}"
+                                                    icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                                        <p:menuitem id="mitab_sub_col_#{cc.id}_#{submenuinec.identificador}_#{submenucol.identificador}_#{menuiteminec.identificador}_#{count}" value="#{menuiteminec.textovisualizar}"
+                                                    outcome="/ui/menu/tabMenu" icon="#{menuiteminec.icon}"
+                                                    rendered="#{cc.attrs.datos.tipoMenu == 13}"
+                                                    >
+                                            <f:param name="i" value="#{menuiteminec.identificador}" />
+                                        </p:menuitem>
+                                    </c:forEach>
+                                </p:submenu>
+                            </c:forEach>
+                        </p:column>
+                    </c:forEach>
+
+
+                    <c:forEach items="#{submenuinec.menuItemList}" var="menuiteminec">
+                        <p:menuitem id="miurl_sub_#{cc.id}_#{submenuinec.identificador}_#{menuiteminec.identificador}" value="#{menuiteminec.textovisualizar}" 
+                                    rendered="#{menuiteminec.visualizar and menuiteminec.url!=null and cc.attrs.datos.tipoMenu!=13}"
+                                    url="#{menuiteminec.url}" 
+                                    icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                        <p:menuitem id="miact_sub_#{cc.id}_#{submenuinec.identificador}_#{menuiteminec.identificador}" value="#{menuiteminec.textovisualizar}" 
+                                    rendered="#{menuiteminec.visualizar and menuiteminec.url==null  and cc.attrs.datos.tipoMenu!=13}"
+                                    actionListener="#{cc.attrs.beanControlador[menuiteminec.accion]}"
+                                    process="#{menuiteminec.process==null ? '@this' : menuiteminec.process}"
+                                    update="#{menuiteminec.update==null ? '@none' : menuiteminec.update}"
+                                    icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                        <p:menuitem id="mitab_sub_#{cc.id}_#{submenuinec.identificador}_#{menuiteminec.identificador}" value="#{menuiteminec.textovisualizar}"
+                                    icon="#{menuiteminec.icon}"
+                                    rendered="#{cc.attrs.datos.tipoMenu == 13}"
+                                    >
+                            <f:param name="i" value="#{cc.attrs.menuiteminec.identificador}" />
+                        </p:menuitem>
+                    </c:forEach>
+                </p:submenu>
+            </c:forEach>
+
+            <c:set var="count2" value="0"/>
+            <c:forEach items="#{cc.attrs.datos.menuItemList}" var="menuiteminec">
+                <c:set var="count2" value="#{count2 + 1}"/>
+                <p:menuitem id="miurl_#{cc.id}_#{count2}_ZZZ#{menuiteminec.identificador}" value="#{menuiteminec.textovisualizar}" 
+                            rendered="#{menuiteminec.visualizar and menuiteminec.url!=null and cc.attrs.datos.tipoMenu!=13}"
+                            url="#{menuiteminec.url}" 
+                            icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                <p:menuitem id="miact_#{cc.id}_#{count2}_ZZZ#{menuiteminec.identificador}" 
+                            value="#{menuiteminec.textovisualizar}" 
+                            rendered="#{menuiteminec.visualizar and menuiteminec.url==null  and cc.attrs.datos.tipoMenu!=13 and menuiteminec.icon!=null}"
+                            actionListener="#{cc.attrs.beanControlador[menuiteminec.accion]}"
+                            process="#{menuiteminec.process==null ? '@this' : menuiteminec.process}"
+                            update="#{menuiteminec.update==null ? '@none' : menuiteminec.update}"
+                            icon="#{menuiteminec.icon}" title="#{menuiteminec.titulo}"/>
+                <p:menuitem id="miacti_#{cc.id}_#{count2}_ZZZ#{menuiteminec.identificador}" 
+                            value="#{menuiteminec.textovisualizar}" 
+                            rendered="#{menuiteminec.visualizar and menuiteminec.url==null  and cc.attrs.datos.tipoMenu!=13  and menuiteminec.icon==null}"
+                            actionListener="#{cc.attrs.beanControlador[menuiteminec.accion]}"
+                            process="#{menuiteminec.process==null ? '@this' : menuiteminec.process}"
+                            update="#{menuiteminec.update==null ? '@none' : menuiteminec.update}" 
+                            oncomplete="#{menuiteminec.accionejecutar}" title="#{menuiteminec.titulo}"/>
+                <p:menuitem id="mitab_#{cc.id}_#{count2}_ZZZ#{menuiteminec.identificador}" value="#{menuiteminec.textovisualizar}"
+                            icon="#{menuiteminec.icon}"
+                            rendered="#{cc.attrs.datos.tipoMenu == 13}"
+                            >
+                    <f:param name="i" value="#{menuiteminec.identificador}" />
+                </p:menuitem>
+            </c:forEach>
+        </pinec:inec_menu_tipo>
+    </cc:implementation>
+</html>

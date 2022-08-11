@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">
+            <h:form id="frmGestionUsuario">   
+                <p:growl id="msgs" showDetail="true"/>                
+                <center>
+                    <h:panelGrid id="panelContieneUsuario" width="1000" columns="1" >
+                        <p:panel header="Seguridad - Usuarios">
+                            <h:panelGrid columns="3">
+                                <p:outputLabel value="Persona"/>  
+                                <p:selectOneMenu id="persona"  panelStyle="width:305px" converter="personaConverter" value="#{gestionUsuarioControlador.personaActual}" required="true"  requiredMessage="Persona necesita ser seleccionado"
+                                                 effect="fade" var="item" filter="true" filterMatchMode="contains">
+                                    <p:ajax update="correo, cargo" />
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionUsuarioControlador.listaPersonal}" var="p" itemLabel="#{p.primerNombre} #{p.segundoNombre} #{p.primerApellido} #{p.segundoApellido}" itemValue="#{p}" />
+                                    <p:column style="width:10%">
+                                        <h:outputText value="#{item.idPersonal}" />
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{item.primerNombre} #{item.segundoNombre} #{item.primerApellido} #{item.segundoApellido}" />
+                                    </p:column>
+                                </p:selectOneMenu>
+                                <p:message for="persona" display="icon"/>  
+
+                                <p:outputLabel value="Correo Institucional"/>
+                                <p:inputText   id="correo" value="#{gestionUsuarioControlador.mapaCorreoInstitucionalPersona[gestionUsuarioControlador.personaActual.idPersonal]}"  
+                                               disabled="true" size="40"/>
+                                <p:message for="correo" display="icon"/>  
+
+                                <p:outputLabel value="Cargo"/>
+                                <p:inputText   id="cargo" value="#{gestionUsuarioControlador.mapaCargos[gestionUsuarioControlador.personaActual.idPersonal]}"  
+                                               disabled="true" size="40"/>                                   
+                                <p:message for="cargo" display="icon"/>  
+
+                                <p:outputLabel value="Usuario"/>
+                                <p:inputText   id="userName" value="#{gestionUsuarioControlador.objUsuarioActual.nombre}"  
+                                               maxlength="50"   size="40"  required="true" requiredMessage="Usuario no puede estar vacío" />
+                                <p:message for="userName" display="icon"/>   
+                                <h:panelGrid columns="2" style="width:100%;">
+                                    <p:outputLabel value="Clave" style="position: relative; left: -3px;"/>
+                                    <input type="text" name="usuario_fake" id="usuario_fake" value="" style="display: none;" />
+                                    <input type="password" name="password_fake" id="password_fake" value="" style="display: none;" />
+                                </h:panelGrid>
+                                <p:password  id="clave"  value="#{gestionUsuarioControlador.objUsuarioActual.clave}" 
+                                             autocomplete="off"  maxlength="200" size="40" redisplay="true"  required="true" requiredMessage="Clave no puede estar vacío"/>
+                                <p:message for="clave" display="icon"/>
+
+                                <p:outputLabel  value="Fecha vigencia inicio" />
+                                <h:panelGrid columns="2" style="width:102%; position: relative; left:-3px;">
+                                    <p:calendar widgetVar="calendarWidget"  id="fechaInicio"   size="40" value="#{gestionUsuarioControlador.objUsuarioActual.fechahoraIni}" maxdate="#{gestionUsuarioControlador.objUsuarioActual.fechahoraFin}" pattern="dd-MM-yyyy HH:mm:ss" mask="true" label="Fecha inicio" >
+                                        <p:ajax event="dateSelect" update="fechaFin" />                                 
+                                    </p:calendar>
+                                    <p:commandButton style="width:18px;" icon="ui-icon-close" iconPos="center" title="Limpiar fecha"  onclick="PF('calendarWidget').setDate(null);PF('calendarWidget').fireDateSelectEvent();" />
+                                </h:panelGrid>
+                                <p:message for="fechaInicio" display="icon"/>
+
+                                <p:outputLabel  value="Fecha vigencia fin" />
+                                <h:panelGrid columns="2" style="width:102%; position: relative; left:-3px;">
+                                    <p:calendar widgetVar="calendarWidget2" id="fechaFin" size="40" value="#{gestionUsuarioControlador.objUsuarioActual.fechahoraFin}" pattern="dd-MM-yyyy HH:mm:ss" mask="true" label="Fecha fin" mindate="#{gestionUsuarioControlador.objUsuarioActual.fechahoraIni}">
+                                        <p:ajax event="dateSelect" update="fechaInicio" />
+                                    </p:calendar>                                   
+                                    <p:commandButton style="width:18px;" icon="ui-icon-close" iconPos="center" title="Limpiar fecha"  onclick="PF('calendarWidget2').setDate(null);PF('calendarWidget2').fireDateSelectEvent();" />
+                                </h:panelGrid>
+                                <p:message for="fechaFin" display="icon"/>
+                                <p:outputLabel value="Estado"/>                                                                    
+                                <p:selectOneMenu id="estado" value="#{gestionUsuarioControlador.objUsuarioActual.codEstadoUsuario}" converter="catalogoConverter" required="true" requiredMessage="Estado necesita ser seleccionado">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                    <f:selectItems value="#{gestionUsuarioControlador.estados}" var="ta" itemLabel="#{ta.nombre}" itemValue="#{ta}" />
+                                </p:selectOneMenu>   
+                                <p:message for="estado" display="icon"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">                                                                                                                      
+                                <center>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardar" 
+                                                         action="#{gestionUsuarioControlador.guardarUsuario()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneUsuario" 
+                                                         update=":frmGestionUsuario:panelConieneListas,panelContieneUsuario,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!(gestionUsuarioControlador.permisosBoton['PAG_INSRT'] || gestionUsuarioControlador.habilitaEdicion)}"
+                                                         onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" 
+                                                         oncomplete="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide(); PF('wVarTblListUsuario').filter();"
+                                                         />
+                                        <p:commandButton value="Nuevo"                                                          
+                                                         id="btnNuevo" 
+                                                         action="#{gestionUsuarioControlador.refrescaNuevo()}" 
+                                                         icon="ui-icon-document"  
+                                                         process="@this" 
+                                                         update=":frmGestionUsuario:panelConieneListas,panelContieneUsuario,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         disabled="#{!gestionUsuarioControlador.permisosBoton['PAG_INSRT']}"
+                                                         onstart="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').show();" 
+                                                         oncomplete="PF('#{baseControlador.datosGenerales.dialogwidgetVar}').hide();">
+                                            <p:resetInput target=":frmGestionUsuario:panelContieneUsuario"/>
+                                        </p:commandButton>
+
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </p:panel>
+                        <p:panel id="panel2" header="Asignación de rol a usuario">
+                            <center>        
+                                <h:panelGrid id="panelContienePickList"  style="margin-left: 15%; width: 800px;"  >
+                                    <h:outputLabel value="Seleccionar rol de usuario(s):"/>                
+                                    <p:pickList  id="pickList"  style="font-size:12px;"  value="#{gestionUsuarioControlador.roles}" var="columRol"   
+                                                 itemLabel="#{columRol.nombre}" itemValue="#{columRol}" 
+                                                 converter="segRolConverter" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true">
+                                    </p:pickList>
+                                </h:panelGrid>
+                            </center>
+                            <f:facet name="footer">                                                                                                                      
+                                <center> 
+                                    <h:panelGrid columns="1">
+                                        <p:commandButton value="Guardar" 
+                                                         id="btnGuardarUsuRol" disabled="#{!gestionUsuarioControlador.habilitaEdicion}"
+                                                         action="#{gestionUsuarioControlador.guardarRolesAsignadosDeUsuario()}" 
+                                                         icon="ui-icon-disk"  
+                                                         process="@this,panelContieneUsuario" 
+                                                         update="panelContieneUsuario,msgs"
+                                                         async="true"
+                                                         global="false"
+                                                         />
+                                    </h:panelGrid>
+                                </center>   
+                            </f:facet>
+                        </p:panel>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelConieneListas">
+                        <h:panelGrid id="panelListUsuario" columns="1" width="800" styleClass="hpanelGrid_font">
+                            <p:dataTable paginator="true" rows="10" id="tablaListUsuario" value="#{gestionUsuarioControlador.listarUsuarioes}"  var="userColumna"   
+                                         selectionMode="single" rowKey="#{userColumna[0]}"
+                                         styleClass="pdataTable_font" widgetVar="wVarTblListUsuario"
+                                         currentPageReportTemplate="{currentPage} de {totalPages}">  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Usuarios" style="font-size:15px;"/>
+                                </f:facet>
+                                <p:column   headerText="ID" width="70" style="font-size:12px;">
+                                    <h:outputText value="#{userColumna[0]}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column   headerText="Usuario" width="200" style="font-size:12px;"  filterBy="#{userColumna[1]}" filterMatchMode="contains">
+                                    <h:outputText value="#{userColumna[1]}" style="font-size:12px;" />
+                                </p:column>
+                                <p:column headerText="Nombre" width="300" style="font-size:12px;" filterBy="#{userColumna[3]}" filterMatchMode="contains">
+                                    <h:outputText value="#{userColumna[3]}" style="font-size:12px;" />                                        
+                                </p:column>  
+                                <p:column   headerText="Fecha vigencia inicio" width="120" style="font-size:12px;"  >
+                                    <h:outputText value="#{userColumna[4]}" style="font-size:12px;" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column   headerText="Fecha vigencia fin" width="120" style="font-size:12px;" >
+                                    <h:outputText value="#{userColumna[5]}" style="font-size:12px;" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Estado" width="100" style="font-size:12px;">
+                                    <h:outputText value="#{userColumna[7]}" style="font-size:12px;" />                                      
+                                </p:column>                                                             
+                                <p:column headerText="Editar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil"  action="#{gestionUsuarioControlador.recuperarUsuarioCampos(userColumna)}" 
+                                                       process="@this" update=":frmGestionUsuario:panelContieneUsuario,:frmGestionUsuario:panelConieneListas,:frmGestionUsuario:msgs" 
+                                                       disabled="#{!gestionUsuarioControlador.permisosBoton['PAG_MODIF']}">
+                                        <p:resetInput target=":frmGestionUsuario:panelContieneUsuario"/>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Eliminar" style="width:50px;text-align: center;font-size:12px;" >
+                                    <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
+                                                     actionListener="#{gestionUsuarioControlador.confirmaEliminar(userColumna)}" 
+                                                     process="@this" update=":frmGestionUsuario,:frmGestionUsuario:message" 
+                                                     async="true" global="false" disabled="#{!gestionUsuarioControlador.permisosBoton['PAG_ELIM']}"
+                                                     oncomplete="PF('wVarTblListUsuario').filter();">
+                                        <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                        <p:resetInput target=":frmGestionUsuario:panelContieneUsuario"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>                      
+                        </h:panelGrid>
+                        <p:growl id="message" showDetail="true" />
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGrid>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>PrimeFaces - ejemplo temas</title>
+    </h:head>
+    <h:body>
+        <h:form id="frmIniCap"  >
+
+            <p:growl id="msgs" showDetail="true"/>
+            <center>
+
+<!--                <p:outputLabel value="Seleccione una opcion" />
+                <p:selectOneMenu id="dpaSelect"  value="#{inicioCapturaSiac.dpaSelect}" style="width: 200px !important"
+                                 filter="true" filterMatchMode="contains" panelStyle="width:280px" >
+                    <f:selectItem  value="#{null}" itemLabel="Seleccione..."/>
+                    <f:selectItems value="#{inicioCapturaSiac.listaDPA}" var="entry"
+                                   itemValue="#{entry.valor}" itemLabel="#{entry.nombre}" />
+                    <p:ajax event="change" listener="#{inicioCapturaSiac.irAFormulario()}"  process="@this" async="true" global="false"   
+                            update=",msgs"  />
+
+                </p:selectOneMenu>-->
+
+                <p:panel header="Ejemplo temas de apariencia">
+                    <p:outputLabel value="Pulsa sobre mí para ver como exploto">
+                        <!-- Aplicamos un efecto al texto cuando se pulse sobre el -->
+                        <!-- Efectos posibles en el atributo type:-->
+                        <!-- blind,clip,drop,explode,fold,puff,slide,scale,bounce, -->
+                        <!-- highlight pulsate shake size transfer -->
+                        <p:effect type="explode" event="click" />
+                    </p:outputLabel>
+<!--                    <p:editor />-->
+                </p:panel>
+            </center>
+        </h:form>   
+    </h:body>
+</html>

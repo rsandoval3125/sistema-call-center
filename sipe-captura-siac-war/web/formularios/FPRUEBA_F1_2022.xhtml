@@ -1,0 +1,1102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/inec_plantilla_captura.xhtml">
+        <ui:define name="contenido">
+            <script src='../js/enemdu.js' type='text/javascript'></script>
+            <script src='../../../js/saltosValidaciones/js_saltos_mod.js' type='text/javascript'></script>
+            <script src='../../../js/saltosValidaciones/js_validacion_mod.js' type='text/javascript'></script>
+            <script src='../../../js/saltosValidaciones/js_configuracion.js' type='text/javascript'></script>
+
+            <script>
+                var myEvent = window.attachEvent || window.addEventListener;
+                var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload';
+                myEvent(chkevent, function (e) {
+                    var confirmationMessage = 'Precaución:';
+                    (e || window.event).returnValue = confirmationMessage;
+                    return confirmationMessage;
+                });
+            </script>
+            <script>
+                $(document).ready(function ()
+                {
+                    $('.BlockDeletion').on('keydown', function (e)
+                    {
+                        try {
+                            if ((e.keyCode == 8 || e.keyCode == 46))
+                                return false;
+                            else
+                                return true;
+                        } catch (Exception)
+                        {
+                            return false;
+                        }
+                    });
+                });
+            </script>
+
+
+            <link href="../css/estilos_enrefam.css" rel="stylesheet" type="text/css"/>
+            <h:body style=" background-color: #D8E1E6;"/>
+            <h:form id="frmCaptura">
+
+                <p:remoteCommand  partialSubmit="true" process="@this" action="#{censoControladorPrueba.okey()}"  name="cargar"/>
+                <p:remoteCommand  partialSubmit="true" process="@this" action="#{censoControladorPrueba.mensajesValid()}"  name="mensajeGrowl"/>
+                <script>
+
+
+                    $(document).ready(function () {
+                        let variablesLista = [];
+                        $('.ui-tabs-panels .ui-inputfield').each(function () {
+
+                            let vari = $(this).attr("id").split(':');
+                            variablesLista.push([vari[2], $(this).attr("alt")]);
+                        });
+                        cargar([{name: 'x', value: JSON.stringify(variablesLista)}]);
+                    });
+                </script>
+
+                <p:growl id="msgs" showDetail="true" life="10000"/>
+                <!--<div id="content"  style="overflow: auto">
+                    <h:graphicImage id="abrirAPP" value="#{baseControlador.getProfundidad()}imagenes/Info.png" onclick="PF('dlgEmigracion').show();" class="slider-arrow show" rendered="#{(censoControladorPrueba.uc.usuarioTieneRol('ROL_REVIS')) or (censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID'))}"/> 
+                </div>-->
+
+                <h:panelGroup id="pnlGroupMortalidad">
+                    <h:panelGrid  id="pnlCapturaMortalidad" rendered="#{censoControladorPrueba.registroMortalidad}">
+                       <!--<h:panelGrid rendered="#{censoControladorPrueba.registroMortalidad}" id="pnlCapturaMortalidad" styleClass="capTextoMediano" >-->
+                        <p:dialog id="dlgMortalidad" closable="false" modal="true"                            
+                                  visible="true" widgetVar="dlgMortalidad" 
+                                  style="font-size:15px;position:fixed!important;" width="85%" position="center">  
+                            <p:scrollPanel>
+                                <h:panelGrid id="pnlMrtld" style="text-align: left;margin: 0 auto;" columns="1" width="50%">
+                                    <p:panel header="B. Mortalidad en el hogar - De las personas que fallecieron:">
+                                        <h:panelGrid columns="1" >                                        
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel escape="false" value="Número persona" for="CENSO_S4_M00" style="width:250px;display: block;"/>
+                                                <p:inputText   id="CENSO_S4_M00" widgetVar="CENSO_S4_M00" value="#{censoControladorPrueba.captDetalleH.orden}" 
+                                                               onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0101', '');" 
+                                                               size="2"  maxlength="2" required="false" requiredMessage="Número de persona no puede estar vacío" autocomplete="off" disabled="true"/>
+                                                <p:message for="CENSO_S4_M00" display="icon"/>
+                                            </h:panelGrid>
+
+
+                                            <h:panelGrid columns="3">
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel escape="false" for="CENSO_S4_M0101" value="&lt;strong style='color: #000000;'&gt;1.&lt;/strong&gt; ¿Cuál fue el nombre y apellido?" style="width:250px;display: block;"/>                                            
+                                                    <p:inputText   id="CENSO_S4_M0101" widgetVar="CENSO_S4_M0101" value="#{censoControladorPrueba.captDetalleH.val01}" placeholder="Nombre"
+                                                                   style="width:100%" maxlength="10" size="10"  required="false" autocomplete="off" 
+                                                                   onkeyup="value = value.toUpperCase();" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0102', '')"
+                                                                   />
+                                                </h:panelGrid>
+
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel/>
+                                                    <p:inputText   id="CENSO_S4_M0102" widgetVar="CENSO_S4_M0102" value="#{censoControladorPrueba.captDetalleH.val02}" placeholder="Apellido"
+                                                                   style="width:100%" maxlength="10" size="10"  required="false" autocomplete="off" 
+                                                                   onkeyup="value = value.toUpperCase();" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M01opc', '')"/>
+                                                </h:panelGrid>                                                 
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_M01opc" value="No sabe - No responde" style="width:250px;display: block;"/>
+
+                                                <p:inputText   id="CENSO_S4_M01opc" widgetVar="CENSO_S4_M01opc" value="#{censoControladorPrueba.captDetalleH.val03}" placeholder="No sabe/No responde"
+                                                               style="width:100%" maxlength="1" size="17"  required="false" autocomplete="off" 
+                                                               onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M02', '')"/>
+
+                                                <p:tooltip id="ttCENSO_S4_M01opc" for="CENSO_S4_M01opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;2.&lt;/strong&gt; ¿Cuál fue el sexo?" style="width:250px;display: block;"/>                                                                                                    
+                                                <p:inputText  id="CENSO_S4_M02" widgetVar="CENSO_S4_M02" value="#{censoControladorPrueba.captDetalleH.val04}" required="false"
+                                                              onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0301', '')" onblur="return fn_rango(1, 2, 'CENSO_S4_M02')"                                                              
+                                                              autocomplete="off" onkeyup="$(this).val($(this).val().replace(/[^1-2]/g, ''));"                                                             
+                                                              size="2" maxlength="1" />
+
+                                                <p:tooltip id="ttCENSO_S4_M02" for="CENSO_S4_M02" showEvent="focus" hideEvent="blur" position="top" escape="false" value="1 - Hombre&lt;br&gt;2 - Mujer&lt;br&gt;"/>                                                                                              
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="1">
+                                                <p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;3.&lt;/strong&gt; ¿En qué mes y año murió? &lt;/br&gt;"/>                                                                                            
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="1">
+                                                <!--<p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;3.&lt;/strong&gt; ¿En qué mes y año murió? &lt;/br&gt;"/> -->       
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel escape="false" for="CENSO_S4_M0301" value="&lt;strong style='color: #000000;'&gt;Mes&lt;/strong&gt;" style="width:250px;display: block;"/>
+                                                    <p:inputText  id="CENSO_S4_M0301" widgetVar="CENSO_S4_M0301" value="#{censoControladorPrueba.captDetalleH.val05}" 
+                                                                  onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0301opc', ''), fn_entero(event)" 
+                                                                  size="2" maxlength="2" autocomplete="off" required="false" />    
+
+                                                    <p:outputLabel escape="false" for="CENSO_S4_M0301opc" value="No sabe - No responde" style="width:250px;display: block;"/>                                            
+                                                    <p:inputText   id="CENSO_S4_M0301opc" widgetVar="CENSO_S4_M0301opc" value="#{censoControladorPrueba.captDetalleH.val06}" placeholder="No sabe/No responde"
+                                                                   style="width:100%" maxlength="1" size="17"  required="false" autocomplete="off" 
+                                                                   onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0302', '')"/>
+
+                                                    <p:tooltip id="ttCENSO_S4_M0301opc" for="CENSO_S4_M0301opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                                </h:panelGrid>
+
+                                                <h:panelGrid columns="2">
+                                                    <p:outputLabel escape="false" for="CENSO_S4_M0302" value="&lt;strong style='color: #000000;'&gt;Año&lt;/strong&gt;" style="width:250px;display: block;"/>
+                                                    <p:inputText  id="CENSO_S4_M0302" widgetVar="CENSO_S4_M0302" value="#{censoControladorPrueba.captDetalleH.val07}" 
+                                                                  size="4" maxlength="4" autocomplete="off" 
+                                                                  onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M0302opc', ''), fn_entero(event)" />     
+
+                                                    <p:outputLabel escape="false" for="CENSO_S4_M0302opc" value="No sabe - No responde" style="width:250px;display: block;"/>                                            
+                                                    <p:inputText   id="CENSO_S4_M0302opc" widgetVar="CENSO_S4_M0302opc" value="#{censoControladorPrueba.captDetalleH.val08}" placeholder="No sabe/No responde"
+                                                                   style="width:100%" maxlength="1" size="17"  required="false" autocomplete="off" 
+                                                                   onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M04', '')"/>
+
+                                                    <p:tooltip id="ttCENSO_S4_M0302opc" for="CENSO_S4_M0302opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                                </h:panelGrid> 
+                                            </h:panelGrid>                                             
+
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_M04" value="&lt;strong style='color: #000000;'&gt;4.&lt;/strong&gt; ¿Qué edad tenía al morir? &lt;/br&gt; (Anote '0' para menores de 1 año)" style="width:250px;display: block;"/>
+                                                <p:inputText  id="CENSO_S4_M04" widgetVar="CENSO_S4_M04" value="#{censoControladorPrueba.captDetalleH.val09}" 
+                                                              size="3" maxlength="3" autocomplete="off" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M04opc', ''), fn_entero(event)" />  
+
+                                                <p:outputLabel escape="false" for="CENSO_S4_M04opc" value="No sabe - No responde" style="width:250px;display: block;"/>                                            
+                                                <p:inputText   id="CENSO_S4_M04opc" widgetVar="CENSO_S4_M04opc" value="#{censoControladorPrueba.captDetalleH.val10}" placeholder="No sabe/No responde"
+                                                               style="width:100%" maxlength="1" size="17"  required="false" autocomplete="off" 
+                                                               onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_M05', '')"/>
+
+                                                <p:tooltip id="ttCENSO_S4_M04opc" for="CENSO_S4_M04opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_M05" value="&lt;strong style='color: #000000;'&gt;5.&lt;/strong&gt; ¿Murió a causa de?" style="width:250px;display: block;"/>
+                                                <p:inputText  id="CENSO_S4_M05" widgetVar="CENSO_S4_M05" value="#{censoControladorPrueba.captDetalleH.val11}"                                                              
+                                                              autocomplete="off" size="2" maxlength="1"
+                                                              onkeypress="return fn_entero(event)" onblur="return fn_rango(1, 9, 'CENSO_S4_M05')"
+                                                              onkeyup="$(this).val($(this).val().replace(/[^1-4,^8-9]/g, ''));"/>
+
+                                                <p:tooltip id="ttCENSO_S4_M05" for="CENSO_S4_M05" showEvent="focus" hideEvent="blur" position="top" escape="false" value="1 - Accidente, suicidio o asesinato?&lt;br&gt;2 - Embarazo o dentro de los 42 días siguientes al parto?&lt;br&gt;3 - COVID-19?&lt;br&gt;4 - Otros (Ej:) Enfermedad causa natural?&lt;br&gt;8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>                                               
+                                            </h:panelGrid>  
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="3" style="margin: 0 auto">                                                          
+                                    <p:commandButton value="Guardar" 
+                                                     id="btnGuardarMortalidad" 
+                                                     action="#{censoControladorPrueba.guardarMortalidad()}"
+                                                     icon="ui-icon-disk"
+                                                     process="@this,:frmCaptura:pnlCapturaMortalidad" 
+                                                     update=":frmCaptura:pnlCapturaMortalidad,:frmCaptura:panelContieneListaMortalidad,msgs"
+                                                     async="true"
+                                                     global="false"
+                                                     oncomplete="PF('wVarTablaListMortalidad').filter();"/>
+                                    <p:commandButton value="Limpiar" 
+                                                     id="btnLimpiarMortalidad" 
+                                                     action="#{censoControladorPrueba.limpiarMortalidad()}"
+                                                     icon="ui-icon-refresh"
+                                                     process="@this,:frmCaptura:pnlCapturaMortalidad" 
+                                                     update=":frmCaptura:pnlCapturaMortalidad,:frmCaptura:panelContieneListaMortalidad,msgs"
+                                                     async="true"
+                                                     global="false"
+                                                     oncomplete="PF('wVarTablaListMortalidad').filter();"/>
+                                    <p:commandButton value="Salir" 
+                                                     id="btnSalirMortalidad"
+                                                     action="#{censoControladorPrueba.refrescar()}"
+                                                     onclick="PF('dlgMortalidad').hide();"                                                     
+                                                     icon="ui-icon-circle-close"  
+                                                     process="@this" 
+                                                     async="true"
+                                                     global="false"/>                                                               
+                                </h:panelGrid>
+
+                                <h:panelGrid id="panelContieneListaMortalidad" style="text-align: center;margin: 0 auto" width="95%">
+                                    <h:panelGrid id="panelListMortalidad" columns="1" styleClass="hpanelGrid_font" style="margin: 0 auto">
+                                        <p:dataTable paginator="true" rows="5" id="tablaListMortalidad" value="#{censoControladorPrueba.listaDetalleH}"  var="perColumna"   
+                                                     selectionMode="single" rowKey="#{perColumna.idDeth}"
+                                                     styleClass="pdataTable_font" widgetVar="wVarTablaListMortalidad"
+                                                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                                                     emptyMessage="No se encontraron registros">  
+                                            <f:facet name="header">
+                                                <p:outputLabel value="Personas fallecidas" style="font-size:15px;"/>
+                                            </f:facet>
+                                            <p:column   headerText="Número persona" width="20" >
+                                                <h:outputText value="#{perColumna.orden}" style="font-size:12px;" />
+                                            </p:column>                                                                                        
+
+                                            <p:column headerText="Nombre y apellido" width="50" >
+                                                <h:outputText rendered="#{perColumna.val03.equals('')}" value="#{perColumna.val01} #{perColumna.val02}" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val03 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val03 == 9}" value="No responde" style="font-size:12px;" />
+                                            </p:column> 
+
+                                            <p:column headerText="Sexo" width="2" >
+                                                <h:outputText rendered="#{perColumna.val04 == 1}" value="Hombre" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val04 == 2}" value="Mujer" style="font-size:12px;" />
+                                            </p:column>
+
+                                            <p:column headerText="Mes de la muerte" width="20" >                                                
+                                                <h:outputText rendered="#{!perColumna.val05.equals('') and perColumna.val06.equals('')}" value="#{perColumna.val05}" style="font-size:12px;" />   
+                                                <h:outputText rendered="#{perColumna.val05.equals('') and perColumna.val06 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val05.equals('') and perColumna.val06 == 9}" value="No responde" style="font-size:12px;" />                                               
+                                            </p:column>
+
+                                            <p:column headerText="Año de la muerte" width="20" >                                                
+                                                <h:outputText rendered="#{!perColumna.val07.equals('') and perColumna.val08.equals('')}" value="#{perColumna.val07}" style="font-size:12px;" />   
+                                                <h:outputText rendered="#{perColumna.val07.equals('') and perColumna.val08 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val07.equals('') and perColumna.val08 == 9}" value="No responde" style="font-size:12px;" /> 
+                                            </p:column>
+
+                                            <p:column headerText="Edad al morir" width="20" >
+                                                <h:outputText rendered="#{!perColumna.val09.equals('') and perColumna.val10.equals('')}" value="#{perColumna.val09}" style="font-size:12px;" />   
+                                                <h:outputText rendered="#{perColumna.val09.equals('') and perColumna.val10 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val09.equals('') and perColumna.val10 == 9}" value="No responde" style="font-size:12px;" /> 
+                                            </p:column>
+
+                                            <p:column   headerText="Causa de muerte" width="20" >
+                                                <h:outputText rendered="#{perColumna.val11 == 1}" value="Accidente, suicidio o asesinato" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val11 == 2}" value="Embarazo o dentro de los 42 días siguientes al parto" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val11 == 3}" value="COVID-19" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val11 == 4}" value="Otros (Ej:) Enfermedad causa natural" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val11 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <h:outputText rendered="#{perColumna.val11 == 9}" value="No responde" style="font-size:12px;" />
+                                            </p:column>
+
+                                            <p:column headerText="Editar" style="width:50px;text-align: center;" >
+                                                <p:commandButton   style="font-size:12px;" icon="ui-icon-pencil" action="#{censoControladorPrueba.editarMortalidad(perColumna)}" 
+                                                                   process="@this" update=":frmCaptura:tablaListMortalidad,:frmCaptura:pnlCapturaMortalidad" 
+                                                                   async="true" global="false">
+                                                    <p:resetInput target=":frmCaptura:pnlCapturaMortalidad,:frmCaptura:tablaListMortalidad"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                            <p:column headerText="Eliminar" style="width:50px;text-align: center;" >
+                                                <p:commandButton style="font-size:12px;" icon="ui-icon-trash"
+                                                                 actionListener="#{censoControladorPrueba.eliminarPersona(perColumna)}"
+                                                                 process="@this" update=":frmCaptura:pnlCapturaMortalidad,:frmCaptura:tablaListMortalidad"
+                                                                 async="true" global="false"
+                                                                 oncomplete="PF('wVarTablaListMortalidad').filter();">
+                                                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                                    <p:resetInput target=":frmCaptura:pnlCapturaMortalidad,:frmCaptura:tablaListMortalidad"/>
+                                                </p:commandButton>
+                                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" style="position:fixed!important;">
+                                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                    <p:commandButton value="No" type="button"  styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                </p:confirmDialog>
+                                            </p:column>
+                                        </p:dataTable> 
+                                        <h:panelGrid columns="1" style="margin: 0 auto">                                                                                                      
+                                            <p:commandButton value="Salir" 
+                                                             id="btnSalirMortalidad2" 
+                                                             action="#{censoControladorPrueba.refrescar()}"
+                                                             onclick="PF('dlgMortalidad').hide();"
+                                                             icon="ui-icon-circle-close"  
+                                                             process="@this" 
+                                                             async="true"
+                                                             global="false"/>                                                               
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                    <p:growl id="message" showDetail="true" />
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </h:panelGrid>
+                            </p:scrollPanel>   
+                        </p:dialog>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <h:panelGroup id="pnlGroupEmigracion">
+                    <h:panelGrid  id="pnlCapturaEmigracion" rendered="#{censoControladorPrueba.registroEmigracion}">
+                         <!--<h:panelGrid rendered="#{censoControladorPrueba.registroEmigracion}" id="pnlCapturaEmigracion"-->
+                        <p:dialog id="dlgEmigracion" modal="true" widgetVar="dlgEmigracion" closable="false" 
+                                  style="font-size:15px;position:fixed!important;" visible="true"
+                                  width="65%" position="center">                                  
+                            <p:scrollPanel>                                  
+                                <h:panelGrid id="pnlEmi" style="text-align: left;margin: 0 auto;" columns="1" width="40%">                                                                       
+                                    <p:panel header="C. Emigración - De las personas que salieron">
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid  columns="2">
+                                                <p:outputLabel escape="false" value="Num. persona"  for="CENSO_S4_E00" style="width:250px;display: block;" />
+                                                <p:inputText alt="0" id="CENSO_S4_E00" widgetVar="CENSO_S4_E00" value="#{censoControladorPrueba.captDetalleH.orden}" 
+                                                             size="2" autocomplete="off" maxlength="2" required="false" disabled="true"                                                                                                                          />
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid  columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_E01" value="&lt;strong style='color: #000000;'&gt;1.&lt;/strong&gt; ¿Cuál fue el sexo?" style="width:250px;display: block;" />
+                                                <p:inputText alt="4" id="CENSO_S4_E01" widgetVar="CENSO_S4_E01" value="#{censoControladorPrueba.captDetalleH.val01}" 
+                                                             size="2" autocomplete="off" maxlength="1" required="false" onblur="return fn_rango(1, 2, 'CENSO_S4_E01')"
+                                                             onkeyup="$(this).val($(this).val().replace(/[^1-2]/g, ''));"
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_E02', '');" />
+
+                                                <p:tooltip id="ttCENSO_S4_E01" for="CENSO_S4_E01" showEvent="focus" hideEvent="blur" position="top" escape="false" value="1 - Hombre&lt;br&gt;2 - Mujer&lt;br&gt;"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid  columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_E02" value="&lt;strong style='color: #000000;'&gt;2.&lt;/strong&gt; ¿Cuál fue la edad al salir del país? &lt;/br&gt; (Anote '0' para menores de 1 año)" style="width:250px;display: block;" />
+                                                <p:inputText alt="3" id="CENSO_S4_E02" widgetVar="CENSO_S4_E02" value="#{censoControladorPrueba.captDetalleH.val02}" 
+                                                             size="3" autocomplete="off" maxlength="3" required="false"                                                               
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_E02opc', ''), fn_entero(event)"/>
+
+                                                <p:outputLabel escape="false" for="CENSO_S4_E02opc" value="No sabe - No responde" style="width:250px;display: block;"/> 
+                                                <p:inputText   id="CENSO_S4_E02opc" widgetVar="CENSO_S4_E02opc" value="#{censoControladorPrueba.captDetalleH.val03}" placeholder="No sabe/No responde"
+                                                               style="width:100%" maxlength="1" size="15"  required="false" autocomplete="off" 
+                                                               onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_E03', '')"/>
+
+                                                <p:tooltip id="ttCENSO_S4_E02opc" for="CENSO_S4_E02opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid  columns="2">
+                                                <p:outputLabel escape="false" for="CENSO_S4_E03" value="&lt;strong style='color: #000000;'&gt;3.&lt;/strong&gt; ¿Cuál fue el año de salida?" style="width:250px;display: block;" />
+                                                <p:inputText alt="3" id="CENSO_S4_E03" widgetVar="CENSO_S4_E03" value="#{censoControladorPrueba.captDetalleH.val04}" 
+                                                             size="4" autocomplete="off" maxlength="4" required="false" onblur="return fn_rango(2010, 2021, 'CENSO_S4_E03')"                                                               
+                                                             onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_E03opc', ''), fn_entero(event)"/>
+
+                                                <p:outputLabel escape="false" for="CENSO_S4_E03opc" value="No sabe - No responde" style="width:250px;display: block;"/>                                                 
+                                                <p:inputText   id="CENSO_S4_E03opc" widgetVar="CENSO_S4_E03opc" value="#{censoControladorPrueba.captDetalleH.val05}" placeholder="No sabe/No responde"
+                                                               style="width:100%" maxlength="1" size="15"  required="false" autocomplete="off" 
+                                                               onkeyup="$(this).val($(this).val().replace(/[^8-9]/g, ''));" onkeypress="return ejecutarSaltoEnterHacia(event, 'frmCaptura:CENSO_S4_E04', '')"/>
+
+                                                <p:tooltip id="ttCENSO_S4_E03opc" for="CENSO_S4_E03opc" showEvent="focus" hideEvent="blur" position="top" escape="false" value="8 - No sabe&lt;br&gt;9 - No responde&lt;br&gt;"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid  columns="2">
+                                                <p:outputLabel escape="false"  value="&lt;strong style='color: #000000;'&gt;4.&lt;/strong&gt; ¿Cuál es el país actual de residencia?" style="width:250px;display: block;" />
+                                                <p:selectOneMenu id="CENSO_S4_E04" title="Seleccione un País"
+                                                                 value="#{censoControladorPrueba.paisSelected}"
+                                                                 converter="catalogoConverter" panelStyle="width:100px"
+                                                                 filter="true" filterMatchMode="contains"  effect="fade" 
+                                                                 style="width: 200px !important">
+                                                    <!--<f:param name="action" value="pais" />-->
+                                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" />
+                                                    <f:selectItems value="#{censoControladorPrueba.listaPaises}" var="cargo" itemLabel="#{cargo.nombre}" itemValue="#{cargo}" />
+                                                </p:selectOneMenu>
+                                            </h:panelGrid>    
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:panelGrid>   
+
+                                <h:panelGrid columns="3" style="margin: 0 auto">
+                                    <p:commandButton id="btnGuardarEmigracion" action="#{censoControladorPrueba.guardarEmigracion()}" 
+                                                     icon="ui-icon-disk"
+                                                     value="Guardar"
+                                                     async="true" 
+                                                     process="@this,:frmCaptura:pnlCapturaEmigracion" 
+                                                     partialSubmit="true"
+                                                     update=":frmCaptura:msgs,:frmCaptura:pnlContieneLstEmigracion,frmCaptura:pnlCapturaEmigracion" 
+                                                     global="false"
+                                                     oncomplete="PF('wtblEmigracion').filter();"
+                                                     />
+                                    <p:commandButton id="btnLimpiarEmigracion" action="#{censoControladorPrueba.limpiarEmigracion()}" 
+                                                     icon="ui-icon-refresh"
+                                                     value="Limpiar"
+                                                     async="true" 
+                                                     process="@this,:frmCaptura:pnlCapturaEmigracion" 
+                                                     partialSubmit="true"
+                                                     update=":frmCaptura:msgs,:frmCaptura:pnlContieneLstEmigracion,frmCaptura:pnlCapturaEmigracion" 
+                                                     global="false"
+                                                     oncomplete="PF('wtblEmigracion').filter();"
+                                                     />
+                                    <p:commandButton id="btnSalirEmigracion" 
+                                                     value="Salir"
+                                                     action="#{censoControladorPrueba.refrescar()}"
+                                                     onclick="PF('dlgEmigracion').hide();"
+                                                     async="true" 
+                                                     process="@this"                                                          
+                                                     update=":frmCaptura:msgs" 
+                                                     global="false"
+                                                     icon="ui-icon-circle-close"/> 
+                                </h:panelGrid>
+
+                                <h:panelGrid id="pnlContieneLstEmigracion" style="text-align: center;margin: 0 auto; font-size: 12px" width="95%">
+                                    <h:panelGrid id="pnlLstEmigracion" columns="1">                                                                                                                                     
+                                        <p:dataTable rows="3" id="tblEmigracion" var="emi" value="#{censoControladorPrueba.listaDetalleH}"                                                     
+                                                     selectionMode="single" rowKey="#{emi.idDeth}" paginator="true"
+                                                     styleClass="pdataTable_font" widgetVar="wtblEmigracion"
+                                                     currentPageReportTemplate="{currentPage} de {totalPages}"
+                                                     emptyMessage="No se encontraron registros">
+
+                                            <f:facet name="header">
+                                                <p:outputLabel value="Personas Emigración" style="color: #ffffff"/>
+                                            </f:facet>
+                                            <p:column headerText="Núm. persona" width="5">
+                                                <p:outputLabel value="#{emi.orden}" style="font-size:12px;"/>
+                                            </p:column>     
+                                            <p:column headerText="Sexo" width="5">
+                                                <p:outputLabel rendered="#{emi.val01 == 1}" value="Hombre" style="font-size:12px;"/>
+                                                <p:outputLabel rendered="#{emi.val01 == 2}" value="Mujer" style="font-size:12px;"/>
+                                            </p:column>
+                                            <p:column headerText="Edad" width="10">                                                
+                                                <p:outputLabel rendered="#{!emi.val02.equals('') and emi.val03.equals('')}" value="#{emi.val02}" style="font-size:12px;" />   
+                                                <p:outputLabel rendered="#{emi.val02.equals('') and emi.val03 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <p:outputLabel rendered="#{emi.val02.equals('') and emi.val03 == 9}" value="No responde" style="font-size:12px;" /> 
+                                            </p:column>
+                                            <p:column headerText="Año" width="10">                                                
+                                                <p:outputLabel rendered="#{!emi.val04.equals('') and emi.val05.equals('')}" value="#{emi.val04}" style="font-size:12px;" />   
+                                                <p:outputLabel rendered="#{emi.val04.equals('') and emi.val05 == 8}" value="No sabe" style="font-size:12px;" />
+                                                <p:outputLabel rendered="#{emi.val04.equals('') and emi.val05 == 9}" value="No responde" style="font-size:12px;" />
+                                            </p:column>
+                                            <p:column headerText="País" width="20" >
+                                                <p:outputLabel value="#{emi.val06}" style="font-size:12px;"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Editar" width="10">
+                                                <p:commandButton icon="ui-icon-pencil" 
+                                                                 action="#{censoControladorPrueba.cargarEmigracion(emi)}"
+                                                                 update=":frmCaptura:msgs,:frmCaptura:tblEmigracion,:frmCaptura:pnlCapturaEmigracion"
+                                                                 process="@this" global="false" async="true" >                                                    
+                                                </p:commandButton>
+                                            </p:column>    
+                                            <p:column headerText="Eliminar" width="10">        
+                                                <p:commandButton icon="ui-icon-trash" 
+                                                                 actionListener="#{censoControladorPrueba.eliminarEmigracion(emi)}"
+                                                                 update=":frmCaptura:msgs,:frmCaptura:tblEmigracion,:frmCaptura:pnlCapturaEmigracion"
+                                                                 process="@this" global="false" async="true" 
+                                                                 oncomplete="PF('wtblEmigracion').filter();">
+                                                    <p:confirm header="Confirmacion" message="Desea eliminar el registro?" icon="ui-icon-alert" />
+                                                    <p:resetInput target=":frmCaptura:tblEmigracion,:frmCaptura:pnlCapturaEmigracion"/>
+                                                </p:commandButton>
+                                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" style="position:fixed!important;">
+                                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                    <p:commandButton value="No" type="button"  styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                </p:confirmDialog> 
+                                            </p:column>    
+                                        </p:dataTable>
+                                    </h:panelGrid>   
+                                </h:panelGrid>                          
+                            </p:scrollPanel>
+                        </p:dialog>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <h:panelGroup id="pnlGroupMiembros">
+                    <h:panelGrid  rendered="#{censoControladorPrueba.registro}"  id="pnlIniCap" styleClass="capTextoMediano" >
+
+                        <p:dialog closable="false" modal="true" visible="true" position="center down"  id="dlgMiembrosInicial" widgetVar="dlgMiembrosInicial"  style="position:fixed!important;">
+                            <p:outputLabel value="¿CUÁLES SON LOS NOMBRES Y APELLIDOS DE CADA UNA DE LAS PERSONAS QUE VIVEN HABITUALMENTE EN ESTE HOGAR?" style="size: 15px;font-weight: bold;" />
+                            <br/><br/>
+
+
+                            <p:dataTable rowIndexVar="row" id="tblCovid"   var="listaCovid"  emptyMessage="Sin registros creados" value="#{censoControladorPrueba.listaInicial}">
+
+                                <p:column headerText="COD PER" width="5%">
+                                    #{row+1}
+                                </p:column>
+                                <p:column width="20%" headerText="1er.Nombre" > <p:inputText id="inputnombreU" value="#{listaCovid.CENSO_S5_P0001}" autocomplete="off"
+                                                                                             onkeypress="return fn_letras(event, this);" 
+                                                                                             onkeyup="value = value.toUpperCase();" onblur="value = value.toUpperCase();"
+                                                                                             />
+
+                                </p:column>
+                                <p:column width="20%" headerText="2do.Nombre" > <p:inputText   id="inputnombreD" value="#{listaCovid.CENSO_S5_P0002}"  autocomplete="off"
+                                                                                               onkeypress="return fn_letras(event, this);" 
+                                                                                               onkeyup="value = value.toUpperCase();" onblur="value = value.toUpperCase();"
+                                                                                               />
+
+                                </p:column>
+                                <p:column width="20%" headerText="1er.Apellido" > <p:inputText id="inputapellidoU" value="#{listaCovid.CENSO_S5_P0003}" autocomplete="off"
+                                                                                               onkeypress="return fn_letras(event, this);" 
+                                                                                               onkeyup="value = value.toUpperCase();" onblur="value = value.toUpperCase();"
+                                                                                               />
+
+                                </p:column>
+                                <p:column width="20%" headerText="2do.Apellido" > <p:inputText id="inputapellidoD" value="#{listaCovid.CENSO_S5_P0004}" autocomplete="off"
+                                                                                               onkeypress="return fn_letras(event, this);" 
+                                                                                               onkeyup="value = value.toUpperCase();" onblur="value = value.toUpperCase();"
+                                                                                               /> 
+
+                                </p:column>
+                                <p:column width="7%" headerText="Parentesco" > <p:inputText  id="inputparentesco" value="#{listaCovid.CENSO_S5_P01}" title="1 - Representante del hogar&lt;br&gt;2 - Cónyugue o conviviente&lt;br&gt;3 - Hija o hijo&lt;br&gt;4 - Hijastra o hijastro&lt;br&gt;5 - Nuera o yerno&lt;br&gt;6 - Nieta o nieto&lt;br&gt;7 - Madre o padre&lt;br&gt;8 - Suegra o suegro&lt;br&gt;9 - Otro pariente&lt;br&gt;10 - Otro no pariente&lt;br&gt;11 - Empleada/o doméstica/o&lt;br&gt;12 - Miembro de hogar colectivo &lt;br&gt;13 - Persona sin vivienda&lt;br&gt;"
+                                                                                             maxlength="2"  size="2"
+                                                                                             autocomplete="off"
+                                                                                             onkeypress="return enterSoloNumerosPorCatalogo(event, this, 1);" onblur="cargarSalto(this)"
+
+                                                                                             />
+                                    <p:tooltip  for="inputparentesco" showEvent="focus" hideEvent="blur" />
+                                </p:column>
+                                <p:column width="3%" headerText="Sexo" >  <p:inputText  id="inputsexo" value="#{listaCovid.CENSO_S5_P02}" title="1. Hombre&lt;br /&gt;2. Mujer"
+                                                                                        maxlength="1"  size="1"
+                                                                                        autocomplete="off"
+                                                                                        onkeypress="return enterSoloNumerosPorCatalogo(event, this, 0);" onblur="cargarSalto(this)"
+                                                                                        />
+                                    <p:tooltip for="inputsexo" showEvent="focus" hideEvent="blur" />
+                                </p:column>
+                                <p:column width="5%" headerText="Años Cumplidos" > <p:inputText  id="inputedad" value="#{listaCovid.CENSO_S5_P03}"
+                                                                                                 maxlength="3"  size="3"
+                                                                                                 autocomplete="off"
+                                                                                                 onkeypress="return enterSoloNumeros(event, this);" onblur="cargarSalto(this)"
+                                                                                                 />
+                                </p:column>
+
+                            </p:dataTable>
+
+                            <p:commandButton id="btnFin" action="#{censoControladorPrueba.guardarIniciales(censoControladorPrueba.listaInicial)}" 
+                                             process="@this,:frmCaptura:tblCovid,:frmCaptura:pnlCaptura"  
+                                             partialSubmit="true" async="true" global="false"
+                                             icon="fa fa-save" value="Guardar y continuar al formulario" 
+                                             update=":frmCaptura:pnlBotones,msgs,lblElemento,:frmCaptura:pnlControlNuevoElemento,
+                                             frmCaptura:f2:CENSO_S5_P00,frmCaptura:f2:CENSO_S5_P0001,frmCaptura:f2:CENSO_S5_P0002,frmCaptura:f2:CENSO_S5_P0003,
+                                             frmCaptura:f2:CENSO_S5_P0004,frmCaptura:f2:CENSO_S5_P01,frmCaptura:f2:CENSO_S5_P02,frmCaptura:f2:CENSO_S5_P03,
+                                             frmCaptura:f2:CENSO_S4_H1203,frmCaptura:f2:CENSO_S4_H1201,frmCaptura:f2:CENSO_S4_H1202"                                            
+                                             style="font-size:12px"
+                                             onclick="fn_focoSiguiente('CENSO_S4_H1202', '')">                                
+                                <p:confirm  header="Confirmación" message="Por favor asegurese de haber ingresado todo los datos obligatorios caso contrario debera volver a ingresarlos" icon="ui-icon-alert" />
+                            </p:commandButton>                            
+
+                            <p:commandButton id="btnRegresar2" 
+                                             title="Salir"
+                                             process="@this" 
+                                             partialSubmit="true" style="font-size: 11px;width: 75px;height: 25px;"
+                                             async="true" icon="fa fa-reply"
+                                             global="false"
+                                             update="msgs"
+                                             onclick="PF('dlgMiembrosInicial').hide();">
+                            </p:commandButton>
+                        </p:dialog>
+
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <center>
+                    <p:fieldset legend="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.codOperativo.codOpe.nombre}-#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.nombre}| Secuencial:#{censoControladorPrueba.cabeceraActual.idCab} | Usuario: #{usuarioControlador.usuarioActual.nombre}" toggleable="true" toggleSpeed="500"
+                                styleClass="estiloPanelTop">
+                        <h:panelGrid columns="3" >
+                            <h:panelGrid id="pnlInfo" >
+                                <p:panel header="Información de Control" >
+                                    <h:panelGrid id="pnlInfoControl" columns="2" 
+                                                 border="1"
+                                                 style="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.estilo}font-size: 0.8vw;">
+                                        <h:outputText value="Cod Form SIPE N°:" style="font-weight: bold;"/>
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.idCab}"/>
+                                        <h:outputText value="Estado:" style="font-weight: bold;"/>
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.estado}"/>
+                                        <h:outputText value="Fecha Creación:" style="font-weight: bold;"/>
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.fechaCreacion}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd hh:mm"/>
+                                        </h:outputText>
+                                        <h:outputText value="Fecha Edición:" style="font-weight: bold;"/>
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.fechahoraEdicion}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd hh:mm"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlInfoMuestra" columns="2" 
+                                                 border="1"
+                                                 style="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.estilo}">
+                                        <h:outputText value="Identif Hogar:" style="font-weight: bold;"/>
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.codCarCon.clave}-#{censoControladorPrueba.cabeceraActual.codCarCon.control1}-#{censoControladorPrueba.cabeceraActual.codCarCon.control2}"/>
+                                        <h:outputLabel  value="Tot.personas:"/>
+                                        <h:outputText id="numeroPersonas" value="#{censoControladorPrueba.cabeceraActual.numDet}"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:panelGrid>
+
+                            <h:panelGrid id="pnlEstados" style="font-size:9px;" width="200" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N')}">
+                                <p:dataTable id="lstEstados" value="#{censoControladorPrueba.listaEstados}" var="estado">
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Estados de Información por Persona" style="color: #ffffff"/>
+                                    </f:facet>
+                                    <p:column headerText="N°" width="25" style="#{estado.estado=='C'?'background-color:#F6CECE;':'background-color:#e1f8ec'}"><p:outputLabel value="#{estado.numDet}"/></p:column>
+                                    <p:column  headerText="Estado" width="25" style="#{estado.estado=='C'?'background-color:#F6CECE;':'background-color:#e1f8ec'}"><p:outputLabel value="#{estado.estado}"/></p:column>
+                                    <p:column headerText="Última Modificación" width="150" style="#{estado.estado=='C'?'background-color:#F6CECE;':'background-color:#e1f8ec'}"><p:outputLabel value="#{estado.fechahoraEdicion}"/></p:column>
+                                </p:dataTable>                             
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="1" width="550" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N')}">
+                                <h:panelGrid id="pnlElementosControl"
+                                             rendered="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.tipo=='ME'}"
+                                             style="font-size:9px;" width="550">
+                                    <p:dataTable id="lstElementosControl" value="#{censoControladorPrueba.listaElementosControlEnemdu}" var="ele"
+                                                 style="width: 550px;">
+                                        <f:facet name="header">
+                                            <p:outputLabel value="Resumen" style="color: #ffffff"/>
+                                        </f:facet>
+                                        <p:column headerText="N°" width="5%"><p:outputLabel id="eleNum" value="#{ele.CENSO_S5_P00}"/></p:column>
+                                        <p:column  headerText="Nombres y Apellidos" width="40%"><p:outputLabel id="eleNomApe" value="#{ele.CENSO_S5_P0001} #{ele.CENSO_S5_P0002} #{ele.CENSO_S5_P0003} #{ele.CENSO_S5_P0004}"/></p:column>
+                                        <p:column  headerText="Par."  width="8%"><p:outputLabel id="elePar"  value="#{ele.CENSO_S5_P01}"/></p:column>
+                                        <p:column  headerText="Sexo"  width="5%"><p:outputLabel id="eleSex" value="#{ele.CENSO_S5_P02}"/></p:column>
+                                        <p:column  headerText="Edad"  width="5%"><p:outputLabel id="eleEdad" value="#{ele.CENSO_S5_P03}"/></p:column>                                                                                                                        
+                                        <p:column width="8%">
+                                            <p:commandButton id="btnDelMiembro" action="#{censoControladorPrueba.eliminarMiembro(ele.num)}" 
+                                                             icon="fa fa-trash" 
+                                                             rendered="#{(ele.num gt 1) and (!censoControladorPrueba.uc.usuarioTieneRol('ROL_OBS'))}"
+                                                             async="true" partialSubmit="true" process="@this"                                                              
+                                                             update=":frmCaptura:pnlElementosControl,:frmCaptura:pnlBotonesEle,:frmCaptura:pnlEstados,:frmCaptura:numeroPersonas,:frmCaptura:msgs,frmCaptura:pnlCaptura" 
+                                                             style="font-size:10px;width: 32px;height: 16px;background:#{txt.estColor2B};" 
+                                                             title="Eliminar miembro"
+                                                             oncomplete="fn_document_ready();''">                                                             
+                                                <p:confirm header="Confirmación" message="Está seguro de eliminar PERMANENTEMENTE el miembro?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                            </p:confirmDialog>
+                                        </p:column> 
+                                    </p:dataTable>
+
+                                    <h:panelGrid id="pnlControlNuevoElemento">
+                                        <p:panel style="width: 30px;" rendered="#{!censoControladorPrueba.uc.usuarioTieneRol('ROL_OBS')}">
+                                            <p:commandButton type="button" onclick="PF('dlgNewMiembro').show();"
+                                                             rendered="#{censoControladorPrueba.habilitaCrearMiembro}"
+                                                             style="font-size:16px;width: 25px;"
+                                                             icon="fa fa-male" title="Nuevo miembro"
+                                                             />
+                                            <p:dialog id="dlgNewMiembro" modal="true" widgetVar="dlgNewMiembro" closable="true" 
+                                                      width="100%" position="center top"  positionType="absolute"
+                                                      style="font-size:16px;"
+                                                      >
+                                                <p:outputLabel value="Posición de Nuevo Elemento:"/>
+                                                <p:inputText id="posNew" value="#{censoControladorPrueba.posicionNuevoElemento}" size="2" maxlength="2" autocomplete="off"
+                                                             onkeypress="if (event.keyCode === 13) {
+                                                                         document.getElementById('frmCaptura:btnNew').click();
+                                                                         return false;
+                                                                     }"/>
+                                                <p:commandButton id="btnNew" action="#{censoControladorPrueba.crearNuevoElemento()}" value="Insertar"
+                                                                 async="true" process="@this,:frmCaptura:posNew" partialSubmit="true"
+                                                                 update="lstElementosControl,pnlEstados,pnlBotonesEle,numeroPersonas,:frmCaptura:msgs,:frmCaptura:pnlGroupMiembros" 
+                                                                 oncomplete="PF('dlgNewMiembro').hide();"
+                                                                 title="Nuevo Miembro"/> 
+                                                <h:panelGrid/>
+                                                <h:panelGrid>
+                                                    <p:commandButton id="btnSalirNewMiembro" 
+                                                                     value="Salir"                                                                         
+                                                                     onclick="PF('dlgNewMiembro').hide();"
+                                                                     async="true" 
+                                                                     process="@this"                                                                                                                                
+                                                                     global="false"
+                                                                     icon="ui-icon-circle-close"
+                                                                     update=":frmCaptura:msgs,lblElemento"
+                                                                     style="font-size: 12px;width: 75px;height: 25px;"/>
+                                                </h:panelGrid>
+
+                                            </p:dialog>
+                                        </p:panel>
+                                    </h:panelGrid> 
+                                </h:panelGrid>
+                                <h:panelGrid id="pnlBotonesEle" columns="3" cellpadding="5" 
+                                             width="600"
+                                             >
+
+                                    <h:panelGrid id="pnlBotones" columns="10">
+                                        <c:forEach items="#{censoControladorPrueba.listaEstados}" var="ele">
+                                            <p:commandButton value="#{ele.numDet}"
+                                                             action="#{censoControladorPrueba.cambiarDeElemento(ele.numDet)}"
+                                                             async="true" global="false" process="@this"
+                                                             partialSubmit="true"
+                                                             styleClass="#{ele.numDet==censoControladorPrueba.elementoActual ? 'btnOrange':''}"                                                             
+                                                             update="frmCaptura:pnlBotones,msgs,lblElemento,frmCaptura:pnlCaptura"
+                                                             onstart="PF('dlgValidando').show();"
+                                                             oncomplete="PF('dlgValidando').hide();"
+                                                             onclick="fn_focoSiguiente('CENSO_S5_P00', '')"/>
+                                        </c:forEach>
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:fieldset>
+
+                    <h:panelGrid width="1200">
+                        <p:toolbar id="tbCaptura">
+                            <f:facet name="left">
+                                <h:panelGrid columns="5">
+                                    <h:panelGrid style="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.estilo}height: 35px;" width="35">
+                                        <h:outputText value="#{censoControladorPrueba.cabeceraActual.idCab}" style="font-size:10px;"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="pnlBotonBack">
+                                        <p:commandButton id="btnRegresar"
+                                                         action="#{censoControladorPrueba.regresarAInicio()}"
+                                                         title="Regresar"
+                                                         process="@this" 
+                                                         partialSubmit="true" style="font-size: 18px;width: 75px;height: 35px;"
+                                                         async="true" icon="fa fa-reply"
+                                                         global="false"
+                                                         update="msgs"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid width="50"/>
+                                    <c:set var="vali" value="#{censoControladorPrueba.listaElementosControlEnemdu.size()>0}"/>
+                                    <c:set var="primero" value="#{censoControladorPrueba.listaElementosControlEnemdu.size()>0?censoControladorPrueba.listaElementosControlEnemdu.get(censoControladorPrueba.elementoActual-1):''}"/>
+                                    <p:outputLabel id="lblElemento" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N')}" 
+
+                                                   value="#{censoControladorPrueba.elementoActual} - #{vali?primero.CENSO_S5_P0001:''} #{vali?primero.CENSO_S5_P0002:''} #{vali?primero.CENSO_S5_P0003:''} #{vali?primero.CENSO_S5_P0004:''} - "
+                                                   style="font-size: 25px;"/>
+                                    <p:outputLabel value="#{vali?primero.CENSO_S5_P03:''} años" style="font-size: 25px;" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N')}"/>
+                                </h:panelGrid>
+                            </f:facet>
+
+                            <f:facet name="right">                                
+                                <h:panelGrid id="pnlGuardar" columns="6" rendered="#{!censoControladorPrueba.uc.usuarioTieneRol('ROL_OBS')}">   
+                                    <h:panelGrid columns="1" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N')}">
+                                        <p:commandButton 
+                                            id="btnGuardarTodo"
+                                            action="#{censoControladorPrueba.guardarElemento('G')}"
+                                            value="Guardar"
+                                            process="#{'@this,frmCaptura:f'.concat(censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.idFormulario)}"
+                                            partialSubmit="true"
+                                            async="true"
+                                            global="false" style="font-size: 12px;width: 75px;height: 35px;"
+                                            update="msgs,pnlEstados,pnlElementosControl, pnlGuardar, sbchValIntForm1, sbchSuperIntForm1, sbchValIntForm2,:frmCaptura:pnlInfoControl"
+                                            icon="fa fa-save"
+                                            onstart="PF('dlgValidando').show();"
+                                            oncomplete="PF('dlgValidando').hide();"
+                                            />
+                                    </h:panelGrid>  
+                                    <h:panelGrid columns="1" rendered="#{censoControladorPrueba.cabeceraActual.info1.equals('N')}">
+                                        <p:commandButton 
+                                            id="btnGuardarTodoNoEfectivo"
+                                            action="#{censoControladorPrueba.guardarElementoNoEfectivo('G')}"
+                                            value="Guardar No Efectivo"
+                                            process="#{'@this,frmCaptura:f'.concat(censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.idFormulario)}"
+                                            partialSubmit="true"
+                                            async="true"
+                                            global="false" style="font-size: 12px;width: 95px;height: 45px;"
+                                            update="msgs,pnlEstados,pnlElementosControl, pnlGuardar, sbchValIntForm1NoEfectivo, sbchSuperIntForm1NoEfectivo, sbchValIntForm2NoEfectivo,:frmCaptura:pnlInfoControl"
+                                            icon="fa fa-save"
+                                            onstart="PF('dlgValidando').show();"
+                                            oncomplete="PF('dlgValidando').hide();"
+                                            />
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="1" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.cargaActual.control2 == 1}">
+                                        <p:commandButton id="btnVGuardarTodo"                                                     
+                                                         action="#{censoControladorPrueba.validarVerificar((censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID') or censoControladorPrueba.uc.usuarioTieneRol('ROL_SUPER') or censoControladorPrueba.uc.usuarioTieneRol('ROL_ENCUE'))?'VG':'VS')}"
+                                                         value="Validar y Guardar"
+                                                         process="@this,pnlCaptura"
+                                                         partialSubmit="true"
+                                                         async="true"
+                                                         global="false" style="font-size: 10px; background-color: #01DF74; border-color: #01DF74;width: 75px;height: 35px;"
+                                                         update="msgs,pnlEstados,pnlElementosControl, pnlGuardar, sbchValIntForm1, sbchSuperIntForm1, sbchValIntForm2,   :frmCaptura:pnlInfoControl"
+                                                         icon="ui-icon-check"
+                                                         onstart="PF('dlgValidando').show();"
+                                                         oncomplete="PF('dlgValidando').hide();" />
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="1" rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.cargaActual.control2 > 1}">
+                                        <p:commandButton id="btnVGuardarTodoNuevoHogar"                                                     
+                                                         action="#{censoControladorPrueba.validarVerificarNuevoHogar((censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID') or censoControladorPrueba.uc.usuarioTieneRol('ROL_SUPER') or censoControladorPrueba.uc.usuarioTieneRol('ROL_ENCUE'))?'VG':'VS')}"
+                                                         value="Validar y Guardar Nuevo Hogar"
+                                                         process="@this,pnlCaptura"
+                                                         partialSubmit="true"
+                                                         async="true"
+                                                         global="false" style="font-size: 10px; background-color: #01DF74; border-color: #01DF74;width: 95px;height: 45px;"
+                                                         update="msgs,pnlEstados,pnlElementosControl, pnlGuardar, sbchValIntForm1, sbchSuperIntForm1, sbchValIntForm2,   :frmCaptura:pnlInfoControl"
+                                                         icon="ui-icon-check"
+                                                         onstart="PF('dlgValidando').show();"
+                                                         oncomplete="PF('dlgValidando').hide();" />
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="1" rendered="#{censoControladorPrueba.cabeceraActual.info1.equals('N')}">
+                                        <p:commandButton id="btnVGuardarTodoNoEfectivo"                                                     
+                                                         action="#{censoControladorPrueba.validarVerificarNoEfectivo((censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID') or censoControladorPrueba.uc.usuarioTieneRol('ROL_SUPER') or censoControladorPrueba.uc.usuarioTieneRol('ROL_ENCUE'))?'VG':'VS')}"
+                                                         value="Validar y Guardar No Efectivo"
+                                                         process="@this,pnlCaptura"
+                                                         partialSubmit="true"
+                                                         async="true"
+                                                         global="false" style="font-size: 10px; background-color: #01DF74; border-color: #01DF74;width: 85px;height: 55px;"
+                                                         update="msgs,pnlEstados,pnlElementosControl, pnlGuardar, sbchValIntForm1NoEfectivo, sbchSuperIntForm1NoEfectivo, sbchValIntForm2NoEfectivo,   :frmCaptura:pnlInfoControl"
+                                                         icon="ui-icon-check"
+                                                         onstart="PF('dlgValidando').show();"
+                                                         oncomplete="PF('dlgValidando').hide();" />
+                                    </h:panelGrid>
+
+                                    <p:panel  >
+                                        <p:selectBooleanCheckbox widgetVar="sbchSuperIntForm1"  rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.uc.usuarioTieneRol('ROL_SUPER') }"
+                                                                 value="#{censoControladorPrueba.integridadSup}" 
+                                                                 id="sbchSuperIntForm1" >
+                                            <p:outputLabel value="Supervisado" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax  update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1, :frmCaptura:sbchValIntForm2, :frmCaptura:pnlInfoControl" 
+                                                     listener="#{censoControladorPrueba.validarVerificar('VS')}" 
+                                                     process="@this,pnlCaptura"
+                                                     async="true" global="false"
+                                                     onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchSuperIntForm1').input.prop('checked', #{censoControladorPrueba.integridadSup}); return false; }else{PF('dlgValidando').show();PF('sbchSuperIntForm1').input.prop('checked', #{censoControladorPrueba.integridadSup});}" 
+                                                     oncomplete="PF('dlgValidando').hide();PF('sbchSuperIntForm1').input.prop('checked', #{censoControladorPrueba.integridadSup});">
+                                            </p:ajax>  
+                                        </p:selectBooleanCheckbox>
+                                    </p:panel>
+                                    <p:panel  >
+                                        <p:selectBooleanCheckbox widgetVar="sbchSuperIntForm1NoEfectivo"  rendered="#{censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.uc.usuarioTieneRol('ROL_SUPER') }"
+                                                                 value="#{censoControladorPrueba.integridadSup}" 
+                                                                 id="sbchSuperIntForm1NoEfectivo" >
+                                            <p:outputLabel value="Supervisado" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax  update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1NoEfectivo, :frmCaptura:sbchValIntForm2NoEfectivo, :frmCaptura:pnlInfoControl" 
+                                                     listener="#{censoControladorPrueba.validarVerificarNoEfectivo('VS')}" 
+                                                     process="@this,pnlCaptura"
+                                                     async="true" global="false"
+                                                     onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchSuperIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadSup}); return false; }else{PF('dlgValidando').show();PF('sbchSuperIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadSup});}" 
+                                                     oncomplete="PF('dlgValidando').hide();PF('sbchSuperIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadSup});">
+                                            </p:ajax>  
+                                        </p:selectBooleanCheckbox>
+                                    </p:panel>
+                                    <p:panel >
+
+                                        <p:selectBooleanCheckbox widgetVar="sbchValIntForm1"    rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N') and (censoControladorPrueba.uc.usuarioTieneRol('ROL_REVIS') or censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID'))}"
+                                                                 value="#{censoControladorPrueba.integridadValidada}"
+                                                                 id="sbchValIntForm1" >
+                                            <p:outputLabel value="Criticado" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax   update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1, :frmCaptura:pnlInfoControl" 
+                                                      listener="#{censoControladorPrueba.validarVerificar('VC')}" 
+                                                      process="@this,pnlCaptura"
+                                                      async="true" global="false"
+                                                      onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchValIntForm1').input.prop('checked', #{censoControladorPrueba.integridadValidada}); return false; }else{PF('dlgValidando').show();PF('sbchValIntForm1').input.prop('checked', #{censoControladorPrueba.integridadValidada});}" 
+                                                      oncomplete="PF('dlgValidando').hide();PF('sbchValIntForm1').input.prop('checked', #{censoControladorPrueba.integridadValidada});">
+
+                                            </p:ajax>
+
+                                        </p:selectBooleanCheckbox>
+                                        <p:selectBooleanCheckbox widgetVar="sbchValIntForm1NoEfectivo"    rendered="#{censoControladorPrueba.cabeceraActual.info1.equals('N') and (censoControladorPrueba.uc.usuarioTieneRol('ROL_REVIS') or censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID'))}"
+                                                                 value="#{censoControladorPrueba.integridadValidada}"
+                                                                 id="sbchValIntForm1NoEfectivo" >
+                                            <p:outputLabel value="Criticado" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax   update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1NoEfectivo, :frmCaptura:pnlInfoControl" 
+                                                      listener="#{censoControladorPrueba.validarVerificarNoEfectivo('VC')}" 
+                                                      process="@this,pnlCaptura"
+                                                      async="true" global="false"
+                                                      onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchValIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada}); return false; }else{PF('dlgValidando').show();PF('sbchValIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada});}" 
+                                                      oncomplete="PF('dlgValidando').hide();PF('sbchValIntForm1NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada});">
+
+                                            </p:ajax>
+
+                                        </p:selectBooleanCheckbox>
+
+                                        <p:selectBooleanCheckbox widgetVar="sbchValIntForm2"    rendered="#{!censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID')}"
+                                                                 value="#{censoControladorPrueba.integridadValidada}"
+                                                                 id="sbchValIntForm2" >
+                                            <p:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;Consistencia" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax   update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1, :frmCaptura:pnlInfoControl" 
+                                                      listener="#{censoControladorPrueba.validarVerificar('RC')}" 
+                                                      process="@this,pnlCaptura"
+                                                      async="true" global="false"
+                                                      onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchValIntForm2').input.prop('checked', #{censoControladorPrueba.integridadValidada}); return false; }else{PF('dlgValidando').show();PF('sbchValIntForm2').input.prop('checked', #{censoControladorPrueba.integridadValidada});}" 
+                                                      oncomplete="PF('dlgValidando').hide();PF('sbchValIntForm2').input.prop('checked', #{censoControladorPrueba.integridadValidada});">
+
+                                            </p:ajax>
+
+                                        </p:selectBooleanCheckbox>
+                                        <p:selectBooleanCheckbox widgetVar="sbchValIntForm2NoEfectivo"    rendered="#{censoControladorPrueba.cabeceraActual.info1.equals('N') and censoControladorPrueba.uc.usuarioTieneRol('ROL_VALID')}"
+                                                                 value="#{censoControladorPrueba.integridadValidada}"
+                                                                 id="sbchValIntForm2NoEfectivo" >
+                                            <p:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;Consistencia" style="color: brown;font-size: 13px;font-weight: bold"></p:outputLabel>
+                                            <p:ajax   update="msgs,:frmCaptura:pnlEstados,:frmCaptura:pnlElementosControl,:frmCaptura:pnlInfoControl, :frmCaptura:pnlGuardar, :frmCaptura:sbchValIntForm1NoEfectivo, :frmCaptura:pnlInfoControl" 
+                                                      listener="#{censoControladorPrueba.validarVerificarNoEfectivo('RC')}" 
+                                                      process="@this,pnlCaptura"
+                                                      async="true" global="false"
+                                                      onstart="if (!confirm('¿Está seguro que quiere cambiar de estado este formulario?')) { PF('sbchValIntForm2NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada}); return false; }else{PF('dlgValidando').show();PF('sbchValIntForm2NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada});}" 
+                                                      oncomplete="PF('dlgValidando').hide();PF('sbchValIntForm2NoEfectivo').input.prop('checked', #{censoControladorPrueba.integridadValidada});">
+
+                                            </p:ajax>
+
+                                        </p:selectBooleanCheckbox>
+                                    </p:panel>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:toolbar>
+
+                        <!-- <h:panelGrid columns="2" style="display: block; text-align: left;">
+                             <p:commandButton id="btnVGuardarTodo2" 
+                                              action="#{censoControladorPrueba.listarObs()}"
+                                              value="Bitacora Observaciones"                                             
+                                              process="@this"
+                                              partialSubmit="true"
+                                              async="true"
+                                              global="false" 
+                                              style="font-size: 15px; background-color: #F7D358; border-color: #F7D358;width: 150px;height: 45px;display: block; text-align: center;"
+                                              update="msgs"
+                                              icon="ui-icon-pencil"
+                                              />
+                             <p:commandButton id="btnVGuardarTodo3" 
+                                              action="#{censoControladorPrueba.listarObsVal()}"
+                                              value="Bitacora Validaciones"
+                                              process="@this"
+                                              partialSubmit="true"
+                                              async="true"
+                                              global="false" 
+                                              style="font-size: 15px; background-color: #33CCCC; border-color: #33CCCC;width: 150px;height: 45px;display: block; text-align: center;"
+                                              update="msgs"
+                                              icon="ui-icon-pencil"
+                                              />
+                         </h:panelGrid>-->                        
+
+                        <!--<p:dialog   modal="true" widgetVar="dlgVerObs" closable="flase" 
+                                    style="font-size:16px;" 
+                                    width="80%"  position="center" visible="true" 
+                                    >
+                            <h:panelGrid columns="1" style="text-align: center" width="100%">
+                                <h:panelGrid id="obsNew2">   
+                                    <p:outputLabel value="Observaciones Formulario ENEMDU" style="font-size: 18px;font-weight:bold"/>
+                                    <br/>
+                                    <p:outputLabel value="Persona Actual #{censoControladorPrueba.elementoActual} - #{censoControladorPrueba.listaEnemdu.get(0).valor} #{censoControladorPrueba.listaEnemdu.get(2).valor}" style="font-size: 16px;font-weight:bold"/>
+                                    <p:scrollPanel style="width:1350px;height:400px">
+                                        <p:dataTable id="tblObs" var="obs" value="#{censoControladorPrueba.lstObs}"
+                                                     rowStyleClass="#{obs.referencia.contains('r')?'filaTipoReg2':obs.referencia.contains('s')?'capBgcolorInfMuestraAct':obs.referencia.contains('v')?'capBgcolorInfMuestraAct':obs.referencia.contains('d')?'capBgcolorInfMuestraAct':null}"
+                                                     emptyMessage="No se encontraron registros" rowIndexVar="num" editable="true">
+                                            <p:ajax event="rowEdit" listener="#{censoControladorPrueba.onRowEdit}" update=":frmCaptura:msgs"/>
+                                            <p:ajax event="rowEditCancel" listener="#{censoControladorPrueba.onRowCancel}" update=":frmCaptura:msgs"/>
+
+                                            <p:column headerText="Registro" width="5">
+                                                <p:outputLabel value="#{num +1}" />
+                                            </p:column>     
+                                            <p:column headerText="Usuario" width="20" sortBy="#{obs.referencia}" filterBy="#{obs.referencia}">
+                                                <p:outputLabel value="#{obs.referencia}"/>
+                                            </p:column>
+                                            <p:column headerText="Pregunta" width="30" style="text-align: left" sortBy="#{obs.clave}" filterBy="#{obs.clave}">
+                                                <p:outputLabel value="#{obs.clave}" style="text-transform: uppercase" />
+                                            </p:column>
+                                            <p:column headerText="Pers" width="10">
+                                                <p:outputLabel value="#{obs.numDet}" style="text-transform: uppercase" />
+                                            </p:column>
+                                            <p:column headerText="Tipo" width="20" rendered="#{censoControladorPrueba.ver =='99'}">
+                                                <p:outputLabel value="#{obs.tipo  =='1' ? 'Error de Critica' : obs.tipo  =='2' ? 'Error de codificación' :obs.tipo  =='3' ? 'Error de digitación' : obs.tipo  =='4' ? 'Error de sistema' :''}" />
+                                            </p:column>    
+                                            <p:column headerText="Observación" width="120" style="text-align: justify ">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{obs.observacion}" style="text-transform: uppercase"/></f:facet>
+                                                    <f:facet name="input"><p:inputTextarea value="#{obs.observacion}" style="text-transform: uppercase;width:100%;height: 100%" cols="7"/></f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Fecha" width="50">
+                                                <p:outputLabel value="#{obs.fechahoraEdicion}" style="text-transform: uppercase" />
+                                            </p:column>
+                                            <p:column headerText="Editar" width="10" rendered="#{censoControladorPrueba.uc.usuarioTieneRol('RES_ZON') or censoControladorPrueba.uc.usuarioTieneRol('ROL_RESP_CRIT') }">
+                                                <p:rowEditor editTitle="Editar" cancelTitle="Cancelar" saveTitle="Guardar"/>
+                                            </p:column>    
+                                            <p:column headerText="Eliminar" width="10" rendered="#{censoControladorPrueba.uc.usuarioTieneRol('RES_ZON') or censoControladorPrueba.uc.usuarioTieneRol('ROL_RESP_CRIT') }">        
+                                                <p:commandButton icon="ui-icon-trash" 
+                                                                 action="#{censoControladorPrueba.eliminarObs(obs)}"
+                                                                 update=":frmCaptura:msgs, :#{p:component('obsNew2')} "
+                                                                 process="@this" global="false" async="true"  ajax="true" >
+                                                    <p:confirm header="Confirmacion" message="Desea eliminar el registro?" icon="ui-icon-alert" />
+                                                </p:commandButton>
+                                                <p:confirmDialog style="position:fixed!important;" global="true" showEffect="fade" hideEffect="drop">
+                                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                    <p:commandButton value="No" type="button"  styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                </p:confirmDialog> 
+                                            </p:column>    
+                                        </p:dataTable>
+                                    </p:scrollPanel> 
+                                    <br/>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton id="btnNew4" 
+                                                         value="Salir"
+                                                         async="true" process="@this" 
+                                                         partialSubmit="true"
+                                                         onclick="PF('dlgVerObs').hide();"/> 
+                                    </h:panelGrid>
+
+                                </h:panelGrid>   
+                            </h:panelGrid>    
+                        </p:dialog>-->
+
+                        <p:sticky target="tbCaptura" />                        
+                    </h:panelGrid>
+                    <div id="pantalla" class="pantalla" style="display:none">;
+                        <img id="cargando" src="../../../imagenes/cargando.gif"/></div> 
+                    <br/><h:inputHidden id="idFormulario" value="#{censoControladorPrueba.cabeceraActual.codCarCon.codFormulario.idFormulario}" />
+                    <h:inputHidden  id="saltos"  value="#{censoControladorPrueba.listaSaltos}" />
+                    <br/><h:inputHidden  id="validaciones" value="#{censoControladorPrueba.listaValidaciones}" />
+
+                    <h:panelGrid id="pnlCaptura">
+                        <h:panelGrid columns="1" style="display: block; text-align: left;" rendered="#{censoControladorPrueba.elementoActual > 1}">
+                            <p:commandButton id="btnSaltar"                                              
+                                             onclick="fn_focoSiguiente('CENSO_S5_P00', '')"
+                                             value="Comenzar"
+                                             process="@this"
+                                             partialSubmit="true"
+                                             async="true"
+                                             global="false" 
+                                             style="font-size: 18px; background-color: #27ae60; border-color: #27ae60;width: 130px;height: 45px;display: block; text-align: center;"
+                                             update="msgs"
+                                             icon="ui-icon-pencil"
+                                             />                            
+                        </h:panelGrid>
+                        <!--Aqui Metadato-->                         
+                        <!-- generado por:adminsipe f_5_20220317_102413-->
+                        <p:tabView id="f5" widgetVar="tvf5">
+                            <p:tab id="s21" title="PRUEBA SECCION">
+                                <p:panel header="Sección I.">
+                                    <h:panelGrid columns="1">
+                                        <h:panelGrid  columns="1">
+                                            <p:outputLabel escape="false" value="Nombre"  for="VPRUEBA_S1_P1"  />
+                                            <p:inputText alt="0" id="VPRUEBA_S1_P1" widgetVar="VPRUEBA_S1_P1" value="#{censoControladorPrueba.listaEnemdu.get(0).valor}" size="16" autocomplete="off" maxlength="15" required="false"  onkeypress="return fn_alfaNumerico(event)" />
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+
+
+                                    <h:panelGrid columns="2">
+                                        <h:panelGrid  columns="1">
+                                            <p:outputLabel escape="false" value="Apellido"  for="VPRUEBA_S1_P2"  />
+                                            <p:inputText alt="1" id="VPRUEBA_S1_P2" widgetVar="VPRUEBA_S1_P2" value="#{censoControladorPrueba.listaEnemdu.get(1).valor}" size="16" autocomplete="off" maxlength="15" required="false"  onkeypress="return fn_alfaNumerico(event)" />
+                                        </h:panelGrid>
+
+
+                                        <h:panelGrid  columns="2">
+                                            <p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;3.&lt;/strong&gt; Estado civil"  for="VPRUEBA_S1_P3"  />
+                                            <p:inputText alt="2" id="VPRUEBA_S1_P3" widgetVar="VPRUEBA_S1_P3" value="#{censoControladorPrueba.listaEnemdu.get(2).valor}" size="2" autocomplete="off" maxlength="1" required="false"  onkeypress="return fn_entero(event)" onblur="return fn_rango(1, 3, 'VPRUEBA_S1_P3')" />
+
+                                            <p:tooltip id="ttVPRUEBA_S1_P3" for="VPRUEBA_S1_P3" showEvent="focus" hideEvent="blur" position="top" escape="false" value="1 - Soltero&lt;br&gt;2 - Casado&lt;br&gt;3 - Otros&lt;br&gt;"/>
+
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+
+
+                                    <h:panelGrid columns="1">
+                                        <h:panelGrid  columns="2">
+                                            <p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;4. ¿Qué edad tiene?&lt;/br&gt;(Anote 0 para menores de 1 año)&lt;/strong&gt;"  for="VPRUEBA_S1_P4"  />
+                                            <p:inputText alt="3" id="VPRUEBA_S1_P4" widgetVar="VPRUEBA_S1_P4" value="#{censoControladorPrueba.listaEnemdu.get(3).valor}" size="4" autocomplete="off" maxlength="3" required="false"  onkeypress="return fn_entero(event)" />
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+
+
+                                    <br/><h:panelGrid columns="1">
+                                        <h:panelGrid  columns="2">
+                                            <p:outputLabel escape="false" value="&lt;strong style='color: #000000;'&gt;LAS SIGUIENTES PREGUNTAS SON OBLIGATORIAS&lt;/strong&gt;"  />
+
+
+                                        </h:panelGrid>
+
+                                    </h:panelGrid>
+
+                                    <p:panel header="PREGUNTAS OBLIGATORIAS">
+                                        <h:panelGrid columns="1"  >
+                                            <h:panelGrid columns="1">
+                                                <h:panelGrid  columns="2">
+                                                    <p:outputLabel escape="false" value="FECHA DE NACIMIENTO"  for="VPRUEBA_S1_P5"  />
+                                                    <p:inputText alt="4" id="VPRUEBA_S1_P5" widgetVar="VPRUEBA_S1_P5" value="#{censoControladorPrueba.listaEnemdu.get(4).valor}" size="11" autocomplete="off" maxlength="10" required="false"  onkeypress="return fn_alfaNumerico(event)" />
+                                                </h:panelGrid>
+
+                                            </h:panelGrid>
+
+
+                                            <h:panelGrid columns="1">
+                                                <h:panelGrid  columns="2">
+                                                    <p:outputLabel escape="false" value="FECHA DE FALLECIMIENTO"  for="VPRUEBA_S1_P6"  />
+                                                    <p:inputText alt="5" id="VPRUEBA_S1_P6" widgetVar="VPRUEBA_S1_P6" value="#{censoControladorPrueba.listaEnemdu.get(5).valor}" size="11" autocomplete="off" maxlength="10" required="false"  onkeypress="return fn_alfaNumerico(event)" />
+                                                </h:panelGrid>
+
+                                            </h:panelGrid>
+
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:panel></p:tab>
+
+                        </p:tabView>
+                        <!--Fin Metadato-->
+
+                    </h:panelGrid>
+
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

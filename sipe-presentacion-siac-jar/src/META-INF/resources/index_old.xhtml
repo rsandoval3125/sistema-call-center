@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+    <ui:composition template="/plantillas/inec_plantilla.xhtml">
+        <ui:define name="contenido">  
+
+            <center>
+                <div>
+                    <p:panel style="height: 90%; width: 90%; background-repeat: no-repeat; background-position: center">
+                        <center>
+
+                            <h:panelGrid columns="1" >
+
+
+
+                                <!--<h:graphicImage value="/imagenes/tarea.png"/>-->
+                                <center>
+
+                                    <h:panelGrid columns="3" width="100%">
+                                        <h:panelGrid width="12%"/>
+                                        <h:panelGrid width="76%">
+                                            <div align="center">
+                                                <h:panelGrid style="text-align: center;color:#4A88F4;">
+                                                    <h1><div align="center">SIPE Sistema Integrado de producción estadística</div></h1>
+                                                </h:panelGrid>
+                                            </div>
+                                            <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-8,ui-g-12 ui-md-4">
+                                                <h:panelGrid style="font-size:1.4vw;">
+                                                    <div align="justify">Entre la información que maneja el Instituto Nacional de Estadística y Censos (INEC) existe información confidencial, amparada bajo leyes y regulaciones, que estamos en la obligatoriedad de protegerla en cualquier medio en la que se encuentre.</div>
+                                                    <br/>
+                                                    <div align="justify">Al ingresar con un usuario y contraseña, usted hace un compromiso ineludible de responsabilidad para proteger la información confidencial y para utilizar los recursos estrictamente con fines propios del negocio</div>
+
+                                                </h:panelGrid>
+                                                <h:panelGrid>
+                                                    <h:panelGrid  style="background-image: url('#{baseControlador.getProfundidad()}imagenes/sipe_171px.jpg');height: 104px; width: 171px; background-repeat: no-repeat; background-position: center"/>
+                                                    <!--<h:panelGrid  style="background-image: url('#{baseControlador.getProfundidad()}imagenes/censo2020_266px.jpg');height: 85px; width: 266px; background-repeat: no-repeat; background-position: center"/>-->
+
+                                                </h:panelGrid>
+                                                
+                                            </p:panelGrid>
+                                        </h:panelGrid>
+                                        <h:panelGrid width="12%"/>
+                                    </h:panelGrid>
+                                </center>
+                            </h:panelGrid>
+
+                        </center>
+                    </p:panel>
+                </div>
+            </center>
+        </ui:define>
+    </ui:composition> 
+
+</html>

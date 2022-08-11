@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+<body>
+
+	<ui:composition>
+		<pe:blockUI
+			widgetVar="peBlockUI"
+			id="peBlockUI">
+                    <h:panelGrid columns="2" style="background: #ffffff">
+				<h:graphicImage
+					library="themes"
+					name="img/ajax-loader.gif"
+					style="vertical-align: middle; padding-right: 10px;" />
+                                <!--<i class="pi pi-spin pi-spinner" style="font-size: 4rem"></i>-->
+				<h:outputText
+					value="Procesando petición..."
+					style="white-space: nowrap;" />
+			</h:panelGrid>
+		</pe:blockUI>
+	</ui:composition>
+</body>
+</html>
